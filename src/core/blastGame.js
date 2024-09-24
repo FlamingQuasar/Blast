@@ -1,16 +1,17 @@
-import { FieldItem } from './fieldItem.js'
+import { Settings } from './settings.js'
+import { Field } from './field.js'
 
 export class BlastGame{
-    constructor({n, m, c, k=2}){
-       this.fieldHeight = n;
-       this.fieldWidth = m;
-       this.colorsCount = c;
-       this.minimalGroup = k<2?2:k;
-       this.hasPairs = false;
-       if(n && m){
-            this.createField();
-            this.checkField();
-       }
+    
+    constructor({n, m, c, k=2}){  
+        this.settings = new Settings({
+            fieldHeight : n,
+            fieldWidth : m,
+            colorsCount : c,
+            minimalGroup : k<2?2:k
+        });
+        this.hasPairs = false;
+        this.createField();
     }
 
     replaceItemsAfterFire(){
@@ -20,36 +21,28 @@ export class BlastGame{
     }
 
     createField(){
-        this.field=[];
-        for(let i=0; i<this.fieldHeight; i++){
-            let row = [];
-            this.field.push(row);
-            for(let j=0; j<this.fieldWidth;j++){
-                let item = new FieldItem(this.colorsCount);
-                row.push(item);
-                item.initNeighbours((j>0)?this.field[i][j-1]:null,
-                    (i>0)?this.field[i-1][j]:null,null,null);
-            }
+        if(this.settings.fieldHeight && this.settings.fieldWidth){
+            this.field = new Field({settings: this.settings});
+            this.hasPairs = this.checkFieldHasPairs();
         }
-        //console.log(this.field);
     }
 
-    checkField(){
-        this.hasPairs = false;
+    checkFieldHasPairs(){
+        let hasPairs = false;
         outer:
-        for(let i=0; i<this.fieldHeight; i++){
-            for(let j=0; j<this.fieldWidth;j++){
-                this.hasPairs = this.field[i][j].hasSameNeighbour;
-                if(this.hasPairs) break outer;
+        for(let i=0; i<this.settings.fieldHeight; i++){
+            for(let j=0; j<this.settings.fieldWidth;j++){
+                hasPairs = this.field[i][j].hasSameNeighbour;
+                if(hasPairs) break outer;
             }
         }
-        //console.log(this.hasPairs);
+        return hasPairs;
     }
 
     showField({onlyPairs = false}={}){
         let fieldMatrix = "";
-        for(let i=0; i<this.fieldHeight; i++){
-            for(let j=0; j<this.fieldWidth;j++){
+        for(let i=0; i<this.settings.fieldHeight; i++){
+            for(let j=0; j<this.settings.fieldWidth;j++){
                 if(onlyPairs){
                     fieldMatrix += `${this.field[i][j].hasSameNeighbour? this.field[i][j].color:"."} \t`;
                 }
@@ -64,11 +57,11 @@ export class BlastGame{
 
     clickFieldItem(row, col){
         if(this.field[row] === undefined 
-            || this.field[row][col] === undefined){
+            || this.field[row][col] === undefined || this.field[row][col].c =="_"){
             console.log("Такой клетки нет");
             return;
         }
         this.field[row][col].fireItem();
-        this.showField();
+        //this.showField();
     }
 }
