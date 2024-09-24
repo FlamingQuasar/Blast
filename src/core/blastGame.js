@@ -13,6 +13,7 @@ export class BlastGame{
             stepsCounter : stepsCounter>1? stepsCounter : 1
         });
         this.activateFieldItem.bind(this);
+        this.replaceItemsAfterFire.bind(this);
         this.currentScore = 0;
         this.scoreAchieved = false;
         this.hasPairs = false;
@@ -21,7 +22,9 @@ export class BlastGame{
 
     // Сместить фишки сверху вниз после сгорания группы или сгенерировать
     replaceItemsAfterFire(){
-        
+        console.log("replacing!");
+        this.field.runReplacingAfterBurn();
+        this.showField();
     }
 
     createField(){
@@ -53,7 +56,7 @@ export class BlastGame{
             console.log("Победа!");
             this.scoreAchieved = true;
         }
-        else if(this.stepsCounter==0){
+        else if(this.stepsCounter == 0){
             console.log("Поражение!");
         }
     }
@@ -62,8 +65,11 @@ export class BlastGame{
     activateFieldItem(row, col){
         if(this.settings.stepsCounter){
             // Прибавить счет, если фишки сгорят
-
-            this.currentScore += this.field.tryBurnItemAndGetScore(row,col);
+            const newScoreToAdd = this.field.tryBurnItemAndGetScore(row,col);            
+            if(newScoreToAdd){
+                this.currentScore += newScoreToAdd;
+                this.replaceItemsAfterFire();
+            }
             this.settings.stepsCounter--;
             return true;
         }

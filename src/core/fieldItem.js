@@ -1,6 +1,5 @@
 export class FieldItem{
     hasSameNeighbour = false;
-    isCheckedToBurn = false;
     static minimalGroupCount;
 
     constructor(colorsCount, minimalGroupCount=2){
