@@ -1,4 +1,5 @@
-class BlastGame{
+import {FieldItem} from './fieldItem.js';
+export class BlastGame{
     constructor({n, m, c, k=2}){
        this.fieldHeight = n;
        this.fieldWidth = m;
@@ -29,7 +30,7 @@ class BlastGame{
                     (i>0)?this.field[i-1][j]:null,null,null);
             }
         }
-        console.log(this.field);
+        //console.log(this.field);
     }
 
     checkField(){
@@ -41,7 +42,7 @@ class BlastGame{
                 if(this.hasPairs) break outer;
             }
         }
-        console.log(this.hasPairs);
+        //console.log(this.hasPairs);
     }
 
     showField({onlyPairs = false}={}){

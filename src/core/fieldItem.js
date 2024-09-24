@@ -1,4 +1,4 @@
-class FieldItem{
+export class FieldItem{
     hasSameNeighbour = false;
 
     constructor(colorsCount){
