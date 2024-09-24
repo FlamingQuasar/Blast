@@ -1,4 +1,5 @@
-import {FieldItem} from './fieldItem.js';
+import { FieldItem } from './fieldItem.js'
+
 export class BlastGame{
     constructor({n, m, c, k=2}){
        this.fieldHeight = n;
