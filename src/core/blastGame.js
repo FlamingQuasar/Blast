@@ -28,15 +28,7 @@ export class BlastGame{
     }
 
     checkFieldHasPairs(){
-        let hasPairs = false;
-        outer:
-        for(let i=0; i<this.settings.fieldHeight; i++){
-            for(let j=0; j<this.settings.fieldWidth;j++){
-                hasPairs = this.field[i][j].hasSameNeighbour;
-                if(hasPairs) break outer;
-            }
-        }
-        return hasPairs;
+        return this.field.checkPairs();
     }
 
     showField({onlyPairs = false}={}){
@@ -55,13 +47,7 @@ export class BlastGame{
         console.log(fieldMatrix);
     }
 
-    clickFieldItem(row, col){
-        if(this.field[row] === undefined 
-            || this.field[row][col] === undefined || this.field[row][col].c =="_"){
-            console.log("Такой клетки нет");
-            return;
-        }
-        this.field[row][col].fireItem();
-        //this.showField();
+    activateFieldItem(row, col){
+        this.field.activateFieldItem(row,col);
     }
 }

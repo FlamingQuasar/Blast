@@ -15,7 +15,7 @@ do{
     const answer = await rl.question('Введите ряд и столбец для клика через запятую:');
     let splitedAnswer = answer.split(",");
     let {row, column} = { row: +splitedAnswer[0], column: +splitedAnswer[1]};
-    game.clickFieldItem(row, column);
+    game.activateFieldItem(row, column);
     game.showField();
 } while(game.checkFieldHasPairs());
 rl.close();
