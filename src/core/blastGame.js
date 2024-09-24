@@ -3,13 +3,16 @@ import { Field } from './field.js'
 
 export class BlastGame{
     
-    constructor({n, m, c, k=2}){  
+    constructor({n, m, c, k=2, maxScore=1000, maxSteps=10}){  
         this.settings = new Settings({
             fieldHeight : n,
             fieldWidth : m,
             colorsCount : c,
-            minimalGroup : k<2?2:k
+            minimalGroup : k<2?2:k,
+            maxScore : maxScore>1?maxScore:1,
+            maxSteps : maxSteps>1?maxSteps:1
         });
+        this.currentScore = 0;
         this.hasPairs = false;
         this.createField();
     }
