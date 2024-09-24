@@ -3,24 +3,25 @@ import { Field } from './field.js'
 
 export class BlastGame{
     
-    constructor({n, m, c, k=2, maxScore=1000, maxSteps=10}){  
+    constructor({n, m, c, k=2, maxScore=1000, stepsCounter=10}){  
         this.settings = new Settings({
             fieldHeight : n,
             fieldWidth : m,
             colorsCount : c,
             minimalGroup : k<2?2:k,
             maxScore : maxScore>1?maxScore:1,
-            maxSteps : maxSteps>1?maxSteps:1
+            stepsCounter : stepsCounter>1? stepsCounter : 1
         });
+        this.activateFieldItem.bind(this);
         this.currentScore = 0;
+        this.scoreAchieved = false;
         this.hasPairs = false;
         this.createField();
     }
 
+    // Сместить фишки сверху вниз после сгорания группы или сгенерировать
     replaceItemsAfterFire(){
-        //type 1 : появляются сразу на местах
-
-        //type 2 : смещаются снизу вверх и генерятся сверху
+        
     }
 
     createField(){
@@ -48,9 +49,24 @@ export class BlastGame{
             fieldMatrix += "\n";
         }
         console.log(fieldMatrix);
+        if(this.currentScore >= this.settings.maxScore){
+            console.log("Победа!");
+            this.scoreAchieved = true;
+        }
+        else if(this.stepsCounter==0){
+            console.log("Поражение!");
+        }
     }
 
+    // Активировать фишку в ячейке игрового поля
     activateFieldItem(row, col){
-        this.field.activateFieldItem(row,col);
+        if(this.settings.stepsCounter){
+            // Прибавить счет, если фишки сгорят
+
+            this.currentScore += this.field.tryBurnItemAndGetScore(row,col);
+            this.settings.stepsCounter--;
+            return true;
+        }
+        return false;
     }
 }

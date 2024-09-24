@@ -4,6 +4,7 @@ import { FieldItem } from './fieldItem.js'
 export class Field{
 
     static settings = {};
+
     constructor({settings}){
         Field.settings = settings;
         this.matrix = [];
@@ -11,26 +12,29 @@ export class Field{
             let row = [];
             this.matrix.push(row);
             for(let j=0; j<Field.settings.fieldWidth;j++){
-                let item = new FieldItem(Field.settings.colorsCount);
+                let item = new FieldItem(Field.settings.colorsCount, Field.settings.minimalGroup);
                 row.push(item);
                 item.initNeighbours((j>0)?this.matrix[i][j-1]:null,
                     (i>0)?this.matrix[i-1][j]:null,null,null);
             }
         }
-        this.matrix.activateFieldItem = this.activateFieldItem;
+        this.matrix.tryBurnItemAndGetScore = this.tryBurnItemAndGetScore;
         this.matrix.checkPairs = this.checkPairs;
         return this.matrix;
     }
 
-    activateFieldItem(row, col){
+    // Попробовать "сжечь фишки" при активации ячейки
+    tryBurnItemAndGetScore(row, col){
         if(this[row] === undefined 
             || this[row][col] === undefined || this[row][col].c =="_"){
             console.log("Такой клетки нет");
-            return;
+            return 0; // вернуть 0 очков
         }
-        this[row][col].fireItem();
+        let scoreToAdd = this[row][col].fireItemReturnScore();
+        return scoreToAdd; // вернуть 0 очков прибавки
     }
 
+    // Узнать, есть ли вообще группы (заданного минимального числа)
     checkPairs(){
         let hasPairsFlag = false;
         outer:
