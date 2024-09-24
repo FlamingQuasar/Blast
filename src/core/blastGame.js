@@ -1,54 +1,47 @@
-import {FieldItem} from './fieldItem.js';
+import { Settings } from './settings.js'
+import { Field } from './field.js'
+
 export class BlastGame{
-    constructor({n, m, c, k=2}){
-       this.fieldHeight = n;
-       this.fieldWidth = m;
-       this.colorsCount = c;
-       this.minimalGroup = k<2?2:k;
-       this.hasPairs = false;
-       if(n && m){
-            this.createField();
-            this.checkField();
-       }
+    
+    constructor({n, m, c, k=2, maxScore=1000, stepsCounter=10}){  
+        this.settings = new Settings({
+            fieldHeight : n,
+            fieldWidth : m,
+            colorsCount : c,
+            minimalGroup : k<2?2:k,
+            maxScore : maxScore>1?maxScore:1,
+            stepsCounter : stepsCounter>1? stepsCounter : 1
+        });
+        this.activateFieldItem.bind(this);
+        this.replaceItemsAfterFire.bind(this);
+        this.currentScore = 0;
+        this.scoreAchieved = false;
+        this.hasPairs = false;
+        this.createField();
     }
 
+    // Сместить фишки сверху вниз после сгорания группы или сгенерировать
     replaceItemsAfterFire(){
-        //type 1 : появляются сразу на местах
-
-        //type 2 : смещаются снизу вверх и генерятся сверху
+        console.log("replacing!");
+        this.field.runReplacingAfterBurn();
+        this.showField();
     }
 
     createField(){
-        this.field=[];
-        for(let i=0; i<this.fieldHeight; i++){
-            let row = [];
-            this.field.push(row);
-            for(let j=0; j<this.fieldWidth;j++){
-                let item = new FieldItem(this.colorsCount);
-                row.push(item);
-                item.initNeighbours((j>0)?this.field[i][j-1]:null,
-                    (i>0)?this.field[i-1][j]:null,null,null);
-            }
+        if(this.settings.fieldHeight && this.settings.fieldWidth){
+            this.field = new Field({settings: this.settings});
+            this.hasPairs = this.checkFieldHasPairs();
         }
-        //console.log(this.field);
     }
 
-    checkField(){
-        this.hasPairs = false;
-        outer:
-        for(let i=0; i<this.fieldHeight; i++){
-            for(let j=0; j<this.fieldWidth;j++){
-                this.hasPairs = this.field[i][j].hasSameNeighbour;
-                if(this.hasPairs) break outer;
-            }
-        }
-        //console.log(this.hasPairs);
+    checkFieldHasPairs(){
+        return this.field.checkPairs();
     }
 
     showField({onlyPairs = false}={}){
         let fieldMatrix = "";
-        for(let i=0; i<this.fieldHeight; i++){
-            for(let j=0; j<this.fieldWidth;j++){
+        for(let i=0; i<this.settings.fieldHeight; i++){
+            for(let j=0; j<this.settings.fieldWidth;j++){
                 if(onlyPairs){
                     fieldMatrix += `${this.field[i][j].hasSameNeighbour? this.field[i][j].color:"."} \t`;
                 }
@@ -59,15 +52,27 @@ export class BlastGame{
             fieldMatrix += "\n";
         }
         console.log(fieldMatrix);
+        if(this.currentScore >= this.settings.maxScore){
+            console.log("Победа!");
+            this.scoreAchieved = true;
+        }
+        else if(this.stepsCounter == 0){
+            console.log("Поражение!");
+        }
     }
 
-    clickFieldItem(row, col){
-        if(this.field[row] === undefined 
-            || this.field[row][col] === undefined){
-            console.log("Такой клетки нет");
-            return;
+    // Активировать фишку в ячейке игрового поля
+    activateFieldItem(row, col){
+        if(this.settings.stepsCounter){
+            // Прибавить счет, если фишки сгорят
+            const newScoreToAdd = this.field.tryBurnItemAndGetScore(row,col);            
+            if(newScoreToAdd){
+                this.currentScore += newScoreToAdd;
+                this.replaceItemsAfterFire();
+            }
+            this.settings.stepsCounter--;
+            return true;
         }
-        this.field[row][col].fireItem();
-        this.showField();
+        return false;
     }
 }
