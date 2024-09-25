@@ -1,5 +1,6 @@
 import { Settings } from './settings.js'
 import { Field } from './field.js'
+import { GameStates } from './gameState.js'
 
 export class BlastGame{
     
@@ -12,6 +13,7 @@ export class BlastGame{
             maxScore : maxScore>1?maxScore:1,
             stepsCounter : stepsCounter>1? stepsCounter : 1
         });
+        this.stage = GameState.SETTINGS;
         this.activateFieldItem.bind(this);
         this.replaceItemsAfterFire.bind(this);
         this.currentScore = 0;
