@@ -8,16 +8,14 @@ export class Settings{
         maxScore,
         stepsCounter
     }){
-        this.fieldHeight = fieldHeight;
-        this.fieldWidth = fieldWidth;
-        this.colorsCount = colorsCount;
-        this.minimalGroup = minimalGroup;
-        this.maxScore = maxScore;
-        this.stepsCounter = stepsCounter;
-
-        if (!Settings._instance) {
-            Settings._instance = this;
-          }
-          return Settings._instance;
+        if (!Settings._instance) Settings._instance = this;
+                
+        Settings._instance.fieldHeight = fieldHeight;
+        Settings._instance.fieldWidth = fieldWidth;
+        Settings._instance.colorsCount = colorsCount;
+        Settings._instance.minimalGroup = minimalGroup;
+        Settings._instance.maxScore = maxScore;
+        Settings._instance.stepsCounter = stepsCounter;
+        return Settings._instance;
     }
 }

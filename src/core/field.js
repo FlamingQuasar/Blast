@@ -24,7 +24,8 @@ export class Field{
         }
         this.matrix.tryBurnItemAndGetScore = this.tryBurnItemAndGetScore;
         this.matrix.checkPairs = this.checkPairs;
-        this.matrix.runReplacingAfterBurn = this.runReplacingAfterBurn;
+        this.matrix.replaceAfterBurn = this.replaceAfterBurn;
+        this.matrix.generateNewFieldItems = this.generateNewFieldItems;
         return this.matrix;
     }
 
@@ -38,31 +39,44 @@ export class Field{
         let scoreToAdd = this[row][col].fireItemReturnScore();
         return scoreToAdd; // вернуть 0 очков прибавки
     }
+    
+    // Сгенерировать сверху новые фишки после "сгоревших"
+    // param "newItemsGenerationMask" массив-"маска" количества пустых тайлов в каждом столбце
+    generateNewFieldItems(newItemsGenerationMask = []){
+        if(!newItemsGenerationMask.length) return;
+        let maxBurnedItemsColumn = Math.max(...newItemsGenerationMask);
+        for(let i = 0; i< maxBurnedItemsColumn; i++){
+            for(let j=0; j<Field.settings.fieldWidth; j++){
+                if(i < newItemsGenerationMask[j]){
+                    this[i][j] = new FieldItem(Field.settings.colorsCount, Field.settings.minimalGroup);
+                }
+            }
+        }
+        // Обновить ссылки на соседей всех фишек поля
+        for(let i=0; i<Field.settings.fieldHeight; i++){
+            for(let j=0; j<Field.settings.fieldWidth; j++){                
+                Field.initTopAndLeftFieldItemNeighbour(this[i][j], this, i, j);
+            }
+        }
+    }
 
     // Запустить механизм выпадения новых фишек и перемещения
-    runReplacingAfterBurn(){
-
-        function switchFieldItems(firstItem, secondItem){
-            const tempObject = firstItem;
-            firstItem = secondItem;
-            secondItem = tempObject;
-        }
-
+    replaceAfterBurn(callback){
         // Подготовить массив счетчиков для генерации новых фишек
-        let newItemsGenerationCounter = [];
+        let newItemsGenerationMask = [];
         for(let i=0; i<Field.settings.fieldWidth; i++) 
-            newItemsGenerationCounter.push(0);
+            newItemsGenerationMask.push(0);
 
         // Обойти игровое поле снизу вверх        
         for(let i=Field.settings.fieldHeight-1; i>=0; i--){
             for(let j=0; j<Field.settings.fieldWidth; j++){
                 if(this[i][j].color == "_"){
-                    // Если фишка при обходе снизу "сгоревшая" - прибавить счетчик необходимых к генерации фишек
-                    newItemsGenerationCounter[j]++;
                     // Попробовать сдвинуть на её место ближайшую фишку сверху
                     if(i-1>=0) for(let k=i-1; k>=0; k--){                        
                         if(this[k][j].color != "_"){
-                            switchFieldItems();
+                            const tempObject = this[i][j];
+                            this[i][j] = this[k][j];
+                            this[k][j] = tempObject;
                             this[k][j].hasSameNeighbour = false;
                             this[i][j].hasSameNeighbour = false;
                             break;
@@ -75,9 +89,27 @@ export class Field{
         // Проинициализировать соседние фишки (связать соседей)
         for(let i=0; i<Field.settings.fieldHeight; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){                
+                if(this[i][j].color == "_"){
+                    // Если фишка при обходе снизу "сгоревшая" - прибавить счетчик необходимых к генерации фишек
+                    newItemsGenerationMask[j]++;
+                }
+                // Обновить ссылки на соседей всех фишек поля
                 Field.initTopAndLeftFieldItemNeighbour(this[i][j], this, i, j);
             }
         }
+        console.log(`fill array:${newItemsGenerationMask}`);
+
+        let fieldMatrix = "";
+        for(let i=0; i<Field.settings.fieldHeight; i++){
+            for(let j=0; j<Field.settings.fieldWidth;j++){
+                fieldMatrix += `${this[i][j].color} \t`;
+            }
+            fieldMatrix += "\n";
+        }
+        console.log(fieldMatrix);
+
+        // Сгенерировать новые фишки
+        this.generateNewFieldItems(newItemsGenerationMask);
     }
 
     // Узнать, есть ли вообще группы (заданного минимального числа)

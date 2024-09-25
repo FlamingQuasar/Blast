@@ -1,4 +1,4 @@
-import { BlastGame } from './core/blastGame.js'
+import { BlastGame } from '../src/core/blastGame.js'
 import * as readline from 'node:readline/promises';
 import {
    stdin as input,

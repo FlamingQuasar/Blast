@@ -1,6 +1,6 @@
 import { Settings } from './settings.js'
 import { Field } from './field.js'
-import { GameStates } from './gameState.js'
+import { GameState } from './gameState.js'
 
 export class BlastGame{
     
@@ -25,7 +25,7 @@ export class BlastGame{
     // Сместить фишки сверху вниз после сгорания группы или сгенерировать
     replaceItemsAfterFire(){
         console.log("replacing!");
-        this.field.runReplacingAfterBurn();
+        this.field.replaceAfterBurn();
         this.showField();
     }
 
@@ -53,6 +53,7 @@ export class BlastGame{
             }
             fieldMatrix += "\n";
         }
+        // заменить console log на возврат матрицы и смену(!а не возврат) игры
         console.log(fieldMatrix);
         if(this.currentScore >= this.settings.maxScore){
             console.log("Победа!");
