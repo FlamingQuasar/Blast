@@ -23,10 +23,10 @@ export class BlastGame{
     }
 
     // Сместить фишки сверху вниз после сгорания группы или сгенерировать
-    replaceItemsAfterFire(){
+    replaceItemsAfterFire(showConsoleLog){
         console.log("Смещаем фишки сверху!");
         this.field.replaceAfterBurn();
-        this.showField();
+        if(showConsoleLog) this.showField();
     }
 
     // Вызвать "встряску" игрового поля
@@ -77,13 +77,15 @@ export class BlastGame{
     }
 
     // Активировать фишку в ячейке игрового поля
-    activateFieldItem(row, col){
+    activateFieldItem(row, col, showConsoleLog = false){
+        // если row и col undefined и stepsCounter не надо убавлять
+        if((undefined == (row && col)) ?? true) return true;
         if(this.settings.stepsCounter){
             // Прибавить счет, если фишки сгорят
             const newScoreToAdd = this.field.tryBurnItemAndGetScore(row,col);            
             if(newScoreToAdd){
                 this.currentScore += newScoreToAdd;
-                this.replaceItemsAfterFire();
+                this.replaceItemsAfterFire(showConsoleLog);
             }
             this.settings.stepsCounter--;
             return true;

@@ -20,6 +20,7 @@ do{
         let splitedAnswer = answer.split(",");
         if(splitedAnswer.length==1 && splitedAnswer[0] == "s"){
             game.shakeField();
+            row = column = undefined;
             continue;
         } else
             ({row, column} = { row: +splitedAnswer[0], column: +splitedAnswer[1]});
