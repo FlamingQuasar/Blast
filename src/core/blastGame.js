@@ -24,15 +24,22 @@ export class BlastGame{
 
     // Сместить фишки сверху вниз после сгорания группы или сгенерировать
     replaceItemsAfterFire(){
-        console.log("replacing!");
+        console.log("Смещаем фишки сверху!");
         this.field.replaceAfterBurn();
         this.showField();
     }
 
-    createField(){
+    createField(showConsoleLog = false){
         if(this.settings.fieldHeight && this.settings.fieldWidth){
             this.field = new Field({settings: this.settings});
+            if(showConsoleLog) this.showField();
             this.hasPairs = this.checkFieldHasPairs();
+            
+            while(this.hasPairs == false){
+                if(this.field.shakeField() === 0) break;
+                this.hasPairs = this.checkFieldHasPairs();
+                if(this.hasPairs) console.log("Потрясли поле и нашли пары!");
+            }
         }
     }
 

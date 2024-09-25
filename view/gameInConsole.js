@@ -9,7 +9,7 @@ const rl = readline.createInterface({
    input,
    output
 });
-const game = new BlastGame({n:5, m:10, c:6, k:2, maxScore:100, stepsCounter:3});
+const game = new BlastGame({n:3, m:3, c:9, k:2, maxScore:100, stepsCounter:3});
 let {row, column} = {};
 
 do{
