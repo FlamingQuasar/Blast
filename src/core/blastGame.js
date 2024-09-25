@@ -29,6 +29,11 @@ export class BlastGame{
         this.showField();
     }
 
+    // Вызвать "встряску" игрового поля
+    shakeField(){
+        this.field.shakeField();
+    }
+
     createField(showConsoleLog = false){
         if(this.settings.fieldHeight && this.settings.fieldWidth){
             this.field = new Field({settings: this.settings});

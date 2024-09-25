@@ -16,9 +16,13 @@ do{
     console.log(`Шагов осталось: ${game.settings.stepsCounter} (Счёт ${game.currentScore}/${game.settings.maxScore}) - группы не менее ${game.settings.minimalGroup} фишек`);
     game.showField();
     if(game.settings.stepsCounter && !game.scoreAchieved){
-        const answer = await rl.question('Введите ряд и столбец Фишки через запятую:');
+        const answer = await rl.question('Введите ряд и столбец Тайла через запятую (Или букву S - Shake):');
         let splitedAnswer = answer.split(",");
-        ({row, column} = { row: +splitedAnswer[0], column: +splitedAnswer[1]});
+        if(splitedAnswer.length==1 && splitedAnswer[0] == "s"){
+            game.shakeField();
+            continue;
+        } else
+            ({row, column} = { row: +splitedAnswer[0], column: +splitedAnswer[1]});
     }
 } while(game.activateFieldItem(row, column) == true);
 
