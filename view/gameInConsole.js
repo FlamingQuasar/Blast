@@ -11,7 +11,8 @@ const rl = readline.createInterface({
 });
 const game = new BlastGame({n:3, m:3, c:9, k:2, maxScore:100, stepsCounter:3});
 let {row, column} = {};
-
+// спросить в консоли - Настроить игру? y / n
+// задать через запятую высоту n, ширину m, количество цветов c, счет для победы, доступно шагов, доступно встрясок
 do{
     console.log(`Шагов осталось: ${game.settings.stepsCounter} (Счёт ${game.currentScore}/${game.settings.maxScore}) - группы не менее ${game.settings.minimalGroup} фишек`);
     game.showField();
