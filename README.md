@@ -1,4 +1,5 @@
 # Blast
+
 blast videogame example
 
 #Консольный клиент
@@ -6,3 +7,8 @@ blast videogame example
 
 #Автотесты
 Для запуска автотестов нужно: npm test;
+=======
+
+blast videogame example for JavaScript
+Testing via Mocha.js+Chai.js
+
