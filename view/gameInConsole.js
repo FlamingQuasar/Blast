@@ -9,7 +9,7 @@ const rl = readline.createInterface({
    input,
    output
 });
-const game = new BlastGame({n:3, m:3, c:9, k:2, maxScore:100, stepsCounter:3});
+let game = {};
 let {row, column} = {};
 const setupAnswer = await rl.question('Настроить игровые параметры? (y / n)');
 // Настройка игры через консоль
@@ -21,6 +21,20 @@ if(setupAnswer == "y"){
         const bustersParamsAnswer = await rl.question(`Задайте через \",\" Радиус бомбы(R), Размер группы для супер-тайла (L), Вариант логики супер-тайла (1-4)
         (1 - сжигает строку, 2 - сжигает столбец, 3 - сжигает радиус R, 4 - сжигает игровое поле)\n`);
     }
+    const bustersSettings = {
+        r : +bustersParams[0],
+        l : +bustersParams[1],
+        superTileLogicVariant : +bustersParams[2]
+    };
+    game = new BlastGame({ 
+        n: +params[0], m: +params[1], 
+        c: +params[2], k:2, maxScore: +params[3], 
+        stepsCounter: +params[4],
+        bustersSettings : bustersSettings
+    });
+}
+else{
+    game = new BlastGame({n:3, m:3, c:9, k:2, maxScore:100, stepsCounter:3});
 }
 
 // Основной цикл

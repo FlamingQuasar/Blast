@@ -2,9 +2,16 @@ import { Settings } from './settings.js'
 import { Field } from './field.js'
 import { GameState } from './gameState.js'
 
-export class BlastGame{
-    
-    constructor({n, m, c, k=2, maxScore=1000, stepsCounter=10}){  
+export class BlastGame{    
+    /**
+    * Конструктор для создания Игры Бласт
+    * @constructor
+    * @param {number} n - Высота игрового поля
+    * @param {number} m - Ширина игрового поля
+    * @param {number} c - Количество цветов тайлов (фишек)
+    * @param {number} k=2 - Минимальный размер групп
+    */
+    constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10, bustersSettings = null}){  
         this.settings = new Settings({
             fieldHeight : n,
             fieldWidth : m,
