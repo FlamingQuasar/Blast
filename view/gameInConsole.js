@@ -11,8 +11,19 @@ const rl = readline.createInterface({
 });
 const game = new BlastGame({n:3, m:3, c:9, k:2, maxScore:100, stepsCounter:3});
 let {row, column} = {};
-// спросить в консоли - Настроить игру? y / n
-// задать через запятую высоту n, ширину m, количество цветов c, счет для победы, доступно шагов, доступно встрясок
+const setupAnswer = await rl.question('Настроить игровые параметры? (y / n)');
+// Настройка игры через консоль
+if(setupAnswer == "y"){
+    const setupParamsAnswer = await rl.question('Задайте через \",\" Высоту(n), Ширину(m), Число цветов(c), Число очков для победы, Доступно шагов, Доступно встрясок:\n');
+    const params = setupParamsAnswer.split[','];
+    const bustersSetupAnswer = await rl.question('Настроить бустеры? (y / n)');
+    if(bustersSetupAnswer == "y"){
+        const bustersParamsAnswer = await rl.question(`Задайте через \",\" Радиус бомбы(R), Размер группы для супер-тайла (L), Вариант логики супер-тайла (1-4)
+        (1 - сжигает строку, 2 - сжигает столбец, 3 - сжигает радиус R, 4 - сжигает игровое поле)\n`);
+    }
+}
+
+// Основной цикл
 do{
     console.log(`Шагов осталось: ${game.settings.stepsCounter} (Счёт ${game.currentScore}/${game.settings.maxScore}) - группы не менее ${game.settings.minimalGroup} фишек`);
     game.showField();
