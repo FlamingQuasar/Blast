@@ -10,7 +10,7 @@ const rl = readline.createInterface({
    output
 });
 let game = {};
-let {row, column} = {};
+
 const setupAnswer = await rl.question('Настроить игровые параметры? (y / n)');
 // Настройка игры через консоль
 if(setupAnswer == "y"){
@@ -38,6 +38,7 @@ else{
     game = new BlastGame({n:3, m:3, c:9, k:2, maxScore:100, stepsCounter:3, s:3});
 }
 
+let {row, column} = {};
 // Основной цикл
 do{
     console.log(`Шагов осталось: ${game.settings.stepsCounter} (Счёт ${game.currentScore}/${game.settings.maxScore}) - группы не менее ${game.settings.minimalGroup} фишек`);
@@ -48,7 +49,7 @@ do{
     if(game.settings.stepsCounter && !game.scoreAchieved){
         const answer = await rl.question('Введите ряд и столбец Тайла через запятую (Или букву S - Shake):');
         let splitedAnswer = answer.split(",");
-        if(splitedAnswer.length==1 && splitedAnswer[0] == "s"){
+        if(splitedAnswer.length == 1 && splitedAnswer[0] == "s"){
             game.shakeField();
             row = column = undefined;
             continue;

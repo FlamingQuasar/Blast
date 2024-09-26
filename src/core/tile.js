@@ -18,6 +18,7 @@ export class Tile{
     // {rate} коэффициент умножения цены очков за нажатую фишку 
     fireTileReturnScore(rate=1){
         let scoreToAdd = 0;
+        console.log("this.hasSameNeighbour: "+this.hasSameNeighbour);
         if(this.hasSameNeighbour){
             this.hasSameNeighbour = false;
             if(this.left?.color == this.color && this.left?.hasSameNeighbour){

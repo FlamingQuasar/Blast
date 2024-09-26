@@ -108,9 +108,6 @@ export class Field{
                 this[0][1].color = this[0][0].color;
                 this[0][0].hasSameNeighbour = true;
                 this[0][1].hasSameNeighbour = true;
-        } else {
-            console.log("Похоже, задано слишком маленькое игровое поле");
-            return 0;
         }
 
         // Обновить ссылки на соседей всех фишек поля
@@ -121,7 +118,6 @@ export class Field{
     tryBurnItemAndGetScore(row, col){
         if(this[row] === undefined 
             || this[row][col] === undefined || this[row][col].c =="_"){
-            console.log("Такой клетки нет");
             return 0; // вернуть 0 очков
         }
         let scoreToAdd = this[row][col].fireTileReturnScore();
@@ -148,7 +144,7 @@ export class Field{
     // Обновить ссылки на соседей всех фишек поля
     updateNeighbourRelations(){
         for(let i=0; i<Field.settings.fieldHeight; i++){
-            for(let j=0; j<Field.settings.fieldWidth; j++){                
+            for(let j=0; j<Field.settings.fieldWidth; j++){
                 Field.initTopAndLeftFieldItemNeighbour(this[i][j], this, i, j);
             }
         }
