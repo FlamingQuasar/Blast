@@ -1,4 +1,5 @@
-import { BombBooster, TeleportBooster } from './booster.js';
+import { BombBooster } from './bombBooster.js';
+import { TeleportBooster } from './teleportBooster.js';
 import { Tile } from './tile.js'
 
 // Класс "игровое поле" ведёт себя как массив с добавлением методов
@@ -54,11 +55,25 @@ export class Field{
         this.matrix.updateNeighbourRelations = this.updateNeighbourRelations;
         this.matrix.fieldHaveOccurrence = this.fieldHaveOccurrence;
         this.matrix.getTileOnPosition = this.getTileOnPosition;
+        this.matrix.getPositionOfTile = this.getPositionOfTile;
         this.matrix.generateTileWithBoostersProbability = this.generateTileWithBoostersProbability;
         this.matrix.checkIfFieldHaveTile = this.checkIfFieldHaveTile;
         return this.matrix;
     }
 
+    /**
+     * Найти позицию тайла в матрице игрового поля
+     * @param {Tile} tile искомый тайл
+     * @returns позиция {row, col}
+     */
+    getPositionOfTile(tile){
+        for(let i=0; i<this.length; i++){
+            for(let j=0; j<this[i].length; j++){
+                if (this[i][j] == tile) return {row:i, col:j};
+            }
+        }
+        return undefined;
+    }
     /**
     * Защищенный способ получить Фишку(Тайл) с указанной позиции, если он там есть, иначе вернет false
     * @param {array} position - позиция [row,col]*/
@@ -157,7 +172,7 @@ export class Field{
         if(teleportProbability>0 && !this.checkIfFieldHaveTile(TeleportBooster.TILETYPE)){
             // Проверить, есть ли на карте бонус-телепорт, если нет, добавить вероятность его появления
             if( Math.random()+teleportProbability/100 >= 1){
-                tileToReturn = new TeleportBooster({field:this});
+                tileToReturn = new TeleportBooster({field:this, getSecondTilePosition:()=>{}});
             }
         }
         // Если вероятности не сработали, добавить простой тайл

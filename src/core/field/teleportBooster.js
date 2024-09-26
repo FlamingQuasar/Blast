@@ -1,4 +1,6 @@
 import { Booster } from "./booster.js";
+import { Field } from "./field.js";
+import { Tile } from "./tile.js";
 
 export class TeleportBooster extends Booster{
     static TILETYPE = "t";
@@ -6,20 +8,32 @@ export class TeleportBooster extends Booster{
     * Бустер-телепорт принимает аргументом метод ожидания второй клетки для перестановки
     * @constructor
     * @param {object} field - Текущее игровое поле
-    * @param {function} clickSecondItemToSwap - функция выбора второй фишки(тайла) для смены с первым
+    * @param {function} getSecondTilePosition - функция выбора второй фишки(тайла) для смены с первым
     */
-    constructor({field, clickSecondItemToSwap=()=>{}}){ // field возможно лучше заменить на game.field
+    constructor({field, getSecondTilePosition=()=>{}}){ // field возможно лучше заменить на game.field
         super({field});
         this.tileType = TeleportBooster.TILETYPE;
-        this.clickSecondItemToSwap = clickSecondItemToSwap;
+        this.getSecondTilePosition = getSecondTilePosition;
         /*this._doAction = ()=>{
             console.log("additional action");
         };*/
         this.doAction({position:[2,3]});
     }
+    
     fireTileReturnScore(){
-        // включить метод ожидания получения второго тайла для свапа
-        console.log("TELEPORT");
+        //let firstSwapTile включить метод ожидания получения первого тайла для свапа
+        //предусмотреть чтобы не нажимался текущий тайл t
+        //let secondSwapTile включить метод ожидания получения второго тайла для свапа
+        //предусмотреть чтобы не нажимался текущий тайл t
+        
+        console.log("TELEPORT start");
+        //let tileToSwapPosition = this.getSecondTilePosition();
+        let tileToSwap = this.field.getTileOnPosition([2, 2]);
+        let position = this.field.getPositionOfTile(this);
+        if(position){
+            this.field[position.row][position.col] = tileToSwap;
+            this.field[2][2] = this;//new Tile({colorsCount:Field.settings.colorsCount});
+        }
         return 0;
     }
 
