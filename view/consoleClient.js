@@ -42,6 +42,9 @@ else{
 do{
     console.log(`Шагов осталось: ${game.settings.stepsCounter} (Счёт ${game.currentScore}/${game.settings.maxScore}) - группы не менее ${game.settings.minimalGroup} фишек`);
     game.showField();
+    if(game.settings.stepsCounter){
+        
+    }
     if(game.settings.stepsCounter && !game.scoreAchieved){
         const answer = await rl.question('Введите ряд и столбец Тайла через запятую (Или букву S - Shake):');
         let splitedAnswer = answer.split(",");

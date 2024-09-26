@@ -1,4 +1,4 @@
-import { FieldItem } from './tile.js'
+import { Tile } from './tile.js'
 
 // Класс "игровое поле" ведёт себя как массив с добавлением методов
 export class Field{
@@ -32,7 +32,7 @@ export class Field{
             let row = [];
             matrix.push(row);
             for(let j=0; j<settings.fieldWidth;j++){
-                let item = new FieldItem({colorsCount:settings.colorsCount, 
+                let item = new Tile({colorsCount:settings.colorsCount, 
                                         minimalGroup:settings.minimalGroup});
                 row.push(item);
                 Field.initTopAndLeftFieldItemNeighbour(item, matrix, i, j);
@@ -67,14 +67,11 @@ export class Field{
     }
 
     // Проверить, есть ли во всем игровом поле совпадения (для составления пар перемешиванием)
-    fieldHaveOccurrence(matrix){
+    fieldHaveOccurrence(){
         let allMatrix = [];
-        console.log(matrix);
         for(let i=0; i<Field.settings.fieldHeight; i++){
             this[i].map(item => allMatrix.push(item.color));
         }
-        console.log(allMatrix.length);
-        console.log(new Set(allMatrix).size);
         if(new Set(allMatrix).size !== allMatrix.length){
             return true;
         }
@@ -104,16 +101,16 @@ export class Field{
         }
 
         // Если вообще нет одинаковых цветов во всей матрице, создать "пару"
-        if(!this.fieldHaveOccurrence(this)){
-            try{
+        if(!this.fieldHaveOccurrence(this) 
+            && this[0] != undefined 
+            && this[0][0] != undefined
+            && this[0][1] != undefined){
                 this[0][1].color = this[0][0].color;
                 this[0][0].hasSameNeighbour = true;
                 this[0][1].hasSameNeighbour = true;
-            }
-            catch{
-                console.log("Похоже, задано слишком маленькое игровое поле");
-                return 0;
-            }
+        } else {
+            console.log("Похоже, задано слишком маленькое игровое поле");
+            return 0;
         }
 
         // Обновить ссылки на соседей всех фишек поля
@@ -139,7 +136,7 @@ export class Field{
         for(let i = 0; i< maxBurnedItemsColumn; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){
                 if(i < newItemsGenerationMask[j]){
-                    this[i][j] = new FieldItem({colorsCount:Field.settings.colorsCount, 
+                    this[i][j] = new Tile({colorsCount:Field.settings.colorsCount, 
                                                 minimalGroup:Field.settings.minimalGroup});
                 }
             }

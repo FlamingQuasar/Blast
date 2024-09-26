@@ -1,10 +1,10 @@
-export class FieldItem{
+export class Tile{
     hasSameNeighbour = false;
     static minimalGroupCount;
 
     constructor({colorsCount, minimalGroupCount = 2}){
         this.color = Math.floor(Math.random() * colorsCount);
-        FieldItem.minimalGroupCount = minimalGroupCount;
+        Tile.minimalGroupCount = minimalGroupCount;
     }
 
     // Если совпадение по цвету с соседом есть, указать что у фишки есть группа
