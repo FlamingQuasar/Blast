@@ -1,27 +1,50 @@
-import { FieldItem } from './fieldItem.js'
+import { Tile } from './tile.js'
 
 // Класс "игровое поле" ведёт себя как массив с добавлением методов
 export class Field{
 
     static settings = {};
+
     // Проинициализировать(связать с текущей фишкой) предыдущих "соседей" фишки (сверху и слева)
     static initTopAndLeftFieldItemNeighbour(currentItem, matrix, row, col) {
         currentItem.initNeighbours((col>0) ? matrix[row][col-1] : null,
             (row>0) ? matrix[row-1][col] : null,null,null);
     }
 
-    constructor({settings}){
-        Field.settings = settings;
-        this.matrix = [];
-        for(let i=0; i<Field.settings.fieldHeight; i++){
-            let row = [];
-            this.matrix.push(row);
-            for(let j=0; j<Field.settings.fieldWidth;j++){
-                let item = new FieldItem(Field.settings.colorsCount, Field.settings.minimalGroup);
-                row.push(item);
-                Field.initTopAndLeftFieldItemNeighbour(item, this.matrix, i, j);
+    // Вернуть массив с измененным порядком объектов для присвоения массиву с прямым порядком
+    static swap(leftObj, rightObj){
+        return [rightObj, leftObj];
+    }
+
+    static isEmptySettings(settings = Field.settings){
+        for(const prop in settings){ 
+            if(Object.hasOwn(settings, prop)){
+                return false;
             }
         }
+        return true;
+    }
+
+    static createFieldMatrix(settings = Field.settings){
+        if(Field.isEmptySettings(settings)) return undefined;
+        const matrix = []; // двумерный массив фишек(тайлов) для игрового поля
+        for(let i=0; i<settings.fieldHeight; i++){
+            let row = [];
+            matrix.push(row);
+            for(let j=0; j<settings.fieldWidth;j++){
+                let item = new Tile({colorsCount:settings.colorsCount, 
+                                        minimalGroup:settings.minimalGroup});
+                row.push(item);
+                Field.initTopAndLeftFieldItemNeighbour(item, matrix, i, j);
+            }
+        }
+        return matrix;
+    }
+
+    constructor({settings}={}){
+        Field.settings = settings;
+        this.matrix = Field.createFieldMatrix(); // двумерный массив фишек(тайлов) для игрового поля
+        // Для быстроты работы с массивом-игровым полем, передадим методы класса Field в матрицу 
         this.matrix.tryBurnItemAndGetScore = this.tryBurnItemAndGetScore;
         this.matrix.checkPairs = this.checkPairs;
         this.matrix.replaceAfterBurn = this.replaceAfterBurn;
@@ -29,7 +52,18 @@ export class Field{
         this.matrix.shakeField = this.shakeField;
         this.matrix.updateNeighbourRelations = this.updateNeighbourRelations;
         this.matrix.fieldHaveOccurrence = this.fieldHaveOccurrence;
+        this.matrix.getTileOnPosition = this.getTileOnPosition;
         return this.matrix;
+    }
+
+    /**
+    * Защищенный способ получить Фишку(Тайл) с указанной позиции, если он там есть, иначе вернет false
+    * @param {array} position - позиция [row,col]*/
+    getTileOnPosition([row, col]){
+        if(this[row] != undefined && this[row][col] != undefined){
+            return this[row][col];
+        }
+        return null;
     }
 
     // Проверить, есть ли во всем игровом поле совпадения (для составления пар перемешиванием)
@@ -51,33 +85,29 @@ export class Field{
                 // Позиция фишки-пары для перетасовывания
                 let k = Math.floor(Math.random() * Field.settings.fieldWidth);
                 if(k != j){
-                    const tempObject = this[i][j];
-                    this[i][j] = this[i][k];
-                    this[i][k] = tempObject;
+                    // Поменять местами два случайных тайла с помощью специального хинта;
+                    // наличие метода под повторяющееся дейсnвие - хороший подход
+                    [this[i][j], this[i][k]] = Field.swap(this[i][j], this[i][k]);
                     this[i][j].hasSameNeighbour = false;
                     this[i][k].hasSameNeighbour = false;
                 }
                 // Позиция целой "строки" фишек\тайлов для перетасовывания
                 let m = Math.floor(Math.random() * Field.settings.fieldHeight);
                 if(m != i){
-                    const tempObject = this[i];
-                    this[i] = this[m];
-                    this[m] = tempObject;
+                    // Поменять местами две строки тайлов с помощью специального хинта;
+                    [this[i], this[m]] = Field.swap(this[i], this[m]);
                 }
             }
         }
 
         // Если вообще нет одинаковых цветов во всей матрице, создать "пару"
-        if(!this.fieldHaveOccurrence()){
-            try{
+        if(!this.fieldHaveOccurrence(this) 
+            && this[0] != undefined 
+            && this[0][0] != undefined
+            && this[0][1] != undefined){
                 this[0][1].color = this[0][0].color;
                 this[0][0].hasSameNeighbour = true;
                 this[0][1].hasSameNeighbour = true;
-            }
-            catch{
-                console.log("Похоже, задано слишком маленькое игровое поле");
-                return 0;
-            }
         }
 
         // Обновить ссылки на соседей всех фишек поля
@@ -88,10 +118,9 @@ export class Field{
     tryBurnItemAndGetScore(row, col){
         if(this[row] === undefined 
             || this[row][col] === undefined || this[row][col].c =="_"){
-            console.log("Такой клетки нет");
             return 0; // вернуть 0 очков
         }
-        let scoreToAdd = this[row][col].fireItemReturnScore();
+        let scoreToAdd = this[row][col].fireTileReturnScore();
         return scoreToAdd; // вернуть 0 очков прибавки
     }
     
@@ -103,7 +132,8 @@ export class Field{
         for(let i = 0; i< maxBurnedItemsColumn; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){
                 if(i < newItemsGenerationMask[j]){
-                    this[i][j] = new FieldItem(Field.settings.colorsCount, Field.settings.minimalGroup);
+                    this[i][j] = new Tile({colorsCount:Field.settings.colorsCount, 
+                                                minimalGroup:Field.settings.minimalGroup});
                 }
             }
         }
@@ -114,7 +144,7 @@ export class Field{
     // Обновить ссылки на соседей всех фишек поля
     updateNeighbourRelations(){
         for(let i=0; i<Field.settings.fieldHeight; i++){
-            for(let j=0; j<Field.settings.fieldWidth; j++){                
+            for(let j=0; j<Field.settings.fieldWidth; j++){
                 Field.initTopAndLeftFieldItemNeighbour(this[i][j], this, i, j);
             }
         }
@@ -124,26 +154,24 @@ export class Field{
     replaceAfterBurn(showBurnedTiles = false){
         // Подготовить массив счетчиков для генерации новых фишек
         let newItemsGenerationMask = [];
-        for(let i=0; i<Field.settings.fieldWidth; i++) 
+        for(let i=0; i<Field.settings.fieldWidth; i++)
             newItemsGenerationMask.push(0);
 
         // Обойти игровое поле снизу вверх        
         for(let i=Field.settings.fieldHeight-1; i>=0; i--){
             for(let j=0; j<Field.settings.fieldWidth; j++){
-                if(this[i][j].color == "_"){
-                    // Попробовать сдвинуть на её место ближайшую фишку сверху
-                    if(i-1>=0){
-                        for(let k=i-1; k>=0; k--){                        
-                            if(this[k][j].color != "_"){
-                                const tempObject = this[i][j];
-                                this[i][j] = this[k][j];
-                                this[k][j] = tempObject;
-                                this[k][j].hasSameNeighbour = false;
-                                this[i][j].hasSameNeighbour = false;
-                                break;
-                            }
+                // текущее место - сгоревшее и есть куда двигать
+                if(this[i][j].color == "_" && i-1 >= 0){
+                    // Попробовать сдвинуть на "сгоревшее" место ближайшую фишку сверху
+                    for(let k=i-1; k>=0; k--){                        
+                        if(this[k][j].color != "_"){
+                            // Поменять местами два тайла с помощью специального хинта;
+                            [this[i][j], this[k][j]] = Field.swap(this[i][j], this[k][j]);
+                            this[k][j].hasSameNeighbour = false;
+                            this[i][j].hasSameNeighbour = false;
+                            break;
                         }
-                    }
+                    }                    
                 }
             }
         }
@@ -159,6 +187,7 @@ export class Field{
                 Field.initTopAndLeftFieldItemNeighbour(this[i][j], this, i, j);
             }
         }
+
         // Показать если надо промежуточную матрицу с пустотами
         if(showBurnedTiles){
             let fieldMatrix = "";

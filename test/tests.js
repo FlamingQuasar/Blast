@@ -1,4 +1,5 @@
 import { BlastGame } from '../src/core/blastGame.js'
+import { Field } from '../src/core/field.js'
 import { expect } from "chai"
 
 describe('BlastGame class', function () {
@@ -20,8 +21,49 @@ describe('BlastGame class', function () {
             });
         });
     }
+    describe('static Field.isEmptySettings()', function(){
+        it('Field.settings пусты, вернет "true"', function(){
+            expect(Field.isEmptySettings({})).to.equal(true);
+        })
+        it('Field.settings заданы, вернет "false"', function(){
+            let game = new BlastGame({n:5, m:10, c:6});
+            expect(Field.isEmptySettings()).to.equal(false);
+        })
+    });
+    describe('field.fieldHaveOccurrence()', function(){
+        it('field.fieldHaveOccurrence - метод находит повтор элемента в игровом поле', function(){
+            const game = new BlastGame({n:5, m:10, c:6});
+            game.field[0][1].c = game.field[0][0].c;
+            expect(game.field.fieldHaveOccurrence()).to.equal(true);
+        });
+    });
+    describe('field.getTileOnPosition([row, col])', function(){
+        it('field.getTileOnPosition([row, col]) возвращает null в случае когда в данной позиции ничего нет',function(){
+            const game = new BlastGame({n:5, m:10, c:6});
+            expect(game.field.getTileOnPosition([100, 100])).to.equal(null);
+        });        
+        it('field.getTileOnPosition([row, col]) возвращает Tile когда в данной позиции есть Фишка(тайл)',function(){
+            const game = new BlastGame({n:5, m:10, c:6});
+            expect(game.field.getTileOnPosition([0, 0])).to.equal(game.field[0][0]);
+        });
+    });
     
-    
+    describe('Field.swap', function(){
+        it('Field.swap меняет местами значения двух примитивов number', function(){
+            let firstNumber = 1;
+            let secondNumber = 2;
+            [firstNumber, secondNumber] = Field.swap(firstNumber, secondNumber);
+            expect(firstNumber).to.equal(2);
+            expect(secondNumber).to.equal(1);
+        });
+        it('Field.swap меняет местами значения двух объектов {x:number}', function(){
+            let firstNumber = {x:1};
+            let secondNumber = {x:2};
+            [firstNumber, secondNumber] = Field.swap(firstNumber, secondNumber);
+            expect(firstNumber.x).to.equal(2);
+            expect(secondNumber.x).to.equal(1);
+        });
+    });    
     describe('BlastGame.hasPairs', function(){
         it('new BlastGame() всегда создает поле с >=1й парой соседних фишек (game.hasPairs == true)', function(){
             let game = new BlastGame({n:5, m:10, c:6});
@@ -42,4 +84,9 @@ describe('BlastGame class', function () {
             expect(game.settings.minimalGroup).to.equal(3);
         });
     });
+    // конструктор базового класса бустеров
+    // конструктор бустера-телепорта
+    // конструктор бустера-бомбы
+    // экшн бустера-телепорта
+    // экшн бустера-бомбы
 });

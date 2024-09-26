@@ -2,9 +2,17 @@ import { Settings } from './settings.js'
 import { Field } from './field.js'
 import { GameState } from './gameState.js'
 
-export class BlastGame{
-    
-    constructor({n, m, c, k=2, maxScore=1000, stepsCounter=10}){  
+export class BlastGame{    
+    /**
+    * Конструктор для создания Игры Бласт
+    * @constructor
+    * @param {number} n - Высота игрового поля
+    * @param {number} m - Ширина игрового поля
+    * @param {number} c - Количество цветов тайлов (фишек)
+    * @param {number} k=2 - Минимальный размер групп
+    */
+    constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10, s=3, bustersSettings = null}){
+        //TODO Обновить синглтон Сеттингс - добавить shake и bustersSettings
         this.settings = new Settings({
             fieldHeight : n,
             fieldWidth : m,
@@ -78,11 +86,13 @@ export class BlastGame{
 
     // Активировать фишку в ячейке игрового поля
     activateFieldItem(row, col, showConsoleLog = false){
-        // если row и col undefined и stepsCounter не надо убавлять
-        if((undefined == (row && col)) ?? true) return true;
+        // если row и col undefined и stepsCounter не надо убавлять        
+        if((undefined == (row && col)) ?? true){
+            return true;
+        }
         if(this.settings.stepsCounter){
             // Прибавить счет, если фишки сгорят
-            const newScoreToAdd = this.field.tryBurnItemAndGetScore(row,col);            
+            const newScoreToAdd = this.field.tryBurnItemAndGetScore(row,col);
             if(newScoreToAdd){
                 this.currentScore += newScoreToAdd;
                 this.replaceItemsAfterFire(showConsoleLog);
