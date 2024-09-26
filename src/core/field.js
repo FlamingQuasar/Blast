@@ -70,7 +70,7 @@ export class Field{
     fieldHaveOccurrence(){
         let allMatrix = [];
         for(let i=0; i<Field.settings.fieldHeight; i++){
-            this[i].map(item => allMatrix.push(item.color));
+            this[i].map(item => allMatrix.push(item.tileType));
         }
         if(new Set(allMatrix).size !== allMatrix.length){
             return true;
@@ -105,7 +105,7 @@ export class Field{
             && this[0] != undefined 
             && this[0][0] != undefined
             && this[0][1] != undefined){
-                this[0][1].color = this[0][0].color;
+                this[0][1].tileType = this[0][0].tileType;
                 this[0][0].hasSameNeighbour = true;
                 this[0][1].hasSameNeighbour = true;
         }
@@ -124,6 +124,10 @@ export class Field{
         return scoreToAdd; // вернуть 0 очков прибавки
     }
     
+    generateTileWithBonusesProbability(){
+
+    }
+
     // Сгенерировать сверху новые фишки после "сгоревших"
     // param "newItemsGenerationMask" массив-"маска" количества пустых тайлов в каждом столбце
     generateNewFieldItems(newItemsGenerationMask = []){
@@ -161,10 +165,10 @@ export class Field{
         for(let i=Field.settings.fieldHeight-1; i>=0; i--){
             for(let j=0; j<Field.settings.fieldWidth; j++){
                 // текущее место - сгоревшее и есть куда двигать
-                if(this[i][j].color == "_" && i-1 >= 0){
+                if(this[i][j].tileType == "_" && i-1 >= 0){
                     // Попробовать сдвинуть на "сгоревшее" место ближайшую фишку сверху
                     for(let k=i-1; k>=0; k--){                        
-                        if(this[k][j].color != "_"){
+                        if(this[k][j].tileType != "_"){
                             // Поменять местами два тайла с помощью специального хинта;
                             [this[i][j], this[k][j]] = Field.swap(this[i][j], this[k][j]);
                             this[k][j].hasSameNeighbour = false;
@@ -179,7 +183,7 @@ export class Field{
         // Проинициализировать соседние фишки (связать соседей)
         for(let i=0; i<Field.settings.fieldHeight; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){                
-                if(this[i][j].color == "_"){
+                if(this[i][j].tileType == "_"){
                     // Если фишка при обходе снизу "сгоревшая" - прибавить счетчик необходимых к генерации фишек
                     newItemsGenerationMask[j]++;
                 }
@@ -193,7 +197,7 @@ export class Field{
             let fieldMatrix = "";
             for(let i=0; i<Field.settings.fieldHeight; i++){
                 for(let j=0; j<Field.settings.fieldWidth;j++){
-                    fieldMatrix += `${this[i][j].color} \t`;
+                    fieldMatrix += `${this[i][j].tileType} \t`;
                 }
                 fieldMatrix += "\n";
             }

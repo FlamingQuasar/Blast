@@ -35,7 +35,7 @@ if(setupAnswer == "y"){
     });
 }
 else{
-    game = new BlastGame({n:3, m:3, c:9, k:2, maxScore:100, stepsCounter:3, s:3});
+    game = new BlastGame({n:5, m:6, c:9, k:2, maxScore:100, stepsCounter:3, s:3});
 }
 
 let {row, column} = {};

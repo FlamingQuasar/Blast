@@ -65,10 +65,10 @@ export class BlastGame{
         for(let i=0; i<this.settings.fieldHeight; i++){
             for(let j=0; j<this.settings.fieldWidth;j++){
                 if(onlyPairs){
-                    fieldMatrix += `${this.field[i][j].hasSameNeighbour? this.field[i][j].color:"."} \t`;
+                    fieldMatrix += `${this.field[i][j].hasSameNeighbour? this.field[i][j].tileType:"."} \t`;
                 }
                 else{
-                    fieldMatrix += `${this.field[i][j].color} \t`;
+                    fieldMatrix += `${this.field[i][j].tileType} \t`;
                 }
             }
             fieldMatrix += "\n";

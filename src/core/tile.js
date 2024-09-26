@@ -3,13 +3,13 @@ export class Tile{
     static minimalGroupCount;
 
     constructor({colorsCount, minimalGroupCount = 2}){
-        this.color = Math.floor(Math.random() * colorsCount);
+        this.tileType = Math.floor(Math.random() * colorsCount);
         Tile.minimalGroupCount = minimalGroupCount;
     }
 
     // Если совпадение по цвету с соседом есть, указать что у фишки есть группа
     checkNeighbourColorAndPush(neighbour){
-        if(neighbour?.color === this.color){
+        if(neighbour?.tileType === this.tileType){
             this.hasSameNeighbour = neighbour.hasSameNeighbour = true;
         }
     }
@@ -18,26 +18,25 @@ export class Tile{
     // {rate} коэффициент умножения цены очков за нажатую фишку 
     fireTileReturnScore(rate=1){
         let scoreToAdd = 0;
-        console.log("this.hasSameNeighbour: "+this.hasSameNeighbour);
         if(this.hasSameNeighbour){
             this.hasSameNeighbour = false;
-            if(this.left?.color == this.color && this.left?.hasSameNeighbour){
+            if(this.left?.tileType == this.tileType && this.left?.hasSameNeighbour){
                 scoreToAdd += this.left.fireTileReturnScore();
                 rate +=1;
             }
-            if(this.top?.color == this.color && this.top?.hasSameNeighbour){
+            if(this.top?.tileType == this.tileType && this.top?.hasSameNeighbour){
                 scoreToAdd += this.top.fireTileReturnScore();
                 rate +=1;
             }
-            if(this.right?.color == this.color && this.right?.hasSameNeighbour){
+            if(this.right?.tileType == this.tileType && this.right?.hasSameNeighbour){
                 scoreToAdd += this.right.fireTileReturnScore();
                 rate +=1;
             }
-            if(this.bottom?.color == this.color && this.bottom?.hasSameNeighbour){
+            if(this.bottom?.tileType == this.tileType && this.bottom?.hasSameNeighbour){
                 scoreToAdd += this.bottom.fireTileReturnScore();
                 rate +=1;
             }
-            this.color = "_";
+            this.tileType = "_";
             scoreToAdd += 10 * rate;
         }
         return scoreToAdd;
