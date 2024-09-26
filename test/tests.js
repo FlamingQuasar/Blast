@@ -1,4 +1,5 @@
 import { BlastGame } from '../src/core/blastGame.js'
+import { BombBooster, TeleportBooster } from '../src/core/field/booster.js';
 import { Field } from '../src/core/field/field.js'
 import { expect } from "chai"
 
@@ -88,6 +89,30 @@ describe('BlastGame class', function () {
             expect(game.field.checkIfFieldHaveTile("x")).to.equal(false);
         });
     });
+
+    describe('field.generateTileWithBoostersProbability()', function(){
+        it('field.generateTileWithBoostersProbability({bombProbability:100}) возвращает BombBooster', function(){
+            let game = new BlastGame({n:5, m:10, c:6});
+            let tile = game.field.generateTileWithBoostersProbability({bombProbability:100});
+            expect(tile instanceof BombBooster).to.equal(true);
+        });
+        it('field.generateTileWithBoostersProbability({bombProbability:0}) не возвращает BombBooster', function(){
+            let game = new BlastGame({n:5, m:10, c:6});
+            let tile = game.field.generateTileWithBoostersProbability({bombProbability:0});
+            expect(tile instanceof BombBooster).to.equal(false);
+        }); 
+        it('field.generateTileWithBoostersProbability({teleportProbability:100}) не возвращает TeleportBooster', function(){
+            let game = new BlastGame({n:5, m:10, c:6});
+            let tile = game.field.generateTileWithBoostersProbability({bombProbability:100});
+            expect(tile instanceof TeleportBooster).to.equal(false);
+        }); 
+        it('field.generateTileWithBoostersProbability({teleportProbability:0}) не возвращает TeleportBooster', function(){
+            let game = new BlastGame({n:5, m:10, c:6});
+            let tile = game.field.generateTileWithBoostersProbability({bombProbability:0});
+            expect(tile instanceof TeleportBooster).to.equal(false);
+        }); 
+    });
+
     describe('BlastGame.hasPairs', function(){
         it('new BlastGame() всегда создает поле с >=1й парой соседних фишек (game.hasPairs == true)', function(){
             let game = new BlastGame({n:5, m:10, c:6});

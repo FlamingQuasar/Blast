@@ -1,3 +1,4 @@
+import { BombBooster, TeleportBooster } from './booster.js';
 import { Tile } from './tile.js'
 
 // Класс "игровое поле" ведёт себя как массив с добавлением методов
@@ -33,7 +34,7 @@ export class Field{
             matrix.push(row);
             for(let j=0; j<settings.fieldWidth;j++){
                 let item = new Tile({colorsCount:settings.colorsCount, 
-                                        minimalGroup:settings.minimalGroup});
+                                minimalGroup:settings.minimalGroup});
                 row.push(item);
                 Field.initTopAndLeftFieldItemNeighbour(item, matrix, i, j);
             }
@@ -53,7 +54,7 @@ export class Field{
         this.matrix.updateNeighbourRelations = this.updateNeighbourRelations;
         this.matrix.fieldHaveOccurrence = this.fieldHaveOccurrence;
         this.matrix.getTileOnPosition = this.getTileOnPosition;
-        this.matrix.generateTileWithBonusesProbability = this.generateTileWithBonusesProbability;
+        this.matrix.generateTileWithBoostersProbability = this.generateTileWithBoostersProbability;
         this.matrix.checkIfFieldHaveTile = this.checkIfFieldHaveTile;
         return this.matrix;
     }
@@ -145,13 +146,24 @@ export class Field{
     * @param {object.number} bombProbability - вероятность появления бомбы
     * @param {object.string} teleportProbability - вероятность появления телепорта
     */
-    generateTileWithBonusesProbability({bombProbability, teleportProbability}={}){
-        if(bombProbability>0){
-
+    generateTileWithBoostersProbability({bombProbability=0.1, teleportProbability=0.1}){
+        let tileToReturn = null;
+        if(bombProbability>0 && !this.checkIfFieldHaveTile(BombBooster.TILETYPE)){
+            // Проверить, есть ли на карте бонус-бомба если нет, добавить вероятность его появления
+            if( Math.random()+bombProbability/100 >= 1){
+                tileToReturn = new BombBooster();
+            }
         }
-        // Проверить, есть ли на карте бонус-бомба если нет, добавить вероятность его появления
-        // Проверить, есть ли на карте бонус-телепорт, если нет, добавить вероятность его появления
+        if(teleportProbability>0 && !this.checkIfFieldHaveTile(TeleportBooster.TILETYPE)){
+            // Проверить, есть ли на карте бонус-телепорт, если нет, добавить вероятность его появления
+            if( Math.random()+teleportProbability/100 >= 1){
+                tileToReturn = new TeleportBooster();
+            }
+        }
         // Если вероятности не сработали, добавить простой тайл
+        return (tileToReturn != null) ? tileToReturn : 
+            new Tile({colorsCount:Field.settings.colorsCount, 
+                minimalGroup:Field.settings.minimalGroup});
     }
 
     /**
@@ -165,8 +177,10 @@ export class Field{
         for(let i = 0; i< maxBurnedItemsColumn; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){
                 if(i < newTilesGenerationMask[j]){
-                    this[i][j] = new Tile({colorsCount:Field.settings.colorsCount, 
-                                                minimalGroup:Field.settings.minimalGroup});
+                    this[i][j] = this.generateTileWithBoostersProbability({bombProbability:0, 
+                                                                        teleportProbability:0});
+                    //new Tile({colorsCount:Field.settings.colorsCount, 
+                      //                          minimalGroup:Field.settings.minimalGroup});
                 }
             }
         }

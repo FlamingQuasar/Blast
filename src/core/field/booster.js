@@ -1,4 +1,4 @@
-import { Tile } from "./tile";
+import { Tile } from "./tile.js";
 
 export class Booster extends Tile{
     /**
@@ -6,7 +6,8 @@ export class Booster extends Tile{
     * @constructor
     * @param {object} field - Текущее игровое поле
     */
-    constructor({field}){
+    constructor({field}={}){
+        super({colorsCount:0});
         this.field = field;
         this.doAction.bind(this);
     }
@@ -21,7 +22,12 @@ export class Booster extends Tile{
     _doAction(){}
 }
 
+export class BombBooster extends Booster{
+    static TILETYPE = "b";
+}
+
 export class TeleportBooster extends Booster{
+    static TILETYPE = "t";
 /**
     * Бустер-телепорт принимает аргументом метод ожидания второй клетки для перестановки
     * @constructor
