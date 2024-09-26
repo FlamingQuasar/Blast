@@ -86,7 +86,7 @@ export class BlastGame{
 
     // Активировать фишку в ячейке игрового поля
     activateFieldItem(row, col, showConsoleLog = false){
-        // если row и col undefined и stepsCounter не надо убавлять
+        // если row и col undefined и stepsCounter не надо убавлять        
         if((undefined == (row && col)) ?? true) return true;
         if(this.settings.stepsCounter){
             // Прибавить счет, если фишки сгорят
