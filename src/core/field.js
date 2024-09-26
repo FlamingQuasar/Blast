@@ -54,6 +54,7 @@ export class Field{
         this.matrix.fieldHaveOccurrence = this.fieldHaveOccurrence;
         this.matrix.getTileOnPosition = this.getTileOnPosition;
         this.matrix.generateTileWithBonusesProbability = this.generateTileWithBonusesProbability;
+        this.matrix.checkIfFieldHaveBooster = this.checkIfFieldHaveBooster;
         return this.matrix;
     }
 
@@ -130,7 +131,13 @@ export class Field{
     * @param {string} boosterType - тип бустера
     */
     checkIfFieldHaveBooster(boosterType){
-
+        for(let i=0; i<Field.settings.fieldHeight; i++){
+            for(let j=0; j<Field.settings.fieldWidth; j++){
+                if(this[i][j].tileType == boosterType)
+                    return true;
+            }
+        }
+        return false;
     }
 
     /**

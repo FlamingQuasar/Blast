@@ -63,7 +63,19 @@ describe('BlastGame class', function () {
             expect(firstNumber.x).to.equal(2);
             expect(secondNumber.x).to.equal(1);
         });
-    });    
+    });
+    describe('field.checkIfFieldHaveBooster', function(){
+        /*it('checkIfFieldHaveBooster(booster) возвращает true когда находит тестовый бустер среди игрового поля', function(){
+            let game = new BlastGame({n:5, m:10, c:6});
+            let tile = game.field.getTileOnPosition(0,0);
+            //tile.tileType = "x";
+            expect(game.field.checkIfFieldHaveBooster("x")).to.equal(true);
+        });*/
+        it('checkIfFieldHaveBooster(booster) возвращает false когда не находит тестовый бустер среди игрового поля', function(){
+            let game = new BlastGame({n:5, m:10, c:6});
+            expect(game.field.checkIfFieldHaveBooster("test")).to.equal(false);
+        });
+    });
     describe('BlastGame.hasPairs', function(){
         it('new BlastGame() всегда создает поле с >=1й парой соседних фишек (game.hasPairs == true)', function(){
             let game = new BlastGame({n:5, m:10, c:6});
