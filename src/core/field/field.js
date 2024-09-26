@@ -151,13 +151,13 @@ export class Field{
         if(bombProbability>0 && !this.checkIfFieldHaveTile(BombBooster.TILETYPE)){
             // Проверить, есть ли на карте бонус-бомба если нет, добавить вероятность его появления
             if( Math.random()+bombProbability/100 >= 1){
-                tileToReturn = new BombBooster();
+                tileToReturn = new BombBooster({field:this});
             }
         }
         if(teleportProbability>0 && !this.checkIfFieldHaveTile(TeleportBooster.TILETYPE)){
             // Проверить, есть ли на карте бонус-телепорт, если нет, добавить вероятность его появления
             if( Math.random()+teleportProbability/100 >= 1){
-                tileToReturn = new TeleportBooster();
+                tileToReturn = new TeleportBooster({field:this});
             }
         }
         // Если вероятности не сработали, добавить простой тайл
@@ -177,10 +177,8 @@ export class Field{
         for(let i = 0; i< maxBurnedItemsColumn; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){
                 if(i < newTilesGenerationMask[j]){
-                    this[i][j] = this.generateTileWithBoostersProbability({bombProbability:0, 
-                                                                        teleportProbability:0});
-                    //new Tile({colorsCount:Field.settings.colorsCount, 
-                      //                          minimalGroup:Field.settings.minimalGroup});
+                    this[i][j] = this.generateTileWithBoostersProbability({bombProbability:90, 
+                                                                        teleportProbability:90});
                 }
             }
         }

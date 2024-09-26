@@ -24,6 +24,10 @@ export class Booster extends Tile{
 
 export class BombBooster extends Booster{
     static TILETYPE = "b";
+    constructor({field}){
+        super({field});
+        this.tileType = BombBooster.TILETYPE;
+    }
 }
 
 export class TeleportBooster extends Booster{
@@ -34,8 +38,9 @@ export class TeleportBooster extends Booster{
     * @param {object} field - Текущее игровое поле
     * @param {function} clickSecondItemToSwap - функция выбора второй фишки(тайла) для смены с первым
     */
-    constructor({field, clickSecondItemToSwap}){ // field возможно лучше заменить на game.field
+    constructor({field, clickSecondItemToSwap=()=>{}}){ // field возможно лучше заменить на game.field
         super({field});
+        this.tileType = TeleportBooster.TILETYPE;
         this.clickSecondItemToSwap = clickSecondItemToSwap;
         /*this._doAction = ()=>{
             console.log("additional action");
@@ -44,13 +49,13 @@ export class TeleportBooster extends Booster{
     }
 
     _doAction(position){
-        let firstItem = this.field.getTileOnPosition(position);
+        /*let firstItem = this.field.getTileOnPosition(position);
         let secondItem = this.field.getTileOnPosition(this.clickSecondItemToSwap());
         if(firstItem != null && secondItem != null){
             [firstItem, secondItem] = Field.swap(firstItem, secondItem);
             // тут можно callbackEffect(); или return true и проигрыш анимации
             console.log("additional action 2");
             console.log(position);
-        }
+        }*/
     }
 }
