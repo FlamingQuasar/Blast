@@ -1,45 +1,50 @@
+import { Tile } from "./tile";
 
-class Booster{
-    static boosterType = {BOMB:"BOMB", TELEPORT:"TELEPORT"} // возможно надо убрать
+export class Booster extends Tile{
     /**
-    * Базовый класс \ интерфейс для Бустеров
+    * Базовый класс для Бустеров, в игре нет "просто" бустеров
     * @constructor
-    * @param {number} charge - Количество зарядов бустера
     * @param {object} field - Текущее игровое поле
     */
-    constructor({charge, field}){
-        this.charge = charge;
+    constructor({field}){
         this.field = field;
         this.doAction.bind(this);
     }
 
+    /**
+    * Общий метод для вызова дейтсвия бустера
+    * @param {object} field - Текущее игровое поле
+    */
     doAction({position, callback}={}){ //аргументы возможно надо удалить
-        if(this.charge > 0){
-            console.log("base action");
-            this._doAction(position);
-            this.charge --;
-        }
+        this._doAction(position);
     }
     _doAction(){}
 }
 
-class TeleportBooster extends Booster{
-
-    constructor({charge, field, clickSecondItemToSwap}){
-        super({charge, field});
+export class TeleportBooster extends Booster{
+/**
+    * Бустер-телепорт принимает аргументом метод ожидания второй клетки для перестановки
+    * @constructor
+    * @param {object} field - Текущее игровое поле
+    * @param {function} clickSecondItemToSwap - функция выбора второй фишки(тайла) для смены с первым
+    */
+    constructor({field, clickSecondItemToSwap}){ // field возможно лучше заменить на game.field
+        super({field});
         this.clickSecondItemToSwap = clickSecondItemToSwap;
-        this.type = Booster.boosterType.TELEPORT; // возможно надо убрать
         /*this._doAction = ()=>{
             console.log("additional action");
         };*/
         this.doAction({position:[2,3]});
     }
+
     _doAction(position){
         let firstItem = this.field.getItemOnPosition(position);
         let secondItem = this.field.getItemOnPosition(this.clickSecondItemToSwap());
-        [firstItem, secondItem] = Field.swap(firstItem, secondItem);
-        // тут можно callbackEffect(); или return true и проигрыш анимации
-        console.log("additional action 2");
-        console.log(position);
+        if(firstItem != null && secondItem != null){
+            [firstItem, secondItem] = Field.swap(firstItem, secondItem);
+            // тут можно callbackEffect(); или return true и проигрыш анимации
+            console.log("additional action 2");
+            console.log(position);
+        }
     }
 }

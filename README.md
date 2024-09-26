@@ -2,7 +2,8 @@
 blast videogame example
 
 ## Консольный клиент
-Для запуска консольного клиента надо вызвать: **node view/gameinconsole.js**
+Для запуска консольного клиента надо вызвать: 
+ **node view/consoleClient.js**
 
 ## Автотесты
 1. Для установки автотестов нужно: **npm install**
