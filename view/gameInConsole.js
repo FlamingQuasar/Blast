@@ -14,7 +14,7 @@ let {row, column} = {};
 const setupAnswer = await rl.question('Настроить игровые параметры? (y / n)');
 // Настройка игры через консоль
 if(setupAnswer == "y"){
-    const setupParamsAnswer = await rl.question('Задайте через \",\" Высоту(n), Ширину(m), Число цветов(c), Число очков для победы, Доступно шагов, Доступно встрясок:\n');
+    const setupParamsAnswer = await rl.question('Задайте через \",\" Высоту(n), Ширину(m), Число цветов(c), Число очков для победы, Доступно шагов, Доступно перемешиваний:\n');
     const params = setupParamsAnswer.split[','];
     const bustersSetupAnswer = await rl.question('Настроить бустеры? (y / n)');
     if(bustersSetupAnswer == "y"){
@@ -30,11 +30,12 @@ if(setupAnswer == "y"){
         n: +params[0], m: +params[1], 
         c: +params[2], k:2, maxScore: +params[3], 
         stepsCounter: +params[4],
+        s : +params[5],
         bustersSettings : bustersSettings
     });
 }
 else{
-    game = new BlastGame({n:3, m:3, c:9, k:2, maxScore:100, stepsCounter:3});
+    game = new BlastGame({n:3, m:3, c:9, k:2, maxScore:100, stepsCounter:3, s:3});
 }
 
 // Основной цикл

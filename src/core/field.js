@@ -4,10 +4,16 @@ import { FieldItem } from './fieldItem.js'
 export class Field{
 
     static settings = {};
+
     // Проинициализировать(связать с текущей фишкой) предыдущих "соседей" фишки (сверху и слева)
     static initTopAndLeftFieldItemNeighbour(currentItem, matrix, row, col) {
         currentItem.initNeighbours((col>0) ? matrix[row][col-1] : null,
             (row>0) ? matrix[row-1][col] : null,null,null);
+    }
+
+    // Вернуть массив с измененным порядком объектов для присвоения массиву с прямым порядком
+    static swap(leftObj, rightObj){
+        return [rightObj, leftObj];
     }
 
     constructor({settings}){
@@ -51,18 +57,17 @@ export class Field{
                 // Позиция фишки-пары для перетасовывания
                 let k = Math.floor(Math.random() * Field.settings.fieldWidth);
                 if(k != j){
-                    const tempObject = this[i][j];
-                    this[i][j] = this[i][k];
-                    this[i][k] = tempObject;
+                    // Поменять местами два случайных тайла с помощью специального хинта;
+                    // наличие метода под повторяющееся дейсnвие - хороший подход
+                    [this[i][j], this[i][k]] = Field.swap(this[i][j], this[i][k]);
                     this[i][j].hasSameNeighbour = false;
                     this[i][k].hasSameNeighbour = false;
                 }
                 // Позиция целой "строки" фишек\тайлов для перетасовывания
                 let m = Math.floor(Math.random() * Field.settings.fieldHeight);
                 if(m != i){
-                    const tempObject = this[i];
-                    this[i] = this[m];
-                    this[m] = tempObject;
+                    // Поменять местами две строки тайлов с помощью специального хинта;
+                    [this[i], this[m]] = Field.swap(this[i], this[m]);
                 }
             }
         }
@@ -124,26 +129,24 @@ export class Field{
     replaceAfterBurn(showBurnedTiles = false){
         // Подготовить массив счетчиков для генерации новых фишек
         let newItemsGenerationMask = [];
-        for(let i=0; i<Field.settings.fieldWidth; i++) 
+        for(let i=0; i<Field.settings.fieldWidth; i++)
             newItemsGenerationMask.push(0);
 
         // Обойти игровое поле снизу вверх        
         for(let i=Field.settings.fieldHeight-1; i>=0; i--){
             for(let j=0; j<Field.settings.fieldWidth; j++){
-                if(this[i][j].color == "_"){
-                    // Попробовать сдвинуть на её место ближайшую фишку сверху
-                    if(i-1>=0){
-                        for(let k=i-1; k>=0; k--){                        
-                            if(this[k][j].color != "_"){
-                                const tempObject = this[i][j];
-                                this[i][j] = this[k][j];
-                                this[k][j] = tempObject;
-                                this[k][j].hasSameNeighbour = false;
-                                this[i][j].hasSameNeighbour = false;
-                                break;
-                            }
+                // текущее место - сгоревшее и есть куда двигать
+                if(this[i][j].color == "_" && i-1 >= 0){
+                    // Попробовать сдвинуть на "сгоревшее" место ближайшую фишку сверху
+                    for(let k=i-1; k>=0; k--){                        
+                        if(this[k][j].color != "_"){
+                            // Поменять местами два тайла с помощью специального хинта;
+                            [this[i][j], this[k][j]] = Field.swap(this[i][j], this[k][j]);
+                            this[k][j].hasSameNeighbour = false;
+                            this[i][j].hasSameNeighbour = false;
+                            break;
                         }
-                    }
+                    }                    
                 }
             }
         }
@@ -159,6 +162,7 @@ export class Field{
                 Field.initTopAndLeftFieldItemNeighbour(this[i][j], this, i, j);
             }
         }
+
         // Показать если надо промежуточную матрицу с пустотами
         if(showBurnedTiles){
             let fieldMatrix = "";

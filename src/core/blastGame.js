@@ -11,7 +11,8 @@ export class BlastGame{
     * @param {number} c - Количество цветов тайлов (фишек)
     * @param {number} k=2 - Минимальный размер групп
     */
-    constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10, bustersSettings = null}){  
+    constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10, s=3, bustersSettings = null}){
+        //TODO Обновить синглтон Сеттингс - добавить shake и bustersSettings
         this.settings = new Settings({
             fieldHeight : n,
             fieldWidth : m,
