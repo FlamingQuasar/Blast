@@ -53,6 +53,7 @@ export class Field{
         this.matrix.updateNeighbourRelations = this.updateNeighbourRelations;
         this.matrix.fieldHaveOccurrence = this.fieldHaveOccurrence;
         this.matrix.getTileOnPosition = this.getTileOnPosition;
+        this.matrix.generateTileWithBonusesProbability = this.generateTileWithBonusesProbability;
         return this.matrix;
     }
 
@@ -124,14 +125,32 @@ export class Field{
         return scoreToAdd; // вернуть 0 очков прибавки
     }
     
-    generateTileWithBonusesProbability(){
+    /**
+    * Проверить, есть ли уже на Игровом поле бустер данного типа
+    * @param {string} boosterType - тип бустера
+    */
+    checkIfFieldHaveBooster(boosterType){
 
     }
 
-    // Сгенерировать сверху новые фишки после "сгоревших"
-    // param "newItemsGenerationMask" массив-"маска" количества пустых тайлов в каждом столбце
+    /**
+    * Сгенерировать либо тайл, либо бонус, если бонус данного типа еще не находится на карте
+    * @param {object.number} bombProbability - вероятность появления бомбы
+    * @param {object.string} teleportProbability - вероятность появления телепорта
+    */
+    generateTileWithBonusesProbability({bombProbability, teleportProbability}={}){
+        // Проверить, есть ли на карте бонус-бомба если нет, добавить вероятность его появления
+        // Проверить, есть ли на карте бонус-телепорт, если нет, добавить вероятность его появления
+        // Если вероятности не сработали, добавить простой тайл
+    }
+
+    /**
+    * Сгенерировать сверху новые фишки после "сгоревших"
+    * @param {array} newItemsGenerationMask - массив-"маска" количества пустых тайлов в каждом столбце
+    */
     generateNewFieldItems(newItemsGenerationMask = []){
         if(!newItemsGenerationMask.length) return;
+        // добавить 100% появление супер-тайла если маска сгоревшей группы больше L
         let maxBurnedItemsColumn = Math.max(...newItemsGenerationMask);
         for(let i = 0; i< maxBurnedItemsColumn; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){
