@@ -119,8 +119,8 @@ export class Field{
 
     // Попробовать "сжечь фишки" при активации ячейки
     activateTileAndGetScore(row, col){
-        if(this[row] === undefined 
-            || this[row][col] === undefined || this[row][col].c =="_"){
+        if(this[row] === undefined || this[row][col] === undefined 
+            || this[row][col].tileType === "_"){
             return 0; // вернуть 0 очков
         }
         let scoreToAdd = this[row][col].fireTileReturnScore();

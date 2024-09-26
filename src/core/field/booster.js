@@ -47,6 +47,11 @@ export class TeleportBooster extends Booster{
         };*/
         this.doAction({position:[2,3]});
     }
+    fireTileReturnScore(){
+        // включить метод ожидания получения второго тайла для свапа
+        console.log("TELEPORT");
+        return 0;
+    }
 
     _doAction(position){
         /*let firstItem = this.field.getTileOnPosition(position);
