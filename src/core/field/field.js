@@ -46,7 +46,7 @@ export class Field{
         Field.settings = settings;
         this.matrix = Field.createFieldMatrix(); // двумерный массив фишек(тайлов) для игрового поля
         // Для быстроты работы с массивом-игровым полем, передадим методы класса Field в матрицу 
-        this.matrix.tryBurnItemAndGetScore = this.tryBurnItemAndGetScore;
+        this.matrix.activateTileAndGetScore = this.activateTileAndGetScore;
         this.matrix.checkPairs = this.checkPairs;
         this.matrix.replaceAfterBurn = this.replaceAfterBurn;
         this.matrix.generateNewTiles = this.generateNewTiles;
@@ -118,7 +118,7 @@ export class Field{
     }
 
     // Попробовать "сжечь фишки" при активации ячейки
-    tryBurnItemAndGetScore(row, col){
+    activateTileAndGetScore(row, col){
         if(this[row] === undefined 
             || this[row][col] === undefined || this[row][col].c =="_"){
             return 0; // вернуть 0 очков

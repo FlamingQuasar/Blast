@@ -92,7 +92,7 @@ export class BlastGame{
         }
         if(this.settings.stepsCounter){
             // Прибавить счет, если фишки сгорят
-            const newScoreToAdd = this.field.tryBurnItemAndGetScore(row,col);
+            const newScoreToAdd = this.field.activateTileAndGetScore(row,col);
             if(newScoreToAdd){
                 this.currentScore += newScoreToAdd;
                 this.replaceItemsAfterFire(showConsoleLog);
