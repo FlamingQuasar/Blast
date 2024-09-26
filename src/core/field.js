@@ -52,14 +52,14 @@ export class Field{
         this.matrix.shakeField = this.shakeField;
         this.matrix.updateNeighbourRelations = this.updateNeighbourRelations;
         this.matrix.fieldHaveOccurrence = this.fieldHaveOccurrence;
-        this.matrix.getItemOnPosition = this.getItemOnPosition;
+        this.matrix.getTileOnPosition = this.getTileOnPosition;
         return this.matrix;
     }
 
     /**
     * Защищенный способ получить Фишку(Тайл) с указанной позиции, если он там есть, иначе вернет false
     * @param {array} position - позиция [row,col]*/
-    getItemOnPosition([row, col]){
+    getTileOnPosition([row, col]){
         if(this[row] != undefined && this[row][col] != undefined){
             return this[row][col];
         }
@@ -124,7 +124,7 @@ export class Field{
             console.log("Такой клетки нет");
             return 0; // вернуть 0 очков
         }
-        let scoreToAdd = this[row][col].fireItemReturnScore();
+        let scoreToAdd = this[row][col].fireTileReturnScore();
         return scoreToAdd; // вернуть 0 очков прибавки
     }
     

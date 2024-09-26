@@ -16,24 +16,24 @@ export class Tile{
 
     // Активировать (сжечь) фишку на поле и ее соседей, если соответствуют
     // {rate} коэффициент умножения цены очков за нажатую фишку 
-    fireItemReturnScore(rate=1){
+    fireTileReturnScore(rate=1){
         let scoreToAdd = 0;
         if(this.hasSameNeighbour){
             this.hasSameNeighbour = false;
             if(this.left?.color == this.color && this.left?.hasSameNeighbour){
-                scoreToAdd += this.left.fireItemReturnScore();
+                scoreToAdd += this.left.fireTileReturnScore();
                 rate +=1;
             }
             if(this.top?.color == this.color && this.top?.hasSameNeighbour){
-                scoreToAdd += this.top.fireItemReturnScore();
+                scoreToAdd += this.top.fireTileReturnScore();
                 rate +=1;
             }
             if(this.right?.color == this.color && this.right?.hasSameNeighbour){
-                scoreToAdd += this.right.fireItemReturnScore();
+                scoreToAdd += this.right.fireTileReturnScore();
                 rate +=1;
             }
             if(this.bottom?.color == this.color && this.bottom?.hasSameNeighbour){
-                scoreToAdd += this.bottom.fireItemReturnScore();
+                scoreToAdd += this.bottom.fireTileReturnScore();
                 rate +=1;
             }
             this.color = "_";

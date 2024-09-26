@@ -38,8 +38,8 @@ export class TeleportBooster extends Booster{
     }
 
     _doAction(position){
-        let firstItem = this.field.getItemOnPosition(position);
-        let secondItem = this.field.getItemOnPosition(this.clickSecondItemToSwap());
+        let firstItem = this.field.getTileOnPosition(position);
+        let secondItem = this.field.getTileOnPosition(this.clickSecondItemToSwap());
         if(firstItem != null && secondItem != null){
             [firstItem, secondItem] = Field.swap(firstItem, secondItem);
             // тут можно callbackEffect(); или return true и проигрыш анимации

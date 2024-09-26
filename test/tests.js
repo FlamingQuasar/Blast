@@ -37,17 +37,16 @@ describe('BlastGame class', function () {
             expect(game.field.fieldHaveOccurrence()).to.equal(true);
         });
     });
-    describe('field.getItemOnPosition([row, col])', function(){
-        it('field.getItemOnPosition([row, col]) возвращает null в случае когда в данной позиции ничего нет',function(){
+    describe('field.getTileOnPosition([row, col])', function(){
+        it('field.getTileOnPosition([row, col]) возвращает null в случае когда в данной позиции ничего нет',function(){
             const game = new BlastGame({n:5, m:10, c:6});
-            expect(game.field.getItemOnPosition([100, 100])).to.equal(null);
+            expect(game.field.getTileOnPosition([100, 100])).to.equal(null);
         });        
-        it('field.getItemOnPosition([row, col]) возвращает Tile когда в данной позиции есть Фишка(тайл)',function(){
+        it('field.getTileOnPosition([row, col]) возвращает Tile когда в данной позиции есть Фишка(тайл)',function(){
             const game = new BlastGame({n:5, m:10, c:6});
-            expect(game.field.getItemOnPosition([0, 0])).to.equal(game.field[0][0]);
+            expect(game.field.getTileOnPosition([0, 0])).to.equal(game.field[0][0]);
         });
     });
-    // field.getItemOnPosition возвращает Tile
     
     describe('Field.swap', function(){
         it('Field.swap меняет местами значения двух примитивов number', function(){
