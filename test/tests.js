@@ -1,5 +1,5 @@
 import { BlastGame } from '../src/core/blastGame.js'
-import { Field } from '../src/core/field.js'
+import { Field } from '../src/core/field/field.js'
 import { expect } from "chai"
 
 describe('BlastGame class', function () {

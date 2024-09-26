@@ -1,5 +1,5 @@
 import { Settings } from './settings.js'
-import { Field } from './field.js'
+import { Field } from './field/field.js'
 import { GameState } from './gameState.js'
 
 export class BlastGame{    
