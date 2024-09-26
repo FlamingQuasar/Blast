@@ -14,8 +14,8 @@ export class BlastGame{
     constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10, s=3, bustersSettings = null}){
         //TODO Обновить синглтон Сеттингс - добавить shake и bustersSettings
         this.settings = new Settings({
-            fieldHeight : n,
-            fieldWidth : m,
+            fieldHeight : n<2?2:n,
+            fieldWidth : m<2?2:m,
             colorsCount : c,
             minimalGroup : k<2?2:k,
             maxScore : maxScore>1?maxScore:1,

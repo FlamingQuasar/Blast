@@ -11,14 +11,25 @@ describe('BlastGame class', function () {
         const width = Math.floor(Math.random() * j) + 1;
         describe(`Конструктор BlastGame создает игровое поле нужной высоты [${height} на ${width}]`, function(){
             let game = new BlastGame({n:height, m:width, c:6});
-            setTimeout(function(){
+            if(height<2){
+                it(`new BlastGame создает поле высоты 2, а не [${height}], так как 2 - минимальное значение`, function(){                
+                    expect(game.field.length).to.equal(2);
+                });
+            }
+            else{
                 it(`new BlastGame создает поле высоты [${height}]`, function(){                
                     expect(game.field.length).to.equal(height);
                 });
-            },100);
-            it(`new BlastGame создает поле ширины [${width}]`, function(){
-                expect(game.field[0].length).to.equal(width);
-            });
+            }
+            if(width<2){
+                it(`new BlastGame создает поле ширины 2, а не [${width}], так как 2 - минимальное значение`, function(){                
+                    expect(game.field[0].length).to.equal(2);
+                });
+            } else {
+                it(`new BlastGame создает поле ширины [${width}]`, function(){
+                    expect(game.field[0].length).to.equal(width);
+                });
+            }
         });
     }
     describe('static Field.isEmptySettings()', function(){
@@ -64,16 +75,17 @@ describe('BlastGame class', function () {
             expect(secondNumber.x).to.equal(1);
         });
     });
-    describe('field.checkIfFieldHaveBooster', function(){
-        /*it('checkIfFieldHaveBooster(booster) возвращает true когда находит тестовый бустер среди игрового поля', function(){
+    
+    describe('field.checkIfFieldHaveTile', function(){
+       it('checkIfFieldHaveTile(booster) возвращает true когда находит тайл среди игрового поля', function(){
             let game = new BlastGame({n:5, m:10, c:6});
-            let tile = game.field.getTileOnPosition(0,0);
-            //tile.tileType = "x";
-            expect(game.field.checkIfFieldHaveBooster("x")).to.equal(true);
-        });*/
-        it('checkIfFieldHaveBooster(booster) возвращает false когда не находит тестовый бустер среди игрового поля', function(){
+            let tile = game.field.getTileOnPosition([0,0]);
+            tile.tileType = "x";
+            expect(game.field.checkIfFieldHaveTile("x")).to.equal(true);
+        });
+        it('checkIfFieldHaveTile(booster) возвращает false если не находит тайл среди игрового поля', function(){
             let game = new BlastGame({n:5, m:10, c:6});
-            expect(game.field.checkIfFieldHaveBooster("test")).to.equal(false);
+            expect(game.field.checkIfFieldHaveTile("x")).to.equal(false);
         });
     });
     describe('BlastGame.hasPairs', function(){
