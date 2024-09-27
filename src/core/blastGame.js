@@ -21,7 +21,8 @@ export class BlastGame{
     */
     constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10,
                  s=3, boosterProbability = 50, bombRadius=2,
-                 largeGroupBonusRequirement=3, largeGroupBonusEffect=1, tapTileHandler=()=>{}}){
+                 largeGroupBonusRequirement=3, largeGroupBonusEffect=1, 
+                 tapTileHandler=()=>{}}){
         this.tapTileHandler = tapTileHandler;
         this.settings = new Settings({
             fieldHeight : n<2?2:n,
@@ -102,14 +103,18 @@ export class BlastGame{
     }
 
     // Активировать фишку в ячейке игрового поля
-    activateFieldItem(row, col, showConsoleLog = false){
+    async activateFieldItem(row, col, showConsoleLog = false){
         // если row и col undefined и stepsCounter не надо убавлять        
         if((undefined == (row && col)) ?? true){
             return true;
         }
         if(this.settings.stepsCounter){
             // Прибавить счет, если фишки сгорят
-            const newScoreToAdd = this.field.activateTileAndGetScore(row,col);
+            console.log(this.tapConsoleMessage);
+            const newScoreToAdd = await this.field.activateTileAndGetScore(row,col);
+            if(newScoreToAdd.then != undefined){
+                return false;
+            }
             if(newScoreToAdd){
                 this.currentScore += newScoreToAdd;
                 this.replaceItemsAfterFire(showConsoleLog);

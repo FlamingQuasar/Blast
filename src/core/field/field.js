@@ -43,8 +43,15 @@ export class Field{
         return matrix;
     }
 
-    constructor({settings}={}){
+    static async tapTile(questionText){
+        if(Field.tapTileHandler != undefined){
+            return await Field.tapTileHandler(questionText);
+        }
+        return 0;
+    }
+    constructor({settings, tapTileHandler}={}){
         Field.settings = settings;
+        Field.tapTileHandler = tapTileHandler;
         this.matrix = Field.createFieldMatrix(); // двумерный массив фишек(тайлов) для игрового поля
         // Для быстроты работы с массивом-игровым полем, передадим методы класса Field в матрицу 
         this.matrix.activateTileAndGetScore = this.activateTileAndGetScore;
@@ -133,12 +140,18 @@ export class Field{
     }
 
     // Попробовать "сжечь фишки" при активации ячейки
-    activateTileAndGetScore(row, col){
+    async activateTileAndGetScore(row, col, message){
         if(this[row] === undefined || this[row][col] === undefined 
             || this[row][col].tileType === "_"){
             return 0; // вернуть 0 очков
         }
-        let scoreToAdd = this[row][col].fireTileReturnScore();
+        let scoreToAdd = 0;
+        if(this[row][col].fireTileReturnScore.constructor.name == "AsyncFunction"){
+            console.log("TYPEOF: " + this[row][col].fireTileReturnScore.constructor.name);
+            scoreToAdd = await this[row][col].fireTileReturnScore(message);
+        } else {
+            scoreToAdd = this[row][col].fireTileReturnScore();
+        }
         return scoreToAdd; // вернуть 0 очков прибавки
     }
     
@@ -172,7 +185,7 @@ export class Field{
         if(teleportProbability>0 && !this.checkIfFieldHaveTile(TeleportBooster.TILETYPE)){
             // Проверить, есть ли на карте бонус-телепорт, если нет, добавить вероятность его появления
             if( Math.random()+teleportProbability/100 >= 1){
-                tileToReturn = new TeleportBooster({field:this, getSecondTilePosition:()=>{}});
+                tileToReturn = new TeleportBooster({field:this});
             }
         }
         // Если вероятности не сработали, добавить простой тайл

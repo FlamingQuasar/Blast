@@ -5,12 +5,17 @@ import {
    stdout as output
 } from 'node:process';
 
-const rl = readline.createInterface({
-   input,
-   output
-});
 let game = {};
-
+const tapTileClickHandler = async function(questionText = ""){
+    const readLine = readline.createInterface({
+        input,
+        output
+     });
+    const answer = await readLine.question(questionText);
+    readLine.close();
+    return answer.split(",");
+};
+/*
 const setupAnswer = await rl.question('Настроить игровые параметры? (y / n)');
 // Настройка игры через консоль
 if(setupAnswer == "y"){
@@ -34,9 +39,11 @@ if(setupAnswer == "y"){
         bustersSettings : bustersSettings
     });
 }
-else{
-    game = new BlastGame({n:5, m:6, c:9, k:2, maxScore:100, stepsCounter:3, s:3});
-}
+else{*/
+    game = new BlastGame({n:5, m:6, c:9, k:2, maxScore:100, stepsCounter:3, s:3,
+        tapTileHandler: tapTileClickHandler/*, tapConsoleMessage : "Введите ряд и столбец Тайла через запятую: "*/
+    });
+//}
 
 let {row, column} = {};
 // Основной цикл
@@ -44,11 +51,12 @@ do{
     console.log(`Шагов осталось: ${game.settings.stepsCounter} (Счёт ${game.currentScore}/${game.settings.maxScore}) - группы не менее ${game.settings.minimalGroup} фишек`);
     game.showField();
     if(game.settings.stepsCounter){
-        
+        // TODO добавить концовку при окончании числа ходов
     }
     if(game.settings.stepsCounter && !game.scoreAchieved){
-        const answer = await rl.question('Введите ряд и столбец Тайла через запятую (Или букву S - Shake):');
-        let splitedAnswer = answer.split(",");
+        let splitedAnswer = await tapTileClickHandler(
+            'Введите ряд и столбец Тайла через запятую (Или букву S - Shake):'
+        );
         if(splitedAnswer.length == 1 && splitedAnswer[0] == "s"){
             game.shakeField();
             row = column = undefined;
@@ -56,7 +64,6 @@ do{
         } else
             ({row, column} = { row: +splitedAnswer[0], column: +splitedAnswer[1]});
     }
-} while(game.activateFieldItem(row, column) == true);
+} while(await game.activateFieldItem(row, column) == true);
 
-rl.close();
 
