@@ -1,7 +1,4 @@
-import { BlastGame } from "../blastGame.js";
-import { Field } from "./field.js";
 import { Tile } from "./tile.js";
-
 
 export class BombBooster extends Tile{
     static TILETYPE = "b";
@@ -38,7 +35,7 @@ export class BombBooster extends Tile{
             }
             burnAfterTime = burnAfterTime.bind(this)
             setTimeout(burnAfterTime, 300);*/
-            return false;
+            return true;
         }
         return false;
     }
