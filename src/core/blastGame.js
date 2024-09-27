@@ -10,16 +10,31 @@ export class BlastGame{
     * @param {number} m - Ширина игрового поля
     * @param {number} c - Количество цветов тайлов (фишек)
     * @param {number} k=2 - Минимальный размер групп
+    * @param {number} maxScore = 1000 - Число очков для победы
+    * @param {number} stepsCounter = 10 - Максимальное число шагов на уровне
+    * @param {number} s=3 - Количество "встрясок" на уровне
+    * @param {number} boosterProbability = 50 - % выпадения бонуса-бустера
+    * @param {number} bombRadius=2 - Радиус взрыва бустера-бомбы в тайлах
+    * @param {number} largeGroupBonusRequirement=3 - Размер группы сжигаемой для выпадения супер-тайла
+    * @param {number} largeGroupBonusEffect=1 - Тип эффекта активации супер-тайла
+    * @param {function} tapTileHandler=()=>{} - Внешняя функция выбора позиции тацла на игровом поле
     */
-    constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10, s=3, bustersSettings = null}){
-        //TODO Обновить синглтон Сеттингс - добавить shake и bustersSettings
+    constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10,
+                 s=3, boosterProbability = 50, bombRadius=2,
+                 largeGroupBonusRequirement=3, largeGroupBonusEffect=1, tapTileHandler=()=>{}}){
+        this.tapTileHandler = tapTileHandler;
         this.settings = new Settings({
             fieldHeight : n<2?2:n,
             fieldWidth : m<2?2:m,
             colorsCount : c,
             minimalGroup : k<2?2:k,
             maxScore : maxScore>1?maxScore:1,
-            stepsCounter : stepsCounter>1? stepsCounter : 1
+            stepsCounter : stepsCounter>1? stepsCounter : 1,
+            shakesCount : s,
+            boosterProbability,
+            bombRadius,
+            largeGroupBonusRequirement,
+            largeGroupBonusEffect
         });
         this.stage = GameState.SETTINGS;
         this.activateFieldItem.bind(this);
@@ -44,7 +59,8 @@ export class BlastGame{
 
     createField(showConsoleLog = false){
         if(this.settings.fieldHeight && this.settings.fieldWidth){
-            this.field = new Field({settings: this.settings});
+            this.stage = GameState.GENERATE;
+            this.field = new Field({settings: this.settings, tapTileHandler:this.tapTileHandler});
             if(showConsoleLog) this.showField();
             this.hasPairs = this.checkFieldHasPairs();
             
@@ -53,6 +69,7 @@ export class BlastGame{
                 this.hasPairs = this.checkFieldHasPairs();
                 if(this.hasPairs) console.log("Потрясли поле и нашли пары!");
             }
+            this.stage = GameState.START;
         }
     }
 

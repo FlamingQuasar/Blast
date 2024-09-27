@@ -7,7 +7,8 @@ export class Settings{
         minimalGroup,
         maxScore,
         stepsCounter,
-        bonusProbability,
+        shakesCount,
+        boosterProbability,
         bombRadius,
         largeGroupBonusRequirement,
         largeGroupBonusEffect

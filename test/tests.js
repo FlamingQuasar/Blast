@@ -1,5 +1,6 @@
 import { BlastGame } from '../src/core/blastGame.js'
-import { BombBooster, TeleportBooster } from '../src/core/field/booster.js';
+import { BombBooster } from '../src/core/field/bombBooster.js';
+import { TeleportBooster } from '../src/core/field/teleportBooster.js';
 import { Field } from '../src/core/field/field.js'
 import { expect } from "chai"
 
