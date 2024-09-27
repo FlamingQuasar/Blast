@@ -32,12 +32,12 @@ export class BlastGame{
             maxScore : maxScore>1?maxScore:1,
             stepsCounter : stepsCounter>1? stepsCounter : 1,
             shakesCount : s,
-            boosterProbability,
-            bombRadius,
-            largeGroupBonusRequirement,
-            largeGroupBonusEffect
+            boosterProbability :boosterProbability,
+            bombRadius : bombRadius,
+            largeGroupBonusRequirement : largeGroupBonusRequirement,
+            largeGroupBonusEffect : largeGroupBonusEffect
         });
-        this.stage = GameState.SETTINGS;
+        this._stage = GameState.SETTINGS;
         this.activateFieldItem.bind(this);
         this.replaceItemsAfterFire.bind(this);
         this.currentScore = 0;
@@ -45,12 +45,36 @@ export class BlastGame{
         this.hasPairs = false;
         this.createField();
     }
+    get stage(){
+        return this._stage;
+    }
+    set stage(value){
+        this._stage = value;
+        console.log(value.toString());
+    }
+
+    static showField(matrix, settings, onlyPairs=false){
+        let fieldMatrix = "\n";
+        for(let i=0; i<settings.fieldHeight; i++){
+            for(let j=0; j<settings.fieldWidth;j++){
+                if(onlyPairs){
+                    fieldMatrix += `${matrix[i][j].hasSameNeighbour? matrix[i][j].tileType:"."} \t`;
+                }
+                else{
+                    fieldMatrix += `${matrix[i][j].tileType} \t`;
+                }
+            }
+            fieldMatrix += "\n";
+        }
+        // заменить console log на возврат матрицы и смену(!а не возврат) игры
+        console.log(fieldMatrix);
+    }
 
     // Сместить фишки сверху вниз после сгорания группы или сгенерировать
     replaceItemsAfterFire(showConsoleLog){
         console.log("Смещаем фишки сверху!");
         this.field.replaceAfterBurn();
-        if(showConsoleLog) this.showField();
+        if(showConsoleLog) this.showFieldAndState();
     }
 
     // Вызвать "встряску" игрового поля
@@ -65,7 +89,7 @@ export class BlastGame{
         if(this.settings.fieldHeight && this.settings.fieldWidth){
             this.stage = GameState.GENERATE;
             this.field = new Field({settings: this.settings, tapTileHandler:this.tapTileHandler});
-            if(showConsoleLog) this.showField();
+            if(showConsoleLog) this.showFieldAndState();
             this.hasPairs = this.checkFieldHasPairs();
             
             while(this.hasPairs == false){
@@ -81,26 +105,15 @@ export class BlastGame{
         return this.field.checkPairs();
     }
 
-    showField({onlyPairs = false}={}){
-        let fieldMatrix = "";
-        for(let i=0; i<this.settings.fieldHeight; i++){
-            for(let j=0; j<this.settings.fieldWidth;j++){
-                if(onlyPairs){
-                    fieldMatrix += `${this.field[i][j].hasSameNeighbour? this.field[i][j].tileType:"."} \t`;
-                }
-                else{
-                    fieldMatrix += `${this.field[i][j].tileType} \t`;
-                }
-            }
-            fieldMatrix += "\n";
-        }
-        // заменить console log на возврат матрицы и смену(!а не возврат) игры
-        console.log(fieldMatrix);
+    showFieldAndState({onlyPairs = false}={}){
+        BlastGame.showField(this.field, this.settings);
         if(this.currentScore >= this.settings.maxScore){
+            this.stage = GameState.WIN;
             console.log("Победа!");
             this.scoreAchieved = true;
         }
         else if(this.stepsCounter == 0){
+            this.stage = GameState.LOSE;
             console.log("Поражение!");
         }
     }
@@ -121,7 +134,7 @@ export class BlastGame{
                 this.currentScore += newScoreToAdd;
                 this.replaceItemsAfterFire(showConsoleLog);
             }
-            // Вычесть шаг, если калькуляция шагов не заморожена
+            // Вычесть шаг, если калькуляция шагов не заморожена (как при телепорте)
             if(!stepsCalcFreeze) this.settings.stepsCounter--;
             return true;
         }

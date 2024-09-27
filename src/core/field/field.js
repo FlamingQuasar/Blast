@@ -49,6 +49,7 @@ export class Field{
         }
         return 0;
     }
+
     constructor({settings, tapTileHandler}={}){
         Field.settings = settings;
         Field.tapTileHandler = tapTileHandler;
@@ -179,7 +180,7 @@ export class Field{
         if(bombProbability>0 && !this.checkIfFieldHaveTile(BombBooster.TILETYPE)){
             // Проверить, есть ли на карте бонус-бомба если нет, добавить вероятность его появления
             if( Math.random()+bombProbability/100 >= 1){
-                tileToReturn = new BombBooster({field:this});
+                tileToReturn = new BombBooster({field:this, radius:Field.settings.bombRadius});
             }
         }
         if(teleportProbability>0 && !this.checkIfFieldHaveTile(TeleportBooster.TILETYPE)){

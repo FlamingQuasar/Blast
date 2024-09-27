@@ -63,8 +63,9 @@ else{
 let {row, column} = {};
 // Основной цикл
 do{
+    //console.clear();
     console.log(`Осталось (Шагов:${game.settings.stepsCounter}, Встрясок:${game.settings.shakesCount}) (Счёт ${game.currentScore}/${game.settings.maxScore}) - группы не менее ${game.settings.minimalGroup} фишек`);
-    game.showField();
+    game.showFieldAndState();
     if(game.settings.stepsCounter){
         // TODO добавить концовку при окончании числа ходов
     }

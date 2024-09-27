@@ -15,9 +15,27 @@ export class Tile{
         }
     }
 
+    /**
+     * Рекурсивно приобразовать тайлы в определенном направлении к определенному типа
+     * @param {*} direction - направление связи тайла
+     * @param {*} type - тип тайлов к которому надо преобразовать, например к взрыву
+     * @param {*} depth - глубина соседних тайлов
+     */
+    setTypeAndSameNeighbour(direction, type, depth){
+        this.tileType = type;
+        this.hasSameNeighbour = true;
+        let counter = depth-1;
+        if(counter>0 && this[direction] != null){
+            this[direction].setTypeAndSameNeighbour(direction, type, --counter);
+        }
+    }
+
     // Активировать (сжечь) фишку на поле и ее соседей, если соответствуют
     // {rate} коэффициент умножения цены очков за нажатую фишку 
     fireTileReturnScore(rate=1, message){
+        // Если у нас непростой тайл, а наследник реализовавший метод взрыва
+        if(this._fireTileReturnScore()) return 0;
+        
         let scoreToAdd = 0;
         if(this.hasSameNeighbour){
             this.hasSameNeighbour = false;
@@ -42,6 +60,7 @@ export class Tile{
         }
         return scoreToAdd;
     }
+    _fireTileReturnScore(){}
 
     // Связать фишку с соседними фишками с 4 сторон
     initNeighbours(left, top, right, bottom){
