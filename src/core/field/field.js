@@ -142,7 +142,7 @@ export class Field{
     // Попробовать "сжечь фишки" при активации ячейки
     async activateTileAndGetScore(row, col, message){
         if(this[row] === undefined || this[row][col] === undefined 
-            || this[row][col].tileType === "_"){
+            || this[row][col].tileType === Tile.EMPTYTILE){
             return 0; // вернуть 0 очков
         }
         let scoreToAdd = 0;
@@ -234,10 +234,10 @@ export class Field{
         for(let i=Field.settings.fieldHeight-1; i>=0; i--){
             for(let j=0; j<Field.settings.fieldWidth; j++){
                 // текущее место - сгоревшее и есть куда двигать
-                if(this[i][j].tileType == "_" && i-1 >= 0){
+                if(this[i][j].tileType == Tile.EMPTYTILE && i-1 >= 0){
                     // Попробовать сдвинуть на "сгоревшее" место ближайшую фишку сверху
                     for(let k=i-1; k>=0; k--){                        
-                        if(this[k][j].tileType != "_"){
+                        if(this[k][j].tileType != Tile.EMPTYTILE){
                             // Поменять местами два тайла с помощью специального хинта;
                             [this[i][j], this[k][j]] = Field.swap(this[i][j], this[k][j]);
                             this[k][j].hasSameNeighbour = false;
@@ -252,7 +252,7 @@ export class Field{
         // Проинициализировать соседние фишки (связать соседей)
         for(let i=0; i<Field.settings.fieldHeight; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){                
-                if(this[i][j].tileType == "_"){
+                if(this[i][j].tileType == Tile.EMPTYTILE){
                     // Если фишка при обходе снизу "сгоревшая" - прибавить счетчик необходимых к генерации фишек
                     newTilesGenerationMask[j]++;
                 }

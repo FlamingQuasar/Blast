@@ -8,5 +8,9 @@ export class BombBooster extends Tile{
         this.field = field;
         this.tileType = BombBooster.TILETYPE;
     }
+    
+    async fireTileReturnScore(){
+        console.log("boom!");
+    }
 }
 

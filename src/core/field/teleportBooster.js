@@ -3,7 +3,6 @@ import { Tile } from "./tile.js";
 
 export class TeleportBooster extends Tile{
     static TILETYPE = "t";
-    static EMPTYTILE = "_";
     /**
     * Бустер-телепорт принимает аргументом метод ожидания второй клетки для перестановки
     * @constructor
@@ -15,9 +14,9 @@ export class TeleportBooster extends Tile{
         this.tileType = TeleportBooster.TILETYPE;
     }
 
-    async fireTileReturnScore(rate){
+    async fireTileReturnScore(){
         // Вывести из строя текущий тайл телепорта
-        this.tileType = TeleportBooster.EMPTYTILE;
+        this.tileType = Tile.EMPTYTILE;
 
         // Запросить координаты первого тайла для телепортации 
         let pos1 = await Field.tapTile("Позиция первого тайла для телепорта: ");

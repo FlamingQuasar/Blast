@@ -1,6 +1,7 @@
 export class Tile{
     hasSameNeighbour = false;
     static minimalGroupCount;
+    static EMPTYTILE = "_";
 
     constructor({colorsCount, minimalGroupCount = 2}){
         this.tileType = Math.floor(Math.random() * colorsCount);
@@ -9,7 +10,7 @@ export class Tile{
 
     // Если совпадение по цвету с соседом есть, указать что у фишки есть группа
     checkNeighbourTypeAndPush(neighbour){
-        if(neighbour?.tileType === this.tileType && this.tileType != "_"){
+        if(neighbour?.tileType === this.tileType && this.tileType != Tile.EMPTYTILE){
             this.hasSameNeighbour = neighbour.hasSameNeighbour = true;
         }
     }
@@ -36,7 +37,7 @@ export class Tile{
                 scoreToAdd += this.bottom.fireTileReturnScore();
                 rate +=1;
             }
-            this.tileType = "_";
+            this.tileType = Tile.EMPTYTILE;
             scoreToAdd += 10 * rate;
         }
         return scoreToAdd;
