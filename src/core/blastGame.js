@@ -17,7 +17,7 @@ export class BlastGame{
     * @param {number} bombRadius=2 - Радиус взрыва бустера-бомбы в тайлах
     * @param {number} largeGroupBonusRequirement=3 - Размер группы сжигаемой для выпадения супер-тайла
     * @param {number} largeGroupBonusEffect=1 - Тип эффекта активации супер-тайла
-    * @param {function} tapTileHandler=()=>{} - Внешняя функция выбора позиции тацла на игровом поле
+    * @param {function} tapTileHandler=()=>{} - Внешняя функция выбора позиции тайла на игровом поле
     */
     constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10,
                  s=3, boosterProbability = 50, bombRadius=2,
@@ -55,7 +55,10 @@ export class BlastGame{
 
     // Вызвать "встряску" игрового поля
     shakeField(){
-        this.field.shakeField();
+        if(this.settings.shakesCount > 0){
+            this.field.shakeField();
+            this.settings.shakesCount--;
+        }
     }
 
     createField(showConsoleLog = false){
@@ -103,14 +106,13 @@ export class BlastGame{
     }
 
     // Активировать фишку в ячейке игрового поля
-    async activateFieldItem(row, col, showConsoleLog = false){
+    async activateFieldItem(row, col, showConsoleLog = false, stepsCalcFreeze=false){
         // если row и col undefined и stepsCounter не надо убавлять        
         if((undefined == (row && col)) ?? true){
             return true;
         }
         if(this.settings.stepsCounter){
             // Прибавить счет, если фишки сгорят
-            console.log(this.tapConsoleMessage);
             const newScoreToAdd = await this.field.activateTileAndGetScore(row,col);
             if(newScoreToAdd.then != undefined){
                 return false;
@@ -119,7 +121,8 @@ export class BlastGame{
                 this.currentScore += newScoreToAdd;
                 this.replaceItemsAfterFire(showConsoleLog);
             }
-            this.settings.stepsCounter--;
+            // Вычесть шаг, если калькуляция шагов не заморожена
+            if(!stepsCalcFreeze) this.settings.stepsCounter--;
             return true;
         }
         return false;

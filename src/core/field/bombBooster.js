@@ -1,10 +1,11 @@
-import { Booster } from "./booster.js";
+import { Tile } from "./tile.js";
 
 
-export class BombBooster extends Booster{
+export class BombBooster extends Tile{
     static TILETYPE = "b";
-    constructor({field}){
-        super({field});
+    constructor({field}={}){
+        super({colorsCount:0});
+        this.field = field;
         this.tileType = BombBooster.TILETYPE;
     }
 }

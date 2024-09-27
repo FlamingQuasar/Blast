@@ -8,15 +8,15 @@ export class Tile{
     }
 
     // Если совпадение по цвету с соседом есть, указать что у фишки есть группа
-    checkNeighbourColorAndPush(neighbour){
-        if(neighbour?.tileType === this.tileType){
+    checkNeighbourTypeAndPush(neighbour){
+        if(neighbour?.tileType === this.tileType && this.tileType != "_"){
             this.hasSameNeighbour = neighbour.hasSameNeighbour = true;
         }
     }
 
     // Активировать (сжечь) фишку на поле и ее соседей, если соответствуют
     // {rate} коэффициент умножения цены очков за нажатую фишку 
-    fireTileReturnScore(rate=1){
+    fireTileReturnScore(rate=1, message){
         let scoreToAdd = 0;
         if(this.hasSameNeighbour){
             this.hasSameNeighbour = false;
@@ -57,9 +57,9 @@ export class Tile{
 
     // Проверить всех соседей текущей фишки на совпадение по цвету
     checkNeighbours(){
-        this.checkNeighbourColorAndPush(this.left);
-        this.checkNeighbourColorAndPush(this.top);
-        this.checkNeighbourColorAndPush(this.right);
-        this.checkNeighbourColorAndPush(this.bottom);
+        this.checkNeighbourTypeAndPush(this.left);
+        this.checkNeighbourTypeAndPush(this.top);
+        this.checkNeighbourTypeAndPush(this.right);
+        this.checkNeighbourTypeAndPush(this.bottom);
     }
 }

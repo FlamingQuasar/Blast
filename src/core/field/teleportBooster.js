@@ -1,8 +1,7 @@
-import { Booster } from "./booster.js";
 import { Field } from "./field.js";
 import { Tile } from "./tile.js";
 
-export class TeleportBooster extends Booster{
+export class TeleportBooster extends Tile{
     static TILETYPE = "t";
     static EMPTYTILE = "_";
     /**
@@ -10,13 +9,10 @@ export class TeleportBooster extends Booster{
     * @constructor
     * @param {object} field - Текущее игровое поле
     */
-    constructor({field}){ // field возможно лучше заменить на game.field
-        super({field});
+    constructor({field}={}){
+        super({colorsCount:0});
+        this.field = field;
         this.tileType = TeleportBooster.TILETYPE;
-        /*this._doAction = ()=>{
-            console.log("additional action");
-        };*/
-        this.doAction({position:[2,3]});
     }
 
     async fireTileReturnScore(rate){
@@ -24,9 +20,9 @@ export class TeleportBooster extends Booster{
         this.tileType = TeleportBooster.EMPTYTILE;
 
         // Запросить координаты первого тайла для телепортации 
-        let pos1 = await Field.tapTile("Позиция первого тайла: ");
+        let pos1 = await Field.tapTile("Позиция первого тайла для телепорта: ");
         let firstTile = null, secondTile = null;
-        if(pos1 != 0){
+        if(pos1 != 0 && pos1 != undefined){
             firstTile = this.field.getTileOnPosition([+pos1[0], +pos1[1]])
         }
         else{
@@ -37,7 +33,7 @@ export class TeleportBooster extends Booster{
         let pos2 = [+pos1[0],+pos1[1]]; 
         do{
             // Запросить координаты второго тайла для телепортации
-            pos2 = await Field.tapTile("Позиция второго тайла: ");
+            pos2 = await Field.tapTile("Позиция второго тайла для телепорта: ");
             if(pos2 != 0){
                 secondTile = this.field.getTileOnPosition([+pos2[0], +pos2[1]])
             }
@@ -51,27 +47,12 @@ export class TeleportBooster extends Booster{
         //сделать свап двух тайлов
         [this.field[+pos1[0]][+pos1[1]], this.field[+pos2[0]][+pos2[1]]] 
             = Field.swap(this.field[+pos1[0]][+pos1[1]], this.field[+pos2[0]][+pos2[1]]);
-
-        //и поджечь оба свапнутых тайла, если у них есть похожие соседи
-        // код "ниже" переделать
-        /*let position = this.field.getPositionOfTile(this);
-        if(position){
-            this.field[position.row][position.col] = tileToSwap;
-            this.field[2][2] = this;//new Tile({colorsCount:Field.settings.colorsCount});
-        }*/
-        // после свапа двух выбранных тайлов, данный тайл должен пометиться как пустой "_" и сгореть
-        // телепортированные тайлы сразу не активируются, а могут включиться в следующем ходу если на них нажать
+        // Обновить соседские отношения тайлов-пар для новой обстановке на игровом поле
+        this.field.updateNeighbourRelations();
+        // Данный тайл телепорта отмечен как пустой ("_") и должен сгореть
+        this.field.replaceAfterBurn();
+        // TODO: возможный бонус: телепортированные тайлы должны сами активироваться, будто на них нажали
+        // если есть пары, поджечь оба свапнутых тайла, если у них есть похожие соседи
         return 0;
-    }
-
-    _doAction(position){
-        /*let firstItem = this.field.getTileOnPosition(position);
-        let secondItem = this.field.getTileOnPosition(this.clickSecondItemToSwap());
-        if(firstItem != null && secondItem != null){
-            [firstItem, secondItem] = Field.swap(firstItem, secondItem);
-            // тут можно callbackEffect(); или return true и проигрыш анимации
-            console.log("additional action 2");
-            console.log(position);
-        }*/
     }
 }
