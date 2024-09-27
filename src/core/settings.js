@@ -6,16 +6,17 @@ export class Settings{
         colorsCount,
         minimalGroup,
         maxScore,
-        stepsCounter
+        stepsCounter,
+        shakesCount,
+        boosterProbability,
+        bombRadius,
+        largeGroupBonusRequirement,
+        largeGroupBonusEffect
     }){
         if (!Settings._instance) Settings._instance = this;
-                
-        Settings._instance.fieldHeight = fieldHeight;
-        Settings._instance.fieldWidth = fieldWidth;
-        Settings._instance.colorsCount = colorsCount;
-        Settings._instance.minimalGroup = minimalGroup;
-        Settings._instance.maxScore = maxScore;
-        Settings._instance.stepsCounter = stepsCounter;
+        Object.keys(arguments[0]).map(
+            arg => Settings._instance[arg] = arguments[0][arg]
+        );
         return Settings._instance;
     }
 }

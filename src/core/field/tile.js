@@ -1,47 +1,66 @@
 export class Tile{
     hasSameNeighbour = false;
     static minimalGroupCount;
+    static EMPTYTILE = "_";
 
     constructor({colorsCount, minimalGroupCount = 2}){
-        this.color = Math.floor(Math.random() * colorsCount);
+        this.tileType = Math.floor(Math.random() * colorsCount);
         Tile.minimalGroupCount = minimalGroupCount;
     }
 
     // Если совпадение по цвету с соседом есть, указать что у фишки есть группа
-    checkNeighbourColorAndPush(neighbour){
-        if(neighbour?.color === this.color){
+    checkNeighbourTypeAndPush(neighbour){
+        if(neighbour?.tileType === this.tileType && this.tileType != Tile.EMPTYTILE){
             this.hasSameNeighbour = neighbour.hasSameNeighbour = true;
+        }
+    }
+
+    /**
+     * Рекурсивно приобразовать тайлы в определенном направлении к определенному типа
+     * @param {*} direction - направление связи тайла
+     * @param {*} type - тип тайлов к которому надо преобразовать, например к взрыву
+     * @param {*} depth - глубина соседних тайлов
+     */
+    setTypeAndSameNeighbour(direction, type, depth){
+        this.tileType = type;
+        this.hasSameNeighbour = true;
+        let counter = depth-1;
+        if(counter>0 && this[direction] != null){
+            this[direction].setTypeAndSameNeighbour(direction, type, --counter);
         }
     }
 
     // Активировать (сжечь) фишку на поле и ее соседей, если соответствуют
     // {rate} коэффициент умножения цены очков за нажатую фишку 
-    fireTileReturnScore(rate=1){
+    fireTileReturnScore(rate=1, message){
+        // Если у нас непростой тайл, а наследник реализовавший метод взрыва
+        if(this._fireTileReturnScore()) return 0;
+        
         let scoreToAdd = 0;
-        console.log("this.hasSameNeighbour: "+this.hasSameNeighbour);
         if(this.hasSameNeighbour){
             this.hasSameNeighbour = false;
-            if(this.left?.color == this.color && this.left?.hasSameNeighbour){
+            if(this.left?.tileType == this.tileType && this.left?.hasSameNeighbour){
                 scoreToAdd += this.left.fireTileReturnScore();
                 rate +=1;
             }
-            if(this.top?.color == this.color && this.top?.hasSameNeighbour){
+            if(this.top?.tileType == this.tileType && this.top?.hasSameNeighbour){
                 scoreToAdd += this.top.fireTileReturnScore();
                 rate +=1;
             }
-            if(this.right?.color == this.color && this.right?.hasSameNeighbour){
+            if(this.right?.tileType == this.tileType && this.right?.hasSameNeighbour){
                 scoreToAdd += this.right.fireTileReturnScore();
                 rate +=1;
             }
-            if(this.bottom?.color == this.color && this.bottom?.hasSameNeighbour){
+            if(this.bottom?.tileType == this.tileType && this.bottom?.hasSameNeighbour){
                 scoreToAdd += this.bottom.fireTileReturnScore();
                 rate +=1;
             }
-            this.color = "_";
+            this.tileType = Tile.EMPTYTILE;
             scoreToAdd += 10 * rate;
         }
         return scoreToAdd;
     }
+    _fireTileReturnScore(){}
 
     // Связать фишку с соседними фишками с 4 сторон
     initNeighbours(left, top, right, bottom){
@@ -58,9 +77,9 @@ export class Tile{
 
     // Проверить всех соседей текущей фишки на совпадение по цвету
     checkNeighbours(){
-        this.checkNeighbourColorAndPush(this.left);
-        this.checkNeighbourColorAndPush(this.top);
-        this.checkNeighbourColorAndPush(this.right);
-        this.checkNeighbourColorAndPush(this.bottom);
+        this.checkNeighbourTypeAndPush(this.left);
+        this.checkNeighbourTypeAndPush(this.top);
+        this.checkNeighbourTypeAndPush(this.right);
+        this.checkNeighbourTypeAndPush(this.bottom);
     }
 }
