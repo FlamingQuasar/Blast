@@ -66,6 +66,7 @@ export class BlastGame{
             }
             fieldMatrix += "\n";
         }
+        fieldMatrix += "\n";
         // заменить console log на возврат матрицы и смену(!а не возврат) игры
         console.log(fieldMatrix);
     }

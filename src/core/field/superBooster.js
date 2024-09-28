@@ -1,13 +1,14 @@
 import { Tile } from "./tile.js";
+import { Field } from "./field.js";
 
 export class SuperBooster extends Tile{
     static TILETYPE = "L"; // Супер-тайл от слова Large
     static EFFECTS = ["burnBomb","burnRow","burnColumn","burnField"];
-    constructor({field={}, largeGroupBonusEffect=0}){
+    constructor({field={}}){
         super({colorsCount:0});
         this.field = field;
-        this.radius = radius;
-        this.effect = SuperBooster.EFFECTS[largeGroupBonusEffect];
+        this.radius = Field.settings.radius;
+        this.effect = SuperBooster.EFFECTS[Field.settings.largeGroupBonusEffect];
         this.tileType = SuperBooster.TILETYPE;
     }
 

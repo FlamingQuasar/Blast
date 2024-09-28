@@ -210,13 +210,15 @@ export class Field{
         }
         for(let i = 0; i< maxBurnedItemsColumn; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){
-                if(sumBurnedTiles >= settings.largeGroupBonusRequirement){
-                    this[i][j] = new SuperBooster();
-                    sumBurnedTiles = 0;
-                }
-                else if(i < newTilesGenerationMask[j]){
-                    this[i][j] = this.generateTileWithBoostersProbability({bombProbability:90, 
+                if(i < newTilesGenerationMask[j]){
+                    if(sumBurnedTiles >= Field.settings.largeGroupBonusRequirement){
+                        this[i][j] = new SuperBooster({field : this.field});
+                        sumBurnedTiles = 0;
+                    }
+                    else {
+                        this[i][j] = this.generateTileWithBoostersProbability({bombProbability:90, 
                                                                         teleportProbability:90});
+                    }
                 }
             }
         }
