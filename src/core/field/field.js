@@ -1,4 +1,5 @@
 import { BombBooster } from './bombBooster.js';
+import { SuperBooster } from './superBooster.js';
 import { TeleportBooster } from './teleportBooster.js';
 import { Tile } from './tile.js'
 
@@ -203,9 +204,17 @@ export class Field{
         if(!newTilesGenerationMask.length) return;
         // добавить 100% появление супер-тайла если маска сгоревшей группы больше L
         let maxBurnedItemsColumn = Math.max(...newTilesGenerationMask);
+        let sumBurnedTiles = 0;
+        for(let burned of newTilesGenerationMask){
+            sumBurnedTiles += burned;
+        }
         for(let i = 0; i< maxBurnedItemsColumn; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){
-                if(i < newTilesGenerationMask[j]){
+                if(sumBurnedTiles >= settings.largeGroupBonusRequirement){
+                    this[i][j] = new SuperBooster();
+                    sumBurnedTiles = 0;
+                }
+                else if(i < newTilesGenerationMask[j]){
                     this[i][j] = this.generateTileWithBoostersProbability({bombProbability:90, 
                                                                         teleportProbability:90});
                 }
