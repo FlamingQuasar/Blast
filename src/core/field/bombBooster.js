@@ -9,35 +9,22 @@ export class BombBooster extends Tile{
         this.tileType = BombBooster.TILETYPE;
     }
     
+    // Взорвать саму бомбу и инициировать взрывы прилегающего радиуса, как по направлениям, 
+    // так и между ними по диагоналям
     _fireTileReturnScore(){
         if(this.tileType != Tile.EMPTYTILE){
             this.tileType = Tile.EMPTYTILE;
-            if(this.top) 
-                this.top.setTypeAndSameNeighbour("top", Tile.EMPTYTILE, this.radius);
-            
-            if(this.left) 
-                this.left.setTypeAndSameNeighbour("left", Tile.EMPTYTILE, this.radius);
-            
-            if(this.right) 
-                this.right.setTypeAndSameNeighbour("right", Tile.EMPTYTILE, this.radius);
-            
-            if(this.bottom) 
-                this.bottom.setTypeAndSameNeighbour("bottom", Tile.EMPTYTILE, this.radius);
             this.hasSameNeighbour = true;
-            
-            //console.clear();
-            // Todo : это хорошая фишка для консольного клиента, но тут она точно не должна
-            /*let burnAfterTime = function(){
-                //тайлы под действием бустера должны сгореть
-                //console.clear();
-                this.field.replaceAfterBurn();
-                BlastGame.showField(this.field,Field.settings);
-            }
-            burnAfterTime = burnAfterTime.bind(this)
-            setTimeout(burnAfterTime, 300);*/
-            return true;
+
+            let score = 50;
+            score += Tile.firePairReturnScore(this.top, "top", 0+this.radius);
+            score += Tile.firePairReturnScore(this.right, "right", 0+this.radius);
+            score += Tile.firePairReturnScore(this.bottom, "bottom", 0+this.radius);
+            score += Tile.firePairReturnScore(this.left, "left", 0+this.radius);
+
+            return score;
         }
-        return false;
+        return 0;
     }
 }
 

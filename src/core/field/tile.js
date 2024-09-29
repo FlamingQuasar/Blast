@@ -1,7 +1,42 @@
 export class Tile{
     hasSameNeighbour = false;
+    
     static minimalGroupCount;
-    static EMPTYTILE = "_";
+    
+    // константа обозначения пустого тайла после сгорания, подлежащего замещению (и в консоли VSCode смотрится)
+    static EMPTYTILE = "💥";
+
+    /**
+     * Метод рекурсивного взрыва тайлов на уменьшающуюся глубину радиуса
+     * @param {*} tile текущий тайл для его взрыва
+     * @param {*} position базовое направление, куда продолжать взрыв
+     * @param {*} radius оставшийся радиус взрыва
+     * @returns очки за взрыв тайлов для суммирования с очками за саму бомбу
+     */
+    static firePairReturnScore(tile, position, radius, crossType=null){
+        let score = 0;
+        if(tile){
+            score += 10;
+            tile.setTypeAndSameNeighbour(position, Tile.EMPTYTILE);
+            radius--;
+            if(radius>0){
+                score += Tile.firePairReturnScore(tile[position], position, radius, crossType);
+
+                // Если у нас эффект взрыва не крест, не бесконечная строка или столбец, а простой взрыв
+                // Тогда заполнить промежуточные позиции
+                if(crossType==null && radius>1 && radius != Infinity){
+                    let positions = ["left", "top", "right", "bottom"];
+                    for(let pos of positions){
+                        if(pos != position){
+                            score += Tile.firePairReturnScore(tile[pos], position, 0, crossType);
+                        }
+                    }
+                }
+            } 
+            
+        }
+        return score;
+    }
 
     constructor({colorsCount, minimalGroupCount = 2}){
         this.tileType = Math.floor(Math.random() * colorsCount);
@@ -15,6 +50,8 @@ export class Tile{
         }
     }
 
+    
+
     /**
      * Рекурсивно приобразовать тайлы в определенном направлении к определенному типа
      * @param {*} direction - направление связи тайла
@@ -24,17 +61,22 @@ export class Tile{
     setTypeAndSameNeighbour(direction, type, depth){
         this.tileType = type;
         this.hasSameNeighbour = true;
-        let counter = depth-1;
-        if(counter>0 && this[direction] != null){
-            this[direction].setTypeAndSameNeighbour(direction, type, --counter);
-        }
+        //let counter = depth-1;
+        //if(counter>0 && this[direction] != null){
+         //   this[direction].setTypeAndSameNeighbour(direction, type, --counter);
+        //}
     }
 
     // Активировать (сжечь) фишку на поле и ее соседей, если соответствуют
     // {rate} коэффициент умножения цены очков за нажатую фишку 
     fireTileReturnScore(rate=1, message){
+        console.log("fireTileReturnScore" + "!!!!!!");
+        if(this._fireTileReturnScore.toString() != "_fireTileReturnScore(){}"){
         // Если у нас непростой тайл, а наследник реализовавший метод взрыва
-        if(this._fireTileReturnScore()) return 0;
+            console.log("this._fireTileReturnScore() from Tile");
+            return this._fireTileReturnScore();
+            return 70; // За взрывной тайл больше очков
+        }
         
         let scoreToAdd = 0;
         if(this.hasSameNeighbour){
