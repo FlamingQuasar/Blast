@@ -17,7 +17,7 @@ export class SuperBooster extends Tile{
         switch(this.effect){
             // Взорвать радиус бомбы
             case SuperBooster.EFFECTS[0]:{
-
+                
             } break;
             // Взорвать строку
             case SuperBooster.EFFECTS[1]:{
