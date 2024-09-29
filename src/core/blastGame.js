@@ -20,8 +20,8 @@ export class BlastGame{
     * @param {function} tapTileHandler=()=>{} - Внешняя функция выбора позиции тайла на игровом поле
     */
     constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10,
-                 s=3, boosterProbability = 50, bombRadius=2,
-                 largeGroupBonusRequirement=3, largeGroupBonusEffect=1, 
+                 s=3, boosterProbability = 50, bombRadius=4,
+                 largeGroupBonusRequirement=3, largeGroupBonusEffect=0, 
                  tapTileHandler=()=>{}}){
         this.tapTileHandler = tapTileHandler;
         this.settings = new Settings({
@@ -147,8 +147,7 @@ export class BlastGame{
             if(!stepsCalcFreeze) this.settings.stepsCounter--;
             clientResult= true;
         }
-        console.log("BlastGame"+this instanceof BlastGame);
         clientCallbackFunction(this);
-        return clientResult;// false;
+        return clientResult;
     }
 }

@@ -13,23 +13,24 @@ export class Tile{
      * @param {*} radius оставшийся радиус взрыва
      * @returns очки за взрыв тайлов для суммирования с очками за саму бомбу
      */
-    static firePairReturnScore(tile, position, radius){
+    static firePairReturnScore(tile, position, radius, crossType=null){
         let score = 0;
         if(tile){
             score += 10;
             tile.setTypeAndSameNeighbour(position, Tile.EMPTYTILE);
-            console.log(radius);
             radius--;
             if(radius>0){
-                Tile.firePairReturnScore(tile[position], position, radius);
-                if(radius>1){
+                score += Tile.firePairReturnScore(tile[position], position, radius, crossType);
+
+                // Если у нас эффект взрыва не крест, не бесконечная строка или столбец, а простой взрыв
+                // Тогда заполнить промежуточные позиции
+                if(crossType==null && radius>1 && radius != Infinity){
                     let positions = ["left", "top", "right", "bottom"];
                     for(let pos of positions){
                         if(pos != position){
-                            Tile.firePairReturnScore(tile[pos], position, 0);
+                            score += Tile.firePairReturnScore(tile[pos], position, 0, crossType);
                         }
                     }
-                    
                 }
             } 
             
@@ -69,8 +70,10 @@ export class Tile{
     // Активировать (сжечь) фишку на поле и ее соседей, если соответствуют
     // {rate} коэффициент умножения цены очков за нажатую фишку 
     fireTileReturnScore(rate=1, message){
-        if(this._fireTileReturnScore.toString()!= "_fireTileReturnScore(){}"){
+        console.log("fireTileReturnScore" + "!!!!!!");
+        if(this._fireTileReturnScore.toString() != "_fireTileReturnScore(){}"){
         // Если у нас непростой тайл, а наследник реализовавший метод взрыва
+            console.log("this._fireTileReturnScore() from Tile");
             return this._fireTileReturnScore();
             return 70; // За взрывной тайл больше очков
         }

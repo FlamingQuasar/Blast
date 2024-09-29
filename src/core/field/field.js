@@ -153,10 +153,8 @@ export class Field{
             scoreToAdd = await this[row][col].fireTileReturnScore(message);
         } else {
             scoreToAdd = this[row][col].fireTileReturnScore();
-            //if(this[row][col] instanceof BombBooster){
-                console.clear();
-                game.showFieldAndState();
-            //}
+            console.clear();
+            game.showFieldAndState();
         }
         return scoreToAdd; // вернуть 0 очков прибавки
     }
@@ -216,7 +214,7 @@ export class Field{
             for(let j=0; j<Field.settings.fieldWidth; j++){
                 if(i < newTilesGenerationMask[j]){
                     if(sumBurnedTiles >= Field.settings.largeGroupBonusRequirement){
-                        this[i][j] = new SuperBooster({field : this.field});
+                        this[i][j] = new SuperBooster({field : this});
                         sumBurnedTiles = 0;
                     }
                     else {

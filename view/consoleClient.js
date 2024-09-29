@@ -47,7 +47,7 @@ if(setupAnswer[0] == "y"){
         n: +params[0], // высота поля
         m: +params[1], // ширина поля
         c: +params[2], // число цветов
-        k:2, 
+        k: 2, 
         maxScore: +params[3], // число очков для победы на уровне
         stepsCounter: +params[4], // доступно шагов на уровне
         s : +params[5], // доступно перемешиваний на уровне
@@ -58,7 +58,9 @@ if(setupAnswer[0] == "y"){
     });
 }
 else{
-    game = new BlastGame({n:5, m:6, c:9, k:2, maxScore:100, stepsCounter:3, s:3,
+    game = new BlastGame({n:7, m:7, c:9, k:2, maxScore:250, stepsCounter:5, s:5,
+        boosterProbability: 100, bombRadius:3, largeGroupBonusRequirement:3,
+        largeGroupBonusEffect:0,
         tapTileHandler: showQuestionGetInput });
 }
 
