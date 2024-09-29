@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body{
+				background-color: #a1a1a1;
+			}
+			.app{
+				height: 660px;
+			}
+			.app>.game-field{
+				background-color: #0d233d;
+				border: 2px solid #00BCD4;
+				border-radius: 31px;
+				box-shadow: 0px 0px 7px 9px #00c7ffa3 inset;
+				height: 570px;
+				left: 83px;
+				position: absolute;
+				top: 30px;
+				width: 570px;
+			}
+			.app>.game-lvlnscore{
+				background-color: #20549a;
+				border: 4px solid #6be7fa;
+				border-radius: 31px;
+				box-shadow: 0px 0px 7px 8px #00c7ffa3 inset;
+				height: 310px;
+				left: 730px;
+				position: absolute;
+				top: 182px;
+				width: 330px;
+			}
+			.app .game-lvlcircle{
+				background: linear-gradient(146deg, #9198e5, #e66465 66.71%);
+				border: 2px solid #fe54c7;
+				border-radius: 100px;
+				border-top-left-radius: 100px;
+				border-top-right-radius: 100px;
+				border-bottom-right-radius: 100px;
+				border-bottom-left-radius: 100px;
+				box-shadow: 0px 0px 9px 7px #00c7ffa3;
+				height: 154px;
+				margin-left: 87px;
+				margin-top: 17px;
+				width: 154px;
+			}
+			.app .game-lvlcircle>p{
+				color: white;
+				font-family: fantasy;
+				font-size: 48px;
+   				text-align: center;
+			}
+			.app .game-scoreblock{
+				background: linear-gradient(#081e3c, #0f376f 66.71%);
+				border: 1px solid black;
+				border-radius: 15px;
+				box-shadow: 0px 0px 7px 1px #00c7ffa3;
+				height: 95px;
+				margin-left: 40px;
+				margin-top: 17px;
+				width: 246px;
+			}
+			.app .game-scoreblock>img{
+				margin-left: 81px;
+				margin-top: 13px;
+				width: 85px;
+			}
+			.app .game-scoreblock>p{
+				color: white;
+				font-family: fantasy;
+				font-size: 28px;
+				margin-top: 4px;
+   				text-align: center;
+			}
+			.app .game-controls{
+				display: flex;
+				height: 112px;
+				left: 720px;
+				position: absolute;
+				top: 30px;
+			}
+			.app .game-controls>div{
+				background: linear-gradient(#f08dfb, #5e0a98);
+				border-radius: 20px;
+				border: 2px solid pink;
+				height: 112px;
+				margin:10px;
+    			width: 108px;
+			}
+			.app .game-controls>div>.shake-counter{
+				background: #340150;
+				border: 2px solid #a22ccf;
+				border-radius: 16px;
+				color: white;
+				font-family: fantasy;
+				font-size: 26px;
+				margin-left: 12px;
+				margin-top: -7px;
+				text-align: center;
+    			width: 88px;
+			}
+			.app .game-controls>div.end{
+				filter: grayscale(1);
+			}
+			.app .game-controls>div>img{
+				height: 60px;
+				margin-left: 23px;
+				margin-top: 14px;
+				width: 60px;
+				
+				transform: rotate(2deg); transition: 0.9s; transition-property: transform;
+			}			
+			.app .game-controls>div:not(.end):hover{
+				background: linear-gradient(#5e0a98, #f08dfb);
+			}
+			.app .game-controls>div:not(.end):hover>img
+			{
+				transform: rotate(360deg);
+			}
+			.app .game-controls>div.control-settings>img{
+				margin-left: 24px;
+				margin-top: 24px;
+			}
+		</style>
+		<script>
+		
+		</script>
+	</head>
+	<body>
+		<div class="app">
+			<div class="game-progress"></div>
+			<div class="game-field"></div>
+			<div class="game-lvlnscore">
+				<div class="game-lvlcircle">
+					<p id="bllvlcounter">1</p>
+				</div>
+				<div class="game-scoreblock">
+					<img src="htmlClient/assets/scores.png">
+					<p id="blscorecounter">10000</p>
+				</div>
+			</div>
+			<div class="game-controls">
+				<div class="control-shake">
+					<img src="htmlClient/assets/shake.png">
+					<div id="shake-counter" class="shake-counter">3</div>
+				</div>
+				<div class="control-settings">
+					<img src="htmlClient/assets/settings.png">
+				</div>
+			</div>
+
+		</div>
+	</body>
+</html>
