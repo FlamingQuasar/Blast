@@ -3,7 +3,7 @@ import { Field } from "./field.js";
 
 export class SuperBooster extends Tile{
     static TILETYPE = "L"; // Супер-тайл от слова Large
-    static EFFECTS = ["burnBomb","burnRow","burnColumn","burnField"];
+    static EFFECTS = ["burnBomb","burnRow","burnColumn","burnCross","burnField"];
     constructor({field={}}){
         super({colorsCount:0});
         this.field = field;
@@ -15,19 +15,23 @@ export class SuperBooster extends Tile{
     _fireTileReturnScore(){
         this.tileType = Tile.EMPTYTILE;
         switch(this.effect){
-            // Взорвать радиус бомбы
+            // Взорвать радиус бомбы радиуса R
             case SuperBooster.EFFECTS[0]:{
-                
+
             } break;
-            // Взорвать строку
+            // Взорвать всю строку
             case SuperBooster.EFFECTS[1]:{
 
             } break;
-            // Взорвать столбец
+            // Взорвать весь столбец
             case SuperBooster.EFFECTS[2]:{
 
             } break;
-            // Взорвать игровое поле
+            // Взорвать крест радиуса R
+            case SuperBooster.EFFECTS[3]:{
+
+            } break;
+            // Взорвать всё игровое поле
             case SuperBooster.EFFECTS[3]:{
 
             }

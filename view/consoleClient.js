@@ -32,8 +32,8 @@ if(setupAnswer[0] == "y"){
     };
     const bustersSetupAnswer = await showQuestionGetInput('Настроить бустеры? (y / n)');
     if(bustersSetupAnswer == "y"){
-        const bustersParams = await showQuestionGetInput(`Задайте через \",\" (0-100)% генерации бустера после сжигания, Радиус бомбы(R), Размер группы для супер-тайла (L), Вариант логики супер-тайла (1-4)
-        (1 - сжигает строку, 2 - сжигает столбец, 3 - сжигает радиус R, 4 - сжигает игровое поле)\n`);
+        const bustersParams = await showQuestionGetInput(`Задайте через \",\" (0-100)% генерации бустера после сжигания, Радиус бомбы(R), Размер группы для супер-тайла (L), Вариант логики супер-тайла (0-4)
+        (0 - сжигает радиус бомбы, 1 - сжигает строку, 2 - сжигает столбец, 3 - сжигает крест R, 4 -сжигает игровое поле)\n`);
         bustersSettings = {
             boosterProbability : +bustersParams[0],
             bombRadius : +bustersParams[1],
@@ -41,6 +41,7 @@ if(setupAnswer[0] == "y"){
             largeGroupBonusEffect: +bustersParams[3]
         };
     }
+
     game = new BlastGame({ 
         tapTileHandler: showQuestionGetInput,
         n: +params[0], // высота поля

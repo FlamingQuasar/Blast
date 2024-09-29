@@ -220,8 +220,8 @@ export class Field{
                         sumBurnedTiles = 0;
                     }
                     else {
-                        this[i][j] = this.generateTileWithBoostersProbability({bombProbability:90, 
-                                                                        teleportProbability:90});
+                        this[i][j] = this.generateTileWithBoostersProbability({bombProbability:Field.settings.boosterProbability, 
+                                                                        teleportProbability:Field.settings.boosterProbability});
                     }
                 }
             }
