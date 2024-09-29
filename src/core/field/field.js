@@ -9,8 +9,8 @@ export class Field{
     static settings = {};
 
     // Проинициализировать(связать с текущей фишкой) предыдущих "соседей" фишки (сверху и слева)
-    static initTopAndLeftFieldItemNeighbour(currentItem, matrix, row, col) {
-        currentItem.initNeighbours((col>0) ? matrix[row][col-1] : null,
+    static initTopAndLeftTileNeighbour(currentTile, matrix, row, col) {
+        currentTile.initNeighbours((col>0) ? matrix[row][col-1] : null,
             (row>0) ? matrix[row-1][col] : null,null,null);
     }
 
@@ -35,10 +35,10 @@ export class Field{
             let row = [];
             matrix.push(row);
             for(let j=0; j<settings.fieldWidth;j++){
-                let item = new Tile({colorsCount:settings.colorsCount, 
+                let tile = new Tile({colorsCount:settings.colorsCount, 
                                 minimalGroup:settings.minimalGroup});
-                row.push(item);
-                Field.initTopAndLeftFieldItemNeighbour(item, matrix, i, j);
+                row.push(tile);
+                Field.initTopAndLeftTileNeighbour(tile, matrix, i, j);
             }
         }
         return matrix;
@@ -97,7 +97,7 @@ export class Field{
     fieldHaveOccurrence(){
         let allMatrix = [];
         for(let i=0; i<Field.settings.fieldHeight; i++){
-            this[i].map(item => allMatrix.push(item.tileType));
+            this[i].map(tile => allMatrix.push(tile.tileType));
         }
         if(new Set(allMatrix).size !== allMatrix.length){
             return true;
@@ -141,18 +141,22 @@ export class Field{
         this.updateNeighbourRelations();
     }
 
-    // Попробовать "сжечь фишки" при активации ячейки
-    async activateTileAndGetScore(row, col, message){
+    // Попробовать "сжечь тайлы" при активации ячейки
+    async activateTileAndGetScore(row, col, message, game){
         if(this[row] === undefined || this[row][col] === undefined 
             || this[row][col].tileType === Tile.EMPTYTILE){
             return 0; // вернуть 0 очков
         }
         let scoreToAdd = 0;
+        // случай с тайлом-телепортом - метод требует ожидания второго тайла
         if(this[row][col].fireTileReturnScore.constructor.name == "AsyncFunction"){
-            console.log("TYPEOF: " + this[row][col].fireTileReturnScore.constructor.name);
             scoreToAdd = await this[row][col].fireTileReturnScore(message);
         } else {
             scoreToAdd = this[row][col].fireTileReturnScore();
+            //if(this[row][col] instanceof BombBooster){
+                console.clear();
+                game.showFieldAndState();
+            //}
         }
         return scoreToAdd; // вернуть 0 очков прибавки
     }
@@ -203,12 +207,12 @@ export class Field{
     generateNewTiles(newTilesGenerationMask = []){
         if(!newTilesGenerationMask.length) return;
         // добавить 100% появление супер-тайла если маска сгоревшей группы больше L
-        let maxBurnedItemsColumn = Math.max(...newTilesGenerationMask);
+        let maxBurnedTilesColumn = Math.max(...newTilesGenerationMask);
         let sumBurnedTiles = 0;
         for(let burned of newTilesGenerationMask){
             sumBurnedTiles += burned;
         }
-        for(let i = 0; i< maxBurnedItemsColumn; i++){
+        for(let i = 0; i< maxBurnedTilesColumn; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){
                 if(i < newTilesGenerationMask[j]){
                     if(sumBurnedTiles >= Field.settings.largeGroupBonusRequirement){
@@ -230,7 +234,7 @@ export class Field{
     updateNeighbourRelations(){
         for(let i=0; i<Field.settings.fieldHeight; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){
-                Field.initTopAndLeftFieldItemNeighbour(this[i][j], this, i, j);
+                Field.initTopAndLeftTileNeighbour(this[i][j], this, i, j);
             }
         }
     }
@@ -269,7 +273,7 @@ export class Field{
                     newTilesGenerationMask[j]++;
                 }
                 // Обновить ссылки на соседей всех фишек поля
-                Field.initTopAndLeftFieldItemNeighbour(this[i][j], this, i, j);
+                Field.initTopAndLeftTileNeighbour(this[i][j], this, i, j);
             }
         }
 

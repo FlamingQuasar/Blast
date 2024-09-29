@@ -23,6 +23,7 @@ export class BombBooster extends Tile{
             
             if(this.bottom) 
                 this.bottom.setTypeAndSameNeighbour("bottom", Tile.EMPTYTILE, this.radius);
+            
             this.hasSameNeighbour = true;
             
             //console.clear();

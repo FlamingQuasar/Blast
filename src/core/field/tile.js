@@ -1,7 +1,7 @@
 export class Tile{
     hasSameNeighbour = false;
     static minimalGroupCount;
-    static EMPTYTILE = "_";
+    static EMPTYTILE = "💥";
 
     constructor({colorsCount, minimalGroupCount = 2}){
         this.tileType = Math.floor(Math.random() * colorsCount);
@@ -33,8 +33,11 @@ export class Tile{
     // Активировать (сжечь) фишку на поле и ее соседей, если соответствуют
     // {rate} коэффициент умножения цены очков за нажатую фишку 
     fireTileReturnScore(rate=1, message){
+        if(this._fireTileReturnScore.toString()!= "_fireTileReturnScore(){}"){
         // Если у нас непростой тайл, а наследник реализовавший метод взрыва
-        if(this._fireTileReturnScore()) return 0;
+            this._fireTileReturnScore();
+            return 70; // За взрывной тайл больше очков
+        }
         
         let scoreToAdd = 0;
         if(this.hasSameNeighbour){

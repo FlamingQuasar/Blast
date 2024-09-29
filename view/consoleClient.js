@@ -1,4 +1,5 @@
 import { BlastGame } from '../src/core/blastGame.js'
+import { GameState } from '../src/core/gameState.js'
 import * as readline from 'node:readline/promises';
 import {
    stdin as input,
@@ -61,25 +62,36 @@ else{
 }
 
 let {row, column} = {};
+let consoleGameShow = function(gameEntity){
+    if(!gameEntity) return;
+    setTimeout(function(){
+        console.clear();
+        let prefix = `LVL${gameEntity.level} Остаток (Шаги:${gameEntity.settings?.stepsCounter}, Встряски:${gameEntity.settings?.shakesCount}) (Счёт ${gameEntity.currentScore}/${gameEntity.settings.maxScore}) - мин.группа: ${gameEntity.settings.minimalGroup}`;
+        let showGameReturnState = gameEntity.showFieldAndState(prefix);
+        if(showGameReturnState != GameState.WIN && 
+            showGameReturnState != GameState.LOSE){
+            console.log("Введите ряд и столбец(отсчет с \"0\") Тайла через запятую (Или букву S - Shake):");
+        }
+    },800, gameEntity);
+}
 // Основной цикл
-do{
-    //console.clear();
-    console.log(`Осталось (Шагов:${game.settings.stepsCounter}, Встрясок:${game.settings.shakesCount}) (Счёт ${game.currentScore}/${game.settings.maxScore}) - группы не менее ${game.settings.minimalGroup} фишек`);
-    game.showFieldAndState();
-    if(game.settings.stepsCounter){
-        // TODO добавить концовку при окончании числа ходов
-    }
-    if(game.settings.stepsCounter && !game.scoreAchieved){
-        let splitedAnswer = await showQuestionGetInput(
-            'Введите ряд и столбец Тайла через запятую (Или букву S - Shake):'
-        );
-        if(splitedAnswer.length == 1 && splitedAnswer[0] == "s"){
-            game.shakeField();
-            row = column = undefined;
-            continue;
-        } else
-            ({row, column} = { row: +splitedAnswer[0], column: +splitedAnswer[1]});
-    }
-} while(await game.activateFieldItem(row, column) == true);
+const startConsoleClient = async function(game){
+    consoleGameShow(game);
+    do{
+        if(game.settings.stepsCounter){
+            // TODO добавить концовку при окончании числа ходов
+        }
+        if(game.settings.stepsCounter && !game.scoreAchieved){
+            let splitedAnswer = await showQuestionGetInput('');
+            if(splitedAnswer.length == 1 && splitedAnswer[0] == "s"){
+                game.shakeField();
+                row = column = undefined;
+                continue;
+            } else
+                ({row, column} = { row: +splitedAnswer[0], column: +splitedAnswer[1]});
+        }
+    } while(await game.activateTile(row, column, consoleGameShow) == true);
+}
+await startConsoleClient(game);
 
 

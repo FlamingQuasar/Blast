@@ -38,11 +38,12 @@ export class BlastGame{
             largeGroupBonusEffect : largeGroupBonusEffect
         });
         this._stage = GameState.SETTINGS;
-        this.activateFieldItem.bind(this);
-        this.replaceItemsAfterFire.bind(this);
+        this.activateTile.bind(this);
+        this.replaceTilesAfterFire.bind(this);
         this.currentScore = 0;
         this.scoreAchieved = false;
         this.hasPairs = false;
+        this.level = 1;
         this.createField();
     }
     get stage(){
@@ -72,7 +73,7 @@ export class BlastGame{
     }
 
     // Сместить фишки сверху вниз после сгорания группы или сгенерировать
-    replaceItemsAfterFire(showConsoleLog){
+    replaceTilesAfterFire(showConsoleLog){
         console.log("Смещаем фишки сверху!");
         this.field.replaceAfterBurn();
         if(showConsoleLog) this.showFieldAndState();
@@ -106,39 +107,48 @@ export class BlastGame{
         return this.field.checkPairs();
     }
 
-    showFieldAndState({onlyPairs = false}={}){
+    showFieldAndState(prefixText = ""){
+        console.log(prefixText);
         BlastGame.showField(this.field, this.settings);
         if(this.currentScore >= this.settings.maxScore){
             this.stage = GameState.WIN;
             console.log("Победа!");
             this.scoreAchieved = true;
+            return this.stage;
         }
         else if(this.stepsCounter == 0){
             this.stage = GameState.LOSE;
             console.log("Поражение!");
+            return this.stage;
         }
+        return 0;
     }
 
     // Активировать фишку в ячейке игрового поля
-    async activateFieldItem(row, col, showConsoleLog = false, stepsCalcFreeze=false){
-        // если row и col undefined и stepsCounter не надо убавлять        
+    async activateTile(row, col, clientCallbackFunction, stepsCalcFreeze=false){
+        // если row и col undefined и stepsCounter не надо убавлять
+        let clientResult = false; 
         if((undefined == (row && col)) ?? true){
-            return true;
+            clientResult= true;
         }
-        if(this.settings.stepsCounter){
+        else if(this.settings.stepsCounter){
             // Прибавить счет, если фишки сгорят
-            const newScoreToAdd = await this.field.activateTileAndGetScore(row,col);
+            const newScoreToAdd = await this.field.activateTileAndGetScore(row,col,"",this);
             if(newScoreToAdd.then != undefined){
-                return false;
+                console.log("TELEPORT");
+                clientResult= false;
             }
-            if(newScoreToAdd){
+            else if(newScoreToAdd){
                 this.currentScore += newScoreToAdd;
-                this.replaceItemsAfterFire(showConsoleLog);
+                let showConsoleLog = false;
+                this.replaceTilesAfterFire(showConsoleLog);
             }
             // Вычесть шаг, если калькуляция шагов не заморожена (как при телепорте)
             if(!stepsCalcFreeze) this.settings.stepsCounter--;
-            return true;
+            clientResult= true;
         }
-        return false;
+        console.log("BlastGame"+this instanceof BlastGame);
+        clientCallbackFunction(this);
+        return clientResult;// false;
     }
 }
