@@ -52,8 +52,14 @@ window.onload = function() {
 
     const initGame = function(){
         const shakesCountField = document.getElementById("shake-counter");
+        const scoreCountField = document.getElementById("blscorecounter");
+        const stepsCountField = document.getElementById("blstepscounter");
         let shakesCounter = window.getShakesCount();
         shakesCountField.innerText = shakesCounter;
+        scoreCountField.innerText = `${window.getScoreCount()}/${window.getMaxScore()}`;
+        stepsCountField.innerText = window.getStepsCount();
+
+
         if(shakesCounter==0){
             shakeButton.classList.add("end");
         }

@@ -22,7 +22,7 @@ addEventListener("DOMContentLoaded",function(){
         }
 
         const getStepsCount = function(){
-            return game.stepsCounter+1;
+            return game.settings.stepsCounter+1;
         }
 
         const getScoreCount = function(){
@@ -41,5 +41,6 @@ addEventListener("DOMContentLoaded",function(){
         window.shakeField = gameShakeField;
         window.tapTile = ()=>{};
         window.requestStatus = ()=>{};
+
     }
 });
