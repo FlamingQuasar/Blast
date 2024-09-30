@@ -21,6 +21,22 @@ let drawTileOfField = function(ctx, color, xCoord, yCoord){
     return image;
 }
 
+let boomBurnAnimation = function(tileImage, canvas, fabric){
+    tileImage.animate('scaleY', 10, {
+        onChange: canvas.renderAll.bind(canvas),
+        duration: 100,
+    });
+    tileImage.animate('scaleX', 10, {
+        onChange: canvas.renderAll.bind(canvas),
+        duration: 100,
+    });
+    tileImage.animate('opacity', 0, {
+        onChange: canvas.renderAll.bind(canvas),
+        duration: 100,
+        easing: fabric.util.ease.easeOutBounce
+    });
+}
+
 let drawField = function(canvas, field, offsetX=0, offsetY=2){
     canvas.clear();
     for(let i=0; i< field.length; i++){
@@ -73,11 +89,10 @@ let drawField = function(canvas, field, offsetX=0, offsetY=2){
                         onChange: canvas.renderAll.bind(canvas),
                         duration: 100,
                         easing: fabric.util.ease.easeOutBounce
-                    });
-                    console.log("mouseover");
-                    
+                    });                    
                 });
-                myImg.on('mouseout', function(e){                
+
+                myImg.on('mouseout', function(e){
                     this.animate('scaleY', 1, {
                         onChange: canvas.renderAll.bind(canvas)
                     });
@@ -99,7 +114,6 @@ let drawField = function(canvas, field, offsetX=0, offsetY=2){
                         duration: 100,
                         easing: fabric.util.ease.easeOutBounce
                     });
-                    console.log("mouseout");
                 });
 
                 myImg.on('mousedown', async function(e){
