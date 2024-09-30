@@ -31,31 +31,67 @@ let drawField = function(canvas, field, offsetX=0, offsetY=2){
             if(type == "b"){  imgSource = `assets/tile_bomb.png`; }
             else if(type =="t"){ imgSource = `assets/tile_teleport.png`;}
             else if(type=="L"){ imgSource = `assets/tile_super.png`;}
+            else if(type=="_"){ imgSource = `assets/tile__.png`;}
             else imgSource = `assets/tile_${COLORTILES[field[i][j].tileType]}.png`;
 
-            fabric.Image.fromURL(imgSource, function(img) 
-            {
-            myImg = img.set({
-                                left: offsetY+12+j*50, 
-                                top:  offsetX+12+50*i,
-                                width:44,
-                                height:50,
-                                scaleY: 1,
-                            });
-                            myImg.testVariable=""+i+","+j;
-            canvas.add(myImg); 
-            myImg.set('selectable', false);
-            myImg.on('mousedown', async function(e)
-            {
-                let coordinates = e?.target?.testVariable;
-                console.log(coordinates);
-                if(coordinates){
-                    let splitCoords = coordinates.split(",");
-                    await window.tapTile(splitCoords[0],splitCoords[1], ()=>{});//.then(window.showField());
-                    initGame();
-                }
-            
-            });
+            fabric.Image.fromURL(imgSource, function(img){
+                let top = offsetX+12+i*50;
+                myImg = img.set({
+                    left: offsetY+12+j*50, 
+                    top:  top,
+                    width: 44,
+                    height: 50,
+                    opacity: 0.9
+                });
+                myImg.coordinates=""+i+","+j;
+                canvas.add(myImg); 
+                myImg.set('selectable', false);
+
+                myImg.on('mouseover', function(e){
+                    this.animate('scaleY', 0.9, {
+                        onChange: canvas.renderAll.bind(canvas),
+                        duration: 100,
+                        easing: fabric.util.ease.easeOutBounce
+                    });
+                    this.animate('top', top+2, {
+                        onChange: canvas.renderAll.bind(canvas),
+                        duration: 100,
+                        easing: fabric.util.ease.easeOutBounce
+                    });
+                    this.animate('opacity', 1, {
+                        onChange: canvas.renderAll.bind(canvas),
+                        duration: 100,
+                        easing: fabric.util.ease.easeOutBounce
+                    });
+                    console.log("mouseover");
+                    
+                });
+                myImg.on('mouseout', function(e){                
+                    this.animate('scaleY', 1, {
+                        onChange: canvas.renderAll.bind(canvas)
+                    });
+                    this.animate('top', top-2, {
+                        onChange: canvas.renderAll.bind(canvas),
+                        duration: 100,
+                        easing: fabric.util.ease.easeOutBounce
+                    });
+                    this.animate('opacity', 0.9, {
+                        onChange: canvas.renderAll.bind(canvas),
+                        duration: 100,
+                        easing: fabric.util.ease.easeOutBounce
+                    });
+                    console.log("mouseout");
+                });
+
+                myImg.on('mousedown', async function(e){
+                    let coordinates = e?.target?.coordinates;
+                    console.log(coordinates);
+                    if(coordinates){
+                        let splitCoords = coordinates.split(",");
+                        await window.tapTile(splitCoords[0],splitCoords[1], ()=>{});//.then(window.showField());
+                        initGame();
+                    }
+                });
             
             });
         }
