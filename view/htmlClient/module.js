@@ -21,6 +21,17 @@ let drawTileOfField = function(ctx, color, xCoord, yCoord){
     return image;
 }
 
+// анимашка для телепортации в отличие от сгорания уменьшает тайлы и потом увеличивает, либо анимируем смену x,y
+let teleportAnimation = function(firstTile, secondTile){
+
+}
+
+// отправлять этот метод в колбек для выпадания после сгорания
+let fallAnimation = function(tileImage, positionY, canvas, fabric){
+
+}
+
+// отправлять этот метод или расширенную версию принимающую только x,y матрицы в колбек для действий
 let boomBurnAnimation = function(tileImage, canvas, fabric){
     tileImage.animate('scaleY', 10, {
         onChange: canvas.renderAll.bind(canvas),
