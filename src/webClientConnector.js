@@ -33,13 +33,17 @@ addEventListener("DOMContentLoaded",function(){
             return game.settings.maxScore;
         }
 
+        const gameTapTile = async function(row, column, callback = ()=>{}){
+            return await game.activateTile(row, column,callback);
+        }
+
         window.showField = showField;
         window.getShakesCount = getShakesCount;
         window.getStepsCount = getStepsCount;
         window.getScoreCount = getScoreCount;
         window.getMaxScore = getMaxScore;
         window.shakeField = gameShakeField;
-        window.tapTile = ()=>{};
+        window.tapTile = gameTapTile;
         window.requestStatus = ()=>{};
 
     }

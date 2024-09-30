@@ -1,5 +1,9 @@
+
+window.onload = function() {
 const FIELDSIZE = 550;
 const COLORTILES=["blue","orange","green","grey","pink","red","white","yellow"];
+const canvas = new fabric.Canvas('canvas', {selection: false});
+const shakeButton = document.getElementsByClassName("control-shake")[0];
 
 let drawTileOfField = function(ctx, color, xCoord, yCoord){
     //if(color >= COLORTILES.length) color = COLORTILES.length-1;
@@ -8,23 +12,28 @@ let drawTileOfField = function(ctx, color, xCoord, yCoord){
     image.onload = function() { 
         ctx.drawImage(image, xCoord, yCoord, 44, 50);   
     };
-    image.src = `assets/tile_${COLORTILES[color]}.png`;
+    if(color == "b"){ image.src = `assets/tile_bomb.png`; }
+    else if(color =="t"){ image.src = `assets/tile_teleport.png`;}
+    else if(color=="L"){ image.src = `assets/tile_super.png`;}
+    else image.src = `assets/tile_${COLORTILES[color]}.png`;
 
 
     return image;
 }
 
 let drawField = function(canvas, field, offsetX=0, offsetY=2){
-    
-
-
-    
-    var elementslist = []
+    canvas.clear();
     for(let i=0; i< field.length; i++){
         for(let j=0; j<field[i].length; j++){
-            let myImg;
+            let myImg, imgSource;
+            let type = field[i][j].tileType;
 
-            fabric.Image.fromURL(`assets/tile_${COLORTILES[field[i][j].tileType]}.png`, function(img) 
+            if(type == "b"){  imgSource = `assets/tile_bomb.png`; }
+            else if(type =="t"){ imgSource = `assets/tile_teleport.png`;}
+            else if(type=="L"){ imgSource = `assets/tile_super.png`;}
+            else imgSource = `assets/tile_${COLORTILES[field[i][j].tileType]}.png`;
+
+            fabric.Image.fromURL(imgSource, function(img) 
             {
             myImg = img.set({
                                 left: offsetY+12+j*50, 
@@ -33,14 +42,18 @@ let drawField = function(canvas, field, offsetX=0, offsetY=2){
                                 height:50,
                                 scaleY: 1,
                             });
-                            myImg.testVariable="MYTESTVARIABLE-["+i+","+j+"]";
+                            myImg.testVariable=""+i+","+j;
             canvas.add(myImg); 
             myImg.set('selectable', false);
-            myImg.on('mousedown', function(e)
+            myImg.on('mousedown', async function(e)
             {
-            console.log("TEST");
-                console.log(e?.target?.testVariable);
-                console.log('image click event was simulated at: ', e.clientX, e.clientY);
+                let coordinates = e?.target?.testVariable;
+                console.log(coordinates);
+                if(coordinates){
+                    let splitCoords = coordinates.split(",");
+                    await window.tapTile(splitCoords[0],splitCoords[1], ()=>{});//.then(window.showField());
+                    initGame();
+                }
             
             });
             
@@ -53,11 +66,9 @@ let drawField = function(canvas, field, offsetX=0, offsetY=2){
 
     
 
-window.onload = function() {
-    const shakeButton = document.getElementsByClassName("control-shake")[0];
-    const canvas = new fabric.Canvas('canvas', {selection: false});
 
     const initGame = function(){
+        
         const shakesCountField = document.getElementById("shake-counter");
         const scoreCountField = document.getElementById("blscorecounter");
         const stepsCountField = document.getElementById("blstepscounter");
@@ -67,12 +78,12 @@ window.onload = function() {
         stepsCountField.innerText = window.getStepsCount();
 
 
-        if(shakesCounter==0){
+        /*if(shakesCounter==0){
             shakeButton.classList.add("end");
         }
         else {
             shakeButton.classList.remove("end");
-        }
+        }*/
         let field = window.showField();
         let offsetX = (FIELDSIZE-field.length*50)/2;
         let offsetY = (FIELDSIZE-field[0].length*50)/2;
