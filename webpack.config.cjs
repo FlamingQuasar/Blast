@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/core/blastGame.js",
+  entry: "./src/webClientConnector.js",
   mode: "development",
   output: {
     filename: "./view/htmlClient/compiled/MAIN.js"
