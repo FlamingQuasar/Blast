@@ -151,9 +151,3 @@ export class BlastGame{
         return clientResult;
     }
 }
-console.log("Hello w!");
-const game = new BlastGame();
-addEventListener("DOMContentLoaded",function(){
-    console.log("LOADED");
-    if(typeof alert == "function") this.alert("!!!")
-});
