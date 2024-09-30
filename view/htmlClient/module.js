@@ -36,8 +36,9 @@ let drawField = function(canvas, field, offsetX=0, offsetY=2){
 
             fabric.Image.fromURL(imgSource, function(img){
                 let top = offsetX+12+i*50;
+                let left = offsetY+12+j*50;
                 myImg = img.set({
-                    left: offsetY+12+j*50, 
+                    left: left, 
                     top:  top,
                     width: 44,
                     height: 50,
@@ -53,7 +54,17 @@ let drawField = function(canvas, field, offsetX=0, offsetY=2){
                         duration: 100,
                         easing: fabric.util.ease.easeOutBounce
                     });
+                    this.animate('scaleX', 0.9, {
+                        onChange: canvas.renderAll.bind(canvas),
+                        duration: 100,
+                        easing: fabric.util.ease.easeOutBounce
+                    });
                     this.animate('top', top+2, {
+                        onChange: canvas.renderAll.bind(canvas),
+                        duration: 100,
+                        easing: fabric.util.ease.easeOutBounce
+                    });
+                    this.animate('left', left+2, {
                         onChange: canvas.renderAll.bind(canvas),
                         duration: 100,
                         easing: fabric.util.ease.easeOutBounce
@@ -70,7 +81,15 @@ let drawField = function(canvas, field, offsetX=0, offsetY=2){
                     this.animate('scaleY', 1, {
                         onChange: canvas.renderAll.bind(canvas)
                     });
-                    this.animate('top', top-2, {
+                    this.animate('scaleX', 1, {
+                        onChange: canvas.renderAll.bind(canvas)
+                    });
+                    this.animate('top', top, {
+                        onChange: canvas.renderAll.bind(canvas),
+                        duration: 100,
+                        easing: fabric.util.ease.easeOutBounce
+                    });
+                    this.animate('left', left, {
                         onChange: canvas.renderAll.bind(canvas),
                         duration: 100,
                         easing: fabric.util.ease.easeOutBounce
