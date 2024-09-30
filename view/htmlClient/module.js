@@ -9,46 +9,53 @@ let drawTileOfField = function(ctx, color, xCoord, yCoord){
         ctx.drawImage(image, xCoord, yCoord, 44, 50);   
     };
     image.src = `assets/tile_${COLORTILES[color]}.png`;
+
+
+    return image;
 }
 
-let drawField = function(field, offsetX=0, offsetY=2){
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+let drawField = function(canvas, field, offsetX=0, offsetY=2){
+    
+
+
+    
+    var elementslist = []
     for(let i=0; i< field.length; i++){
         for(let j=0; j<field[i].length; j++){
-            drawTileOfField(ctx, field[i][j].tileType, offsetX+12+50*i, offsetY+12+j*50);
+            let myImg;
+
+            fabric.Image.fromURL(`assets/tile_${COLORTILES[field[i][j].tileType]}.png`, function(img) 
+            {
+            myImg = img.set({
+                                left: offsetX+12+50*i, 
+                                top: offsetY+12+j*50 ,
+                                width:44,
+                                height:50,
+                                scaleY: 1,
+                            });
+                            myImg.testVariable="MYTESTVARIABLE-"+i;
+            canvas.add(myImg); 
+            myImg.set('selectable', false);
+            myImg.on('mousedown', function(e)
+            {
+            console.log("TEST");
+                console.log(e?.target?.testVariable);
+                console.log('image click event was simulated at: ', e.clientX, e.clientY);
+            
+            });
+            
+            });
         }
     }
-
-    var elementslist = []
-    canvas.addEventListener("click",function(){
-        console.log("click")
-    });
-    canvas.addEventListener('mousemove', function(event) {
-        event = event || window.event;
-        var ctx = document.getElementById("canvas").getContext("2d")
-    
-        for (var i = elementslist.length - 1; i >= 0; i--){  
-        
-            if (elementslist[i] && ctx.isPointInPath(elementslist[i], event.offsetX, event.offsetY)) {
-                document.getElementById("canvas").style.cursor = 'pointer';
-                ctx.fillStyle = 'orange';
-                ctx.fill(elementslist[i]);
-                return
-            } else {
-                document.getElementById("canvas").style.cursor = 'default';
-                ctx.fillStyle = 'red';
-                for (var d = elementslist.length - 1; d >= 0; d--){ 
-                    ctx.fill(elementslist[d]);
-                }
-            }
-        }
-    });
 }
-            
+    
+
+
+    
+
 window.onload = function() {
     const shakeButton = document.getElementsByClassName("control-shake")[0];
+    const canvas = new fabric.Canvas('canvas', {selection: false});
 
     const initGame = function(){
         const shakesCountField = document.getElementById("shake-counter");
@@ -69,7 +76,8 @@ window.onload = function() {
         let field = window.showField();
         let offsetX = (FIELDSIZE-field.length*50)/2;
         let offsetY = (FIELDSIZE-field[0].length*50)/2;
-        drawField(field, offsetX, offsetY);
+        
+        drawField(canvas,field, offsetX, offsetY);
     }
 
     shakeButton.addEventListener("click", function(){

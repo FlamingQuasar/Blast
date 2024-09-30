@@ -2,10 +2,7 @@ body{
     background-color: #a1a1a1;
     user-select: none;
 }
-.app{
-    height: 660px;
-}
-.app>.game-field{
+.app .canvas-container{
     background-color: #0d233d;
     border: 2px solid #00BCD4;
     border-radius: 31px;
@@ -77,6 +74,7 @@ body{
     height: 112px;
     left: 592px;
     position: absolute;
+    top: 6px;
 }
 .app .game-controls>div{
     background: linear-gradient(#f08dfb, #5e0a98);
