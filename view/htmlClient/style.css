@@ -10,9 +10,9 @@ body{
     border-radius: 31px;
     box-shadow: 0px 0px 7px 9px #00c7ffa3 inset;
     height: 570px;
-    left: 83px;
+    left: 8px;
     position: absolute;
-    top: 30px;
+    top: 8px;
     width: 570px;
 }
 .app>.game-lvlnscore{
@@ -21,9 +21,9 @@ body{
     border-radius: 31px;
     box-shadow: 0px 0px 7px 8px #00c7ffa3 inset;
     height: 412px;
-    left: 730px;
+    left: 602px;
     position: absolute;
-    top: 182px;
+    top: 150px;
     width: 330px;
 }
 .app .game-lvlcircle{
@@ -74,9 +74,8 @@ body{
 .app .game-controls{
     display: flex;
     height: 112px;
-    left: 720px;
+    left: 592px;
     position: absolute;
-    top: 30px;
 }
 .app .game-controls>div{
     background: linear-gradient(#f08dfb, #5e0a98);
@@ -105,10 +104,11 @@ body{
     height: 60px;
     margin-left: 23px;
     margin-top: 14px;
-    width: 60px;
-    
-    transform: rotate(2deg); transition: 0.9s; transition-property: transform;
-}			
+    transform: rotate(0deg);
+    transition: 0.9s;
+    transition-property: transform;
+    width: 60px; 
+}
 .app .game-controls>div:not(.end):hover{
     background: linear-gradient(#5e0a98, #f08dfb);
 }

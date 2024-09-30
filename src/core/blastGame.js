@@ -22,7 +22,7 @@ export class BlastGame{
     constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10,
                  s=3, boosterProbability = 50, bombRadius=4,
                  largeGroupBonusRequirement=3, largeGroupBonusEffect=0, 
-                 tapTileHandler=()=>{}}){
+                 tapTileHandler=()=>{}} = {}){
         this.tapTileHandler = tapTileHandler;
         this.settings = new Settings({
             fieldHeight : n<2?2:n,
@@ -151,3 +151,9 @@ export class BlastGame{
         return clientResult;
     }
 }
+console.log("Hello w!");
+const game = new BlastGame();
+addEventListener("DOMContentLoaded",function(){
+    console.log("LOADED");
+    if(typeof alert == "function") this.alert("!!!")
+});
