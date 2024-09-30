@@ -6,6 +6,13 @@ blast videogame example
 1. **cd view**
 2. **node view/consoleClient.js**
 
+## Веб-клиент
+Для запуска веб-клиента необходимо выполнить команды:
+1. **npm init**
+1. **npm install --save-dev babel-loader css-loader webpack webpack-cli style-loader webpack-dev-server**
+2. **npm run dev**
+3. запустить в браузере **http://192.168.0.11:8080/index.htm**
+
 ## Автотесты
 1. Для установки автотестов нужно: **npm install**
 2. Для запуска автотестов нужно: **npm test**;
@@ -17,4 +24,9 @@ blast videogame example
 - [x] бустер-бомба
 - [x] бустер-телепорт
 - [x] бустер супер-тайл: 4 варианта работы - а) взрыв бомбы радиус R, b) взрыв строки, c) взрыв столбца, d) взрыв креста R, e) взрыв всего игрового поля
+
+## Плюсы
+- [x] Реализованы автоматические тесты
+- [x] Использованы ES6+Babel
+- [x] Сборка проекта webpack
 
