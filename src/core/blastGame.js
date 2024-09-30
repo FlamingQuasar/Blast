@@ -8,7 +8,7 @@ export class BlastGame{
     * @constructor
     * @param {number} n - Высота игрового поля
     * @param {number} m - Ширина игрового поля
-    * @param {number} c - Количество цветов тайлов (фишек)
+    * @param {number} c - Количество цветов тайлов (не более 8)
     * @param {number} k=2 - Минимальный размер групп
     * @param {number} maxScore = 1000 - Число очков для победы
     * @param {number} stepsCounter = 10 - Максимальное число шагов на уровне
@@ -27,7 +27,7 @@ export class BlastGame{
         this.settings = new Settings({
             fieldHeight : n<2?2:n,
             fieldWidth : m<2?2:m,
-            colorsCount : c,
+            colorsCount : c>8?8:c,
             minimalGroup : k<2?2:k,
             maxScore : maxScore>1?maxScore:1,
             stepsCounter : stepsCounter>1? stepsCounter : 1,
@@ -84,7 +84,9 @@ export class BlastGame{
         if(this.settings.shakesCount > 0){
             this.field.shakeField();
             this.settings.shakesCount--;
+            return 1;
         }
+        return 0;
     }
 
     createField(showConsoleLog = false){
@@ -116,7 +118,7 @@ export class BlastGame{
             this.scoreAchieved = true;
             return this.stage;
         }
-        else if(this.stepsCounter == 0){
+        else if(this.settings.stepsCounter == 0){
             this.stage = GameState.LOSE;
             console.log("Поражение!");
             return this.stage;

@@ -3,8 +3,7 @@ blast videogame example
 
 ## Консольный клиент
 Для запуска консольного клиента надо вызвать: 
-1. **cd view**
-2. **node view/consoleClient.js**
+1. **node view/consoleClient.js**
 
 ## Веб-клиент
 Для запуска веб-клиента необходимо выполнить команды:
@@ -12,6 +11,7 @@ blast videogame example
 1. **npm install --save-dev babel-loader css-loader webpack webpack-cli style-loader webpack-dev-server**
 2. **npm run dev**
 3. запустить в браузере **http://192.168.0.11:8080/index.htm**
+4. либо поиграть на сайте разработчика
 
 ## Автотесты
 1. Для установки автотестов нужно: **npm install**

@@ -8,19 +8,36 @@ addEventListener("DOMContentLoaded",function(){
             largeGroupBonusEffect:0,
             tapTileHandler: ()=>{} });
 
-        const myFuncIsGlodal = function(){            
+        const showField = function(){            
             BlastGame.showField(game.field, game.settings);
-            if(typeof alert == "function") this.alert("!!!")
             return game.field;
         };
 
         const gameShakeField = function(){
-            game.shakeField();
-            BlastGame.showField(game.field, game.settings);
-            return game.field;
+            return game.shakeField();
         }
 
-        window.startFunc = myFuncIsGlodal;
+        const getShakesCount = function(){
+            return game.settings.shakesCount;
+        }
+
+        const getStepsCount = function(){
+            return game.stepsCounter+1;
+        }
+
+        const getScoreCount = function(){
+            return game.currentScore;
+        }
+        
+        const getMaxScore = function(){
+            return game.settings.maxScore;
+        }
+
+        window.showField = showField;
+        window.getShakesCount = getShakesCount;
+        window.getStepsCount = getStepsCount;
+        window.getScoreCount = getScoreCount;
+        window.getMaxScore = getMaxScore;
         window.shakeField = gameShakeField;
         window.tapTile = ()=>{};
         window.requestStatus = ()=>{};
