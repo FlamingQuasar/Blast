@@ -29,4 +29,6 @@ blast videogame example
 - [x] Реализованы автоматические тесты
 - [x] Использованы ES6+Babel
 - [x] Сборка проекта webpack
+- [x] Использование Fabric.3.0.0.js для продвинутой работы с canvas
 
+![Скриншот игры Blast](https://bakoomwak.ru/projects/blast/preview.png)

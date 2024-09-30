@@ -27,13 +27,13 @@ let drawField = function(canvas, field, offsetX=0, offsetY=2){
             fabric.Image.fromURL(`assets/tile_${COLORTILES[field[i][j].tileType]}.png`, function(img) 
             {
             myImg = img.set({
-                                left: offsetX+12+50*i, 
-                                top: offsetY+12+j*50 ,
+                                left: offsetY+12+j*50, 
+                                top:  offsetX+12+50*i,
                                 width:44,
                                 height:50,
                                 scaleY: 1,
                             });
-                            myImg.testVariable="MYTESTVARIABLE-"+i;
+                            myImg.testVariable="MYTESTVARIABLE-["+i+","+j+"]";
             canvas.add(myImg); 
             myImg.set('selectable', false);
             myImg.on('mousedown', function(e)
