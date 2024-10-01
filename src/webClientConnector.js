@@ -35,7 +35,7 @@ addEventListener("DOMContentLoaded",function(){
 
         const gameTapTile = async function(row, column, 
                 burnAnimation=()=>{}, fallAnimation = ()=>{}, generateAnimation=()=>{}){
-            return await game.activateTile(row, column, ()=>{}, false, burnAnimation, fallAnimation);
+            return await game.activateTile(row, column, ()=>{}, false, burnAnimation, fallAnimation, generateAnimation);
         }
 
         window.showField = showField;

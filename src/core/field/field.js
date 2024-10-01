@@ -203,7 +203,7 @@ export class Field{
     * Сгенерировать сверху новые фишки после "сгоревших"
     * @param {array} newTilesGenerationMask - массив-"маска" количества пустых тайлов в каждом столбце
     */
-    generateNewTiles(newTilesGenerationMask = [], callbackFunction=()=>{}){
+    generateNewTiles(newTilesGenerationMask = [], genCallback=()=>{}, refreshAllFieldOnUICallback=()=>{}){
         if(!newTilesGenerationMask.length) return;
         // добавить 100% появление супер-тайла если маска сгоревшей группы больше L
         let maxBurnedTilesColumn = Math.max(...newTilesGenerationMask);
@@ -211,23 +211,30 @@ export class Field{
         for(let burned of newTilesGenerationMask){
             sumBurnedTiles += burned;
         }
+        let counterOfGenerations = newTilesGenerationMask.map((element) => element);
         for(let i = 0; i< maxBurnedTilesColumn; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){
+                // Если номер текущей строки меньше чем количество пустот в данном стобце
                 if(i < newTilesGenerationMask[j]){
                     if(sumBurnedTiles >= Field.settings.largeGroupBonusRequirement){
                         this[i][j] = new SuperBooster({field : this});
+                        genCallback(SuperBooster.TILETYPE, j, counterOfGenerations[j]);
                         sumBurnedTiles = 0;
                     }
                     else {
                         this[i][j] = this.generateTileWithBoostersProbability({bombProbability:Field.settings.boosterProbability, 
                                                                         teleportProbability:Field.settings.boosterProbability});
+                        genCallback(this[i][j].tileType, j, counterOfGenerations[j]);
                     }
+                    counterOfGenerations[j]--;
                 }
             }
         }
         // callbackFunction(newTilesGenerationMask, this);
         // Обновить ссылки на соседей всех фишек поля
         this.updateNeighbourRelations();
+        // Вызов колбек функции для обновления UI в соответствующем модуле
+        refreshAllFieldOnUICallback();
     }
 
     // Обновить ссылки на соседей всех фишек поля
@@ -240,7 +247,7 @@ export class Field{
     }
 
     // Запустить механизм выпадения новых фишек и перемещения
-    replaceAfterBurn(showBurnedTiles = false, fallCallback=()=>{}){
+    replaceAfterBurn(showBurnedTiles = false, fallCallback=()=>{}, genCallback=()=>{}){
         // Подготовить массив счетчиков для генерации новых фишек
         let newTilesGenerationMask = [];
         for(let i=0; i<Field.settings.fieldWidth; i++)
@@ -291,7 +298,7 @@ export class Field{
         }
 
         // Сгенерировать новые фишки
-        this.generateNewTiles(newTilesGenerationMask);
+        this.generateNewTiles(newTilesGenerationMask, genCallback);
     }
 
     // Узнать, есть ли вообще группы (заданного минимального числа)
