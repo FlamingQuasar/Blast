@@ -40,8 +40,17 @@ window.onload = function() {
                 tile.empty = true;
                 tile.animate('opacity', 0, {
                     onChange: canvas.renderAll.bind(canvas),
+                    duration: 250
+                });
+                tile.animate('scaleX', 10, {
+                    onChange: canvas.renderAll.bind(canvas),
                     duration: 500
                 });
+                tile.animate('scaleY', 10, {
+                    onChange: canvas.renderAll.bind(canvas),
+                    duration: 500
+                });
+                setTimeout(()=>{ canvas.remove(tile) },500);
             }
         };
     }
