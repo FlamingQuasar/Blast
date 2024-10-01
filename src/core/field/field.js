@@ -35,7 +35,7 @@ export class Field{
             let row = [];
             matrix.push(row);
             for(let j=0; j<settings.fieldWidth;j++){
-                let tile = new Tile({colorsCount:settings.colorsCount, 
+                let tile = new Tile({field:matrix, colorsCount:settings.colorsCount, 
                                 minimalGroup:settings.minimalGroup});
                 row.push(tile);
                 Field.initTopAndLeftTileNeighbour(tile, matrix, i, j);
@@ -142,7 +142,7 @@ export class Field{
     }
 
     // Попробовать "сжечь тайлы" при активации ячейки
-    async activateTileAndGetScore(row, col, message, game){
+    async activateTileAndGetScore(row, col, message, game, burnAnimationCallback){
         if(this[row] === undefined || this[row][col] === undefined 
             || this[row][col].tileType === Tile.EMPTYTILE){
             return 0; // вернуть 0 очков
@@ -152,7 +152,7 @@ export class Field{
         if(this[row][col].fireTileReturnScore.constructor.name == "AsyncFunction"){
             scoreToAdd = await this[row][col].fireTileReturnScore(message);
         } else {
-            scoreToAdd = this[row][col].fireTileReturnScore();
+            scoreToAdd = this[row][col].fireTileReturnScore(1, burnAnimationCallback);
             console.clear();
             game.showFieldAndState();
         }
@@ -194,7 +194,8 @@ export class Field{
         }
         // Если вероятности не сработали, добавить простой тайл
         return (tileToReturn != null) ? tileToReturn : 
-            new Tile({colorsCount:Field.settings.colorsCount, 
+            new Tile({field: this,
+                colorsCount:Field.settings.colorsCount, 
                 minimalGroup:Field.settings.minimalGroup});
     }
 
@@ -202,7 +203,7 @@ export class Field{
     * Сгенерировать сверху новые фишки после "сгоревших"
     * @param {array} newTilesGenerationMask - массив-"маска" количества пустых тайлов в каждом столбце
     */
-    generateNewTiles(newTilesGenerationMask = []){
+    generateNewTiles(newTilesGenerationMask = [], callbackFunction=()=>{}){
         if(!newTilesGenerationMask.length) return;
         // добавить 100% появление супер-тайла если маска сгоревшей группы больше L
         let maxBurnedTilesColumn = Math.max(...newTilesGenerationMask);
@@ -224,6 +225,7 @@ export class Field{
                 }
             }
         }
+        callbackFunction(newTilesGenerationMask, this);
         // Обновить ссылки на соседей всех фишек поля
         this.updateNeighbourRelations();
     }
@@ -238,12 +240,11 @@ export class Field{
     }
 
     // Запустить механизм выпадения новых фишек и перемещения
-    replaceAfterBurn(showBurnedTiles = false){
+    replaceAfterBurn(showBurnedTiles = false, replaceAfterBurn=()=>{}){
         // Подготовить массив счетчиков для генерации новых фишек
         let newTilesGenerationMask = [];
         for(let i=0; i<Field.settings.fieldWidth; i++)
             newTilesGenerationMask.push(0);
-
         // Обойти игровое поле снизу вверх        
         for(let i=Field.settings.fieldHeight-1; i>=0; i--){
             for(let j=0; j<Field.settings.fieldWidth; j++){
@@ -254,6 +255,7 @@ export class Field{
                         if(this[k][j].tileType != Tile.EMPTYTILE){
                             // Поменять местами два тайла с помощью специального хинта;
                             [this[i][j], this[k][j]] = Field.swap(this[i][j], this[k][j]);
+                            
                             this[k][j].hasSameNeighbour = false;
                             this[i][j].hasSameNeighbour = false;
                             break;
@@ -288,7 +290,7 @@ export class Field{
         }
 
         // Сгенерировать новые фишки
-        this.generateNewTiles(newTilesGenerationMask);
+        this.generateNewTiles(newTilesGenerationMask, replaceAfterBurn);
     }
 
     // Узнать, есть ли вообще группы (заданного минимального числа)

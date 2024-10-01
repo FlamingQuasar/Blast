@@ -73,9 +73,9 @@ export class BlastGame{
     }
 
     // Сместить фишки сверху вниз после сгорания группы или сгенерировать
-    replaceTilesAfterFire(showConsoleLog){
+    replaceTilesAfterFire(showConsoleLog, replaceCallback=()=>{}){
         console.log("Смещаем фишки сверху!");
-        this.field.replaceAfterBurn();
+        this.field.replaceAfterBurn(false, replaceCallback);
         if(showConsoleLog) this.showFieldAndState();
     }
 
@@ -127,15 +127,20 @@ export class BlastGame{
     }
 
     // Активировать фишку в ячейке игрового поля
-    async activateTile(row, col, clientCallbackFunction, stepsCalcFreeze=false){
-        // если row и col undefined и stepsCounter не надо убавлять
+    async activateTile(
+        row, col, 
+        clientCallbackFunction = ()=>{}, 
+        stepsCalcFreeze = false, 
+        burnAnimationCallback = ()=>{}, 
+        replaceAnimationCallback = ()=>{}){
+            // если row и col undefined и stepsCounter не надо убавлять
         let clientResult = false; 
         if((undefined == (row && col)) ?? true){
             clientResult= true;
         }
         else if(this.settings.stepsCounter){
             // Прибавить счет, если фишки сгорят
-            const newScoreToAdd = await this.field.activateTileAndGetScore(row,col,"",this);
+            const newScoreToAdd = await this.field.activateTileAndGetScore(row, col, "", this, burnAnimationCallback);
             if(newScoreToAdd.then != undefined){
                 console.log("TELEPORT");
                 clientResult= false;
@@ -143,7 +148,7 @@ export class BlastGame{
             else if(newScoreToAdd){
                 this.currentScore += newScoreToAdd;
                 let showConsoleLog = false;
-                this.replaceTilesAfterFire(showConsoleLog);
+                this.replaceTilesAfterFire(showConsoleLog,replaceAnimationCallback);
             }
             // Вычесть шаг, если калькуляция шагов не заморожена (как при телепорте)
             if(!stepsCalcFreeze) this.settings.stepsCounter--;

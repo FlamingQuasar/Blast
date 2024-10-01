@@ -38,7 +38,8 @@ export class Tile{
         return score;
     }
 
-    constructor({colorsCount, minimalGroupCount = 2}){
+    constructor({field={}, colorsCount, minimalGroupCount = 2}){
+        this.field = field;
         this.tileType = Math.floor(Math.random() * colorsCount);
         Tile.minimalGroupCount = minimalGroupCount;
     }
@@ -69,35 +70,38 @@ export class Tile{
 
     // Активировать (сжечь) фишку на поле и ее соседей, если соответствуют
     // {rate} коэффициент умножения цены очков за нажатую фишку 
-    fireTileReturnScore(rate=1, message){
-        console.log("fireTileReturnScore" + "!!!!!!");
+    fireTileReturnScore(rate=1, burnAnimationCallback=()=>{}){
         if(this._fireTileReturnScore.toString() != "_fireTileReturnScore(){}"){
         // Если у нас непростой тайл, а наследник реализовавший метод взрыва
             console.log("this._fireTileReturnScore() from Tile");
-            return this._fireTileReturnScore();
-            return 70; // За взрывной тайл больше очков
+            return this._fireTileReturnScore(rate, burnAnimationCallback);
         }
         
         let scoreToAdd = 0;
         if(this.hasSameNeighbour){
             this.hasSameNeighbour = false;
             if(this.left?.tileType == this.tileType && this.left?.hasSameNeighbour){
-                scoreToAdd += this.left.fireTileReturnScore();
+                scoreToAdd += this.left.fireTileReturnScore(rate, burnAnimationCallback);
                 rate +=1;
             }
             if(this.top?.tileType == this.tileType && this.top?.hasSameNeighbour){
-                scoreToAdd += this.top.fireTileReturnScore();
+                scoreToAdd += this.top.fireTileReturnScore(rate, burnAnimationCallback);
                 rate +=1;
             }
             if(this.right?.tileType == this.tileType && this.right?.hasSameNeighbour){
-                scoreToAdd += this.right.fireTileReturnScore();
+                scoreToAdd += this.right.fireTileReturnScore(rate, burnAnimationCallback);
                 rate +=1;
             }
             if(this.bottom?.tileType == this.tileType && this.bottom?.hasSameNeighbour){
-                scoreToAdd += this.bottom.fireTileReturnScore();
+                scoreToAdd += this.bottom.fireTileReturnScore(rate, burnAnimationCallback);
                 rate +=1;
             }
             this.tileType = Tile.EMPTYTILE;
+            console.log(this.field);
+            if(this.field != undefined){
+                let position = this.field.getPositionOfTile(this);
+                burnAnimationCallback(position.row, position.col);
+            }
             scoreToAdd += 10 * rate;
         }
         return scoreToAdd;

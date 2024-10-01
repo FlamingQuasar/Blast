@@ -47,10 +47,19 @@ let boomBurnAnimation = function(tileImage, canvas, fabric){
         easing: fabric.util.ease.easeOutBounce
     });
 }
-
+function burnTileFromGroupAnimation(row, col){
+    console.log("burn same pairs animation");
+    console.log(row + "; "+col);
+    alert(row + "; "+col);
+    //tiles;
+}
+let tiles;
 let drawField = function(canvas, field, offsetX=0, offsetY=2){
     canvas.clear();
+    tiles = [];
     for(let i=0; i< field.length; i++){
+        let row = [];
+        tiles.push(row)
         for(let j=0; j<field[i].length; j++){
             let myImg, imgSource;
             let type = field[i][j].tileType;
@@ -61,7 +70,7 @@ let drawField = function(canvas, field, offsetX=0, offsetY=2){
             else if(type=="_"){ imgSource = `assets/tile__.png`;}
             else imgSource = `assets/tile_${COLORTILES[field[i][j].tileType]}.png`;
 
-            fabric.Image.fromURL(imgSource, function(img){
+            let img = fabric.Image.fromURL(imgSource, function(img){
                 let top = offsetX+12+i*50;
                 let left = offsetY+12+j*50;
                 myImg = img.set({
@@ -71,7 +80,8 @@ let drawField = function(canvas, field, offsetX=0, offsetY=2){
                     height: 50,
                     opacity: 0.9
                 });
-                myImg.coordinates=""+i+","+j;
+                myImg.coordinateX = j;
+                myImg.coordinateY = i;
                 canvas.add(myImg); 
                 myImg.set('selectable', false);
 
@@ -128,16 +138,27 @@ let drawField = function(canvas, field, offsetX=0, offsetY=2){
                 });
 
                 myImg.on('mousedown', async function(e){
-                    let coordinates = e?.target?.coordinates;
-                    console.log(coordinates);
-                    if(coordinates){
-                        let splitCoords = coordinates.split(",");
-                        await window.tapTile(splitCoords[0],splitCoords[1], ()=>{});//.then(window.showField());
-                        initGame();
+                    console.log("CLICK");
+                    let coordinateY = e?.target?.coordinateY;
+                    let coordinateX = e?.target?.coordinateX;
+                    if(coordinateX!= undefined && coordinateY!=undefined){
+                       
+                        function generateAndFallAnimation(first,sec){
+
+                            console.log(first)
+                            console.log(sec)
+                        }
+                        await window.tapTile(coordinateY,coordinateX,
+                            burnTileFromGroupAnimation,
+                            generateAndFallAnimation);//.then(window.showField());
+                        setTimeout(function(){initGame()},500);
                     }
                 });
             
+            
             });
+            
+            row.push(img);
         }
     }
 }
