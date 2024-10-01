@@ -97,7 +97,7 @@ export class Tile{
                 rate +=1;
             }
             this.tileType = Tile.EMPTYTILE;
-            console.log(this.field);
+            //console.log(this.field);
             if(this.field != undefined){
                 let position = this.field.getPositionOfTile(this);
                 burnAnimationCallback(position.row, position.col);

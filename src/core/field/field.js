@@ -225,7 +225,7 @@ export class Field{
                 }
             }
         }
-        callbackFunction(newTilesGenerationMask, this);
+        // callbackFunction(newTilesGenerationMask, this);
         // Обновить ссылки на соседей всех фишек поля
         this.updateNeighbourRelations();
     }
@@ -240,7 +240,7 @@ export class Field{
     }
 
     // Запустить механизм выпадения новых фишек и перемещения
-    replaceAfterBurn(showBurnedTiles = false, replaceAfterBurn=()=>{}){
+    replaceAfterBurn(showBurnedTiles = false, fallCallback=()=>{}){
         // Подготовить массив счетчиков для генерации новых фишек
         let newTilesGenerationMask = [];
         for(let i=0; i<Field.settings.fieldWidth; i++)
@@ -253,6 +253,7 @@ export class Field{
                     // Попробовать сдвинуть на "сгоревшее" место ближайшую фишку сверху
                     for(let k=i-1; k>=0; k--){                        
                         if(this[k][j].tileType != Tile.EMPTYTILE){
+                            fallCallback(k, j, i-k);
                             // Поменять местами два тайла с помощью специального хинта;
                             [this[i][j], this[k][j]] = Field.swap(this[i][j], this[k][j]);
                             
@@ -290,7 +291,7 @@ export class Field{
         }
 
         // Сгенерировать новые фишки
-        this.generateNewTiles(newTilesGenerationMask, replaceAfterBurn);
+        this.generateNewTiles(newTilesGenerationMask);
     }
 
     // Узнать, есть ли вообще группы (заданного минимального числа)

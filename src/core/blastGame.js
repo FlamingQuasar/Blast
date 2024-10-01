@@ -73,9 +73,9 @@ export class BlastGame{
     }
 
     // Сместить фишки сверху вниз после сгорания группы или сгенерировать
-    replaceTilesAfterFire(showConsoleLog, replaceCallback=()=>{}){
+    replaceTilesAfterFire(showConsoleLog, fallCallback=()=>{}){
         console.log("Смещаем фишки сверху!");
-        this.field.replaceAfterBurn(false, replaceCallback);
+        this.field.replaceAfterBurn(false, fallCallback);
         if(showConsoleLog) this.showFieldAndState();
     }
 
@@ -132,7 +132,7 @@ export class BlastGame{
         clientCallbackFunction = ()=>{}, 
         stepsCalcFreeze = false, 
         burnAnimationCallback = ()=>{}, 
-        replaceAnimationCallback = ()=>{}){
+        fallAnimationCallback = ()=>{}){
             // если row и col undefined и stepsCounter не надо убавлять
         let clientResult = false; 
         if((undefined == (row && col)) ?? true){
@@ -148,7 +148,7 @@ export class BlastGame{
             else if(newScoreToAdd){
                 this.currentScore += newScoreToAdd;
                 let showConsoleLog = false;
-                this.replaceTilesAfterFire(showConsoleLog,replaceAnimationCallback);
+                this.replaceTilesAfterFire(showConsoleLog, fallAnimationCallback);
             }
             // Вычесть шаг, если калькуляция шагов не заморожена (как при телепорте)
             if(!stepsCalcFreeze) this.settings.stepsCounter--;

@@ -33,11 +33,37 @@ window.onload = function() {
         });
     }
 
+    
+    function generateAnimation(first,sec){
+
+        console.log(first)
+        console.log(sec)
+    }
+
+    function fallDownTileAnimation(r, c, positions){
+        console.log("Fall down, row:"+r+"; col:"+c)
+        let tiles = canvas.getObjects();
+        for(let tile of tiles){
+            if(tile.coordinateY == r && tile.coordinateX == c){
+                console.log(tile.top);
+                const currentTop = tile.top;
+                const newTop = currentTop+50*positions;
+                tile.animate('top', newTop, {
+                    onChange: canvas.renderAll.bind(canvas),
+                    duration: 100
+                });
+                tile.set("top",newTop);
+                break;
+            }
+        }
+    }
+
     function burnTileFromGroupAnimation(row, col){
         let tiles = canvas.getObjects();
         for(let tile of tiles){
             if(tile.coordinateY == row && tile.coordinateX == col){
                 tile.empty = true;
+                console.log(tile.top);
                 tile.animate('opacity', 0, {
                     onChange: canvas.renderAll.bind(canvas),
                     duration: 250
@@ -51,6 +77,7 @@ window.onload = function() {
                     duration: 500
                 });
                 setTimeout(()=>{ canvas.remove(tile) },500);
+                break;
             }
         };
     }
@@ -149,15 +176,10 @@ window.onload = function() {
                             let coordinateY = e?.target?.coordinateY;
                             let coordinateX = e?.target?.coordinateX;
                             if(coordinateX!= undefined && coordinateY!=undefined){
-                            
-                                function generateAndFallAnimation(first,sec){
-
-                                    console.log(first)
-                                    console.log(sec)
-                                }
                                 await window.tapTile(coordinateY,coordinateX,
                                     burnTileFromGroupAnimation,
-                                    generateAndFallAnimation);//.then(window.showField());
+                                    fallDownTileAnimation,
+                                    generateAnimation);//.then(window.showField());
                                 //setTimeout(function(){initGame()},500);
                             }
                         }
