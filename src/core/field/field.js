@@ -153,7 +153,7 @@ export class Field{
             scoreToAdd = await this[row][col].fireTileReturnScore(message);
         } else {
             scoreToAdd = this[row][col].fireTileReturnScore(1, burnAnimationCallback);
-            console.clear();
+            //console.clear();
             game.showFieldAndState();
         }
         return scoreToAdd; // вернуть 0 очков прибавки
