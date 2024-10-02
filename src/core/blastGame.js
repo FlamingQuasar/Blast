@@ -28,7 +28,6 @@ export class BlastGame{
         this.tapTileHandler = tapTileHandler;
         this.settings = new Settings({
             singleLevel: singleLevel,
-            currentLevel: 1,
             isWebUI: isWebUI,
             fieldHeight : n<2?2:n,
             fieldWidth : m<2?2:m,
@@ -47,9 +46,10 @@ export class BlastGame{
         this.activateTile.bind(this);
         this.replaceTilesAfterFire.bind(this);
         this.currentScore = 0;
+        this.currentShakesCount = s;
         this.scoreAchieved = false;
         this.hasPairs = false;
-        //this.level = 1;
+        this.currentLevel = 1;
         this.createField();
     }
     get stage(){
@@ -87,9 +87,9 @@ export class BlastGame{
 
     // Вызвать "встряску" игрового поля
     shakeField(){
-        if(this.settings.shakesCount > 0){
+        if(this.currentShakesCount > 0){
             this.field.shakeField();
-            this.settings.shakesCount--;
+            this.currentShakesCount--;
             return 1;
         }
         return 0;
@@ -139,11 +139,13 @@ export class BlastGame{
         burnAnimationCallback = ()=>{}, 
         fallAnimationCallback = ()=>{},
         genAnimationCallback = ()=>{},
-        refreshAllField = ()=>{}){
+        refreshAllField = ()=>{},
+        showResultPopup = ()=>{}){
         
         this.field.burnAnimationCallback = burnAnimationCallback;
         this.field.fallAnimationCallback = fallAnimationCallback;
         this.field.genAnimationCallback = genAnimationCallback;
+        this.refreshAllField = refreshAllField;
 
         let clientResult = false; 
         // если row и col undefined и stepsCounter не надо убавлять
@@ -169,7 +171,7 @@ export class BlastGame{
         
         // Вызов Колбека при работе с UI
         setTimeout(()=>{
-            refreshAllField();
+            this.refreshAllField();
         }, 500);
 
         // Вызов колбека при работе с Консолью
@@ -177,19 +179,42 @@ export class BlastGame{
         console.log("this.currentScore: "+this.currentScore);
         console.log("this.stepsCount: "+this.settings.stepsCounter);
         if(this.currentScore >= this.settings.maxScore){
-            console.log("Победа!");
-            console.log("Вывести итоговую табличку по уровню и написать в ней счет");
-            console.log("Кнопка Далее!");
+            const needRestart = false;
+            const resultName = "ПОБЕДА!";
+            const resultLevelText = `Уровень ${this.currentLevel} пройден`;
+            const resultScoreText = `${this.currentScore}/${this.settings.maxScore} очков`;
+            const resultButtonText = "Далее";           
+            showResultPopup(needRestart, resultName, resultLevelText, resultScoreText, resultButtonText);
         }
         else if(this.settings.stepsCounter == 0){
-            console.log("Поражение :(");
-            console.log("Вывести итоговую табличку по уровню и написать в ней счет");
-            console.log("Кнопка Переиграть!");
+            const needRestart = true;
+            const resultName = "ПОРАЖЕНИЕ :(";
+            const resultLevelText = "0 шагов осталось";
+            const resultScoreText = `${this.currentScore}/${this.settings.maxScore} очков`;
+            const resultButtonText = "Переиграть";
+            showResultPopup(needRestart, resultName, resultLevelText, resultScoreText, resultButtonText);
         }
         return clientResult;
     }
 
-    startAnotherLevel(){
-
+    startAnotherLevel(repeat = true){
+        this.currentScore = 0;
+        this.hasPairs = false;
+        if(!repeat){
+            this.settings.maxStepsCount += 1;
+            this.currentLevel += 1;
+            this.settings.maxScore += 50;
+            if(this.currentLevel%5==0){
+                this.settings.shakesCount += 1;
+                if(this.settings.fieldWidth < 11) this.settings.fieldWidth += 1;
+            }
+            if(this.currentLevel%6 == 0 && this.settings.fieldHeight<11){
+                this.settings.fieldHeight += 1;
+            }
+        }
+        this.currentShakesCount = this.settings.shakesCount;
+        this.settings.stepsCounter = this.settings.maxStepsCount;
+        this.createField();
+        this.refreshAllField();
     }
 }

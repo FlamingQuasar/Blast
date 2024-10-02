@@ -32,6 +32,7 @@ window.onload = function() {
     let field;
     let offsetX = 0;
     let offsetY = 0;
+    let levelNeedRepeat = true;
 
     
     // Появление нового Тайла и его анимация генерации\выпадения
@@ -79,6 +80,36 @@ window.onload = function() {
                 break;
             }
         };
+    }
+
+    const anotherLevelInit = function(repeatLevel){
+        window.anotherLevelInitRequest(repeatLevel);
+    }
+
+    const resultPopupButtonClick = function(){
+        const resultPopup = document.getElementsByClassName("game-resultbox")[0];
+        resultPopup.classList.remove("active");
+        anotherLevelInit(levelNeedRepeat);
+        document.getElementById("shake-counter").innerText = window.getShakesCount();
+        document.getElementById("bllvlcounter").innerText = window.getCurrentLevel();
+    }
+
+    document.getElementsByClassName("result-button")[0].addEventListener("click",function(){
+        resultPopupButtonClick();
+    });
+    
+    const showResultPopup = function(needRestart, resultName, resultLevelText, resultScoreText, resultButtonText){
+        levelNeedRepeat = needRestart;
+        const resultPopup = document.getElementsByClassName("game-resultbox")[0];
+        const resultTitle = document.getElementsByClassName("result-title")[0];
+        const resultInfo = document.getElementsByClassName("result-info")[0];
+        const resultScore = document.getElementsByClassName("result-score")[0];
+        const resultButton = document.getElementsByClassName("result-button")[0];
+        resultTitle.innerText = resultName;
+        resultInfo.innerText = resultLevelText;
+        resultScore.innerText = resultScoreText;
+        resultButton.innerText = resultButtonText;
+        resultPopup.classList.add("active");
     }
 
     let createTile = function(i, j, offsetX, offsetY, canvas, field, tileType, positionsDifference){
@@ -182,7 +213,8 @@ window.onload = function() {
                                 burnTileFromGroupAnimation,
                                 fallDownTileAnimation,
                                 generateAnimation,
-                                refreshAllField
+                                refreshAllField,
+                                showResultPopup
                             );
                         }
                         else{
@@ -212,10 +244,6 @@ window.onload = function() {
         setTimeout(()=>{
             canvas.remove(...oldCanvasField);
         },150);
-    }
-
-    const ShowResultPopup = function(){
-
     }
 
     const initGame = function(){

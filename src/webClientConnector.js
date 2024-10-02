@@ -24,7 +24,7 @@ addEventListener("DOMContentLoaded",function(){
         }
 
         const getShakesCount = function(){
-            return game.settings.shakesCount;
+            return game.currentShakesCount;
         }
 
         const getStepsCount = function(){
@@ -39,14 +39,23 @@ addEventListener("DOMContentLoaded",function(){
             return game.settings.maxScore;
         }
 
+        const anotherLevelInit = function(repeat = true){
+            game.startAnotherLevel(repeat);
+        }
+
+        const getCurrentLevel = function(){
+            return game.currentLevel;
+        }
+
         const gameTapTile = async function(
                 row, column, 
                 burnAnimation=()=>{}, 
                 fallAnimation = ()=>{}, 
                 generateAnimation=()=>{},
-                refreshAllField=()=>{}){
+                refreshAllField=()=>{},
+                showResultPopup=()=>{}){
             return await game.activateTile(row, column, ()=>{}, false, burnAnimation, 
-                fallAnimation, generateAnimation, refreshAllField);
+                fallAnimation, generateAnimation, refreshAllField, showResultPopup);
         }
 
         window.showField = showField;
@@ -58,6 +67,8 @@ addEventListener("DOMContentLoaded",function(){
         window.tapTile = gameTapTile;
         window.createNewGame = createNewGame;
         window.requestStatus = ()=>{};
+        window.anotherLevelInitRequest = anotherLevelInit;
+        window.getCurrentLevel = getCurrentLevel;
 
     }
 });
