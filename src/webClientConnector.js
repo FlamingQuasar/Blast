@@ -52,6 +52,10 @@ addEventListener("DOMContentLoaded",function(){
             return game.currentLevel;
         }
 
+        const getSettings = function(){
+            return game.settings;
+        }
+
         const gameTapTile = async function(
                 row, column, 
                 burnAnimation=()=>{}, 
@@ -74,6 +78,6 @@ addEventListener("DOMContentLoaded",function(){
         window.requestStatus = ()=>{};
         window.anotherLevelInitRequest = anotherLevelInit;
         window.getCurrentLevel = getCurrentLevel;
-
+        window.getSettings = getSettings;
     }
 });

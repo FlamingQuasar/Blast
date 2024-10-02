@@ -31,6 +31,9 @@ window.onload = function() {
     const canvas = new fabric.Canvas('canvas', {selection: false});
     const shakeButton = document.getElementsByClassName("control-shake")[0];
     const settingsButton = document.getElementsByClassName("control-settings")[0];
+    const settingsButtonCancel = document.getElementsByClassName("sb-cancel")[0];
+    const settingsButtonOk = document.getElementsByClassName("sb-ok")[0];
+
     //let tilesField = [];
     let field;
     let offsetX = 0;
@@ -269,10 +272,44 @@ window.onload = function() {
         
         drawField(canvas,field, offsetX, offsetY);
     }
-    
+
+    settingsButtonCancel.addEventListener("click", function(){
+        let box = document.getElementsByClassName("game-settingsbox")[0];
+        box.classList.remove("active");
+    });
+
+    settingsButtonOk.addEventListener("click", function(){
+        let box = document.getElementsByClassName("game-settingsbox")[0];
+        box.classList.remove("active");
+        window.createNewGame(
+            document.getElementById("fieldheight").value,
+            document.getElementById("fieldwidth").value, 
+            document.getElementById("colorscount").value, 
+            document.getElementById("maxscore").value, 
+            document.getElementById("stepscounter").value, 
+            document.getElementById("shakescount").value, 
+            document.getElementById("boosterprobability").value, 
+            document.getElementById("bombradius").value, 
+            document.getElementById("largegroupbonusrequirement").value, 
+            document.getElementById("largegroupbonuseffect").value,
+            tapTileForTeleport);
+        initGame();
+    });
+
     settingsButton.addEventListener("click", function(){
         let box = document.getElementsByClassName("game-settingsbox")[0];
         box.classList.add("active");
+        let settings = window.getSettings();
+        document.getElementById("fieldheight").value=settings.fieldHeight ;
+        document.getElementById("fieldwidth").value=settings.fieldWidth ;
+        document.getElementById("colorscount").value=settings.colorsCount;
+        document.getElementById("maxscore").value= settings.maxScore ;
+        document.getElementById("stepscounter").value= settings.maxStepsCount; 
+        document.getElementById("shakescount").value= settings.shakesCount ;
+        document.getElementById("boosterprobability").value= settings.boosterProbability; 
+        document.getElementById("bombradius").value= settings.bombRadius ;
+        document.getElementById("largegroupbonusrequirement").value=settings.largeGroupBonusRequirement; 
+        document.getElementById("largegroupbonuseffect").value=settings.largeGroupBonusEffect;
     });
 
     shakeButton.addEventListener("click", function(){
