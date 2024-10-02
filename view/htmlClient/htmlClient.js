@@ -33,7 +33,7 @@ window.onload = function() {
 
     // Появление нового Тайла и его анимация генерации\выпадения
     function generateAnimation(newTileType, row, positionsDifference){
-                
+
         if(newTileType == undefined) return;
         // Создать новый тайл с параетрами "типа тайлов" и "разницы в Y позиции"
         createTile(0, row, offsetX, offsetY, canvas, field, newTileType, positionsDifference);
@@ -111,7 +111,6 @@ window.onload = function() {
             // true если создаваемый тайл вторичен и должен свалиться сверху
             if(positionsDifference){
                 const currentTop = myImg.top;
-                console.log("pD::::::"+positionsDifference+"("+tileType+") "+currentTop);
                 myImg.set("opacity",0);
                 const newTop = currentTop+50 * (positionsDifference-1);
                 myImg.animate('top', newTop, {

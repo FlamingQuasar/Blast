@@ -156,10 +156,13 @@ export class BlastGame{
             if(!stepsCalcFreeze) this.settings.stepsCounter--;
             clientResult= true;
         }
+        
+        // Вызов Колбека при работе с UI
         setTimeout(()=>{
-            console.log("refresh AFTER STEP - 0")
-            //console.log("!!! refresh !!!");
-            refreshAllField()}, 1000);
+            refreshAllField();
+        }, 500);
+
+        // Вызов колбека при работе с Консолью
         clientCallbackFunction(this);
         return clientResult;
     }

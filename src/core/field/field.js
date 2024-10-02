@@ -248,17 +248,19 @@ export class Field{
 
     // Запустить механизм выпадения новых фишек и перемещения
     replaceAfterBurn(showBurnedTiles = false, fallCallback=()=>{}, genCallback=()=>{}){
+        
         // Подготовить массив счетчиков для генерации новых фишек
         let newTilesGenerationMask = [];
         for(let i=0; i<Field.settings.fieldWidth; i++)
             newTilesGenerationMask.push(0);
-        // Обойти игровое поле снизу вверх        
+
+        // Обойти игровое поле снизу вверх
         for(let i=Field.settings.fieldHeight-1; i>=0; i--){
             for(let j=0; j<Field.settings.fieldWidth; j++){
                 // текущее место - сгоревшее и есть куда двигать
                 if(this[i][j].tileType == Tile.EMPTYTILE && i-1 >= 0){
                     // Попробовать сдвинуть на "сгоревшее" место ближайшую фишку сверху
-                    for(let k=i-1; k>=0; k--){                        
+                    for(let k=i-1; k>=0; k--){
                         if(this[k][j].tileType != Tile.EMPTYTILE){
                             fallCallback(k, j, i-k);
                             // Поменять местами два тайла с помощью специального хинта;

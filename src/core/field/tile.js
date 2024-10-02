@@ -1,3 +1,5 @@
+import { Field } from "./field.js";
+
 export class Tile{
     hasSameNeighbour = false;
     
@@ -9,26 +11,35 @@ export class Tile{
     /**
      * Метод рекурсивного взрыва тайлов на уменьшающуюся глубину радиуса
      * @param {*} tile текущий тайл для его взрыва
-     * @param {*} position базовое направление, куда продолжать взрыв
+     * @param {*} direction базовое направление, куда продолжать взрыв
      * @param {*} radius оставшийся радиус взрыва
      * @returns очки за взрыв тайлов для суммирования с очками за саму бомбу
      */
-    static firePairReturnScore(tile, position, radius, crossType=null){
+    static firePairReturnScore(tile, direction, radius, crossType=null, field=null, burnAnimationCallback=()=>{}){
         let score = 0;
         if(tile){
             score += 10;
-            tile.setTypeAndSameNeighbour(position, Tile.EMPTYTILE);
+            tile.setTypeAndSameNeighbour(direction, Tile.EMPTYTILE);
+
+            // Вызов коллбека для анимации на UI
+            if(field != null){
+                let position = field.getPositionOfTile(tile);
+                burnAnimationCallback(position.row, position.col);
+            }
+
             radius--;
             if(radius>0){
-                score += Tile.firePairReturnScore(tile[position], position, radius, crossType);
+                score += Tile.firePairReturnScore(tile[direction], direction, radius, 
+                                            crossType, field, burnAnimationCallback);
 
-                // Если у нас эффект взрыва не крест, не бесконечная строка или столбец, а простой взрыв
+                // Если выбран эффект взрыва не крест, не бесконечная строка или столбец, а простой взрыв
                 // Тогда заполнить промежуточные позиции
-                if(crossType==null && radius>1 && radius != Infinity){
-                    let positions = ["left", "top", "right", "bottom"];
-                    for(let pos of positions){
-                        if(pos != position){
-                            score += Tile.firePairReturnScore(tile[pos], position, 0, crossType);
+                if(crossType == null && radius>1 && radius != Infinity){
+                    let directions = ["left", "top", "right", "bottom"];
+                    for(let dir of directions){
+                        if(dir != direction){
+                            score += Tile.firePairReturnScore(tile[dir], direction, 0, 
+                                                crossType, field, burnAnimationCallback);
                         }
                     }
                 }
@@ -71,8 +82,10 @@ export class Tile{
     // Активировать (сжечь) фишку на поле и ее соседей, если соответствуют
     // {rate} коэффициент умножения цены очков за нажатую фишку 
     fireTileReturnScore(rate=1, burnAnimationCallback=()=>{}){
+
+        // Если метод _fireTileReturnScore имплементирован, то есть имеет тело
         if(this._fireTileReturnScore.toString() != "_fireTileReturnScore(){}"){
-        // Если у нас непростой тайл, а наследник реализовавший метод взрыва
+            // Когда не простой тайл, а наследник реализовавший метод взрыва
             console.log("this._fireTileReturnScore() from Tile");
             return this._fireTileReturnScore(rate, burnAnimationCallback);
         }
@@ -97,7 +110,7 @@ export class Tile{
                 rate +=1;
             }
             this.tileType = Tile.EMPTYTILE;
-            //console.log(this.field);
+            
             if(this.field != undefined){
                 let position = this.field.getPositionOfTile(this);
                 burnAnimationCallback(position.row, position.col);

@@ -11,18 +11,23 @@ export class BombBooster extends Tile{
     
     // Взорвать саму бомбу и инициировать взрывы прилегающего радиуса, как по направлениям, 
     // так и между ними по диагоналям
-    _fireTileReturnScore(){
+    _fireTileReturnScore(rate=1, burnAnimationCallback=()=>{} ){
+
         if(this.tileType != Tile.EMPTYTILE){
             this.tileType = Tile.EMPTYTILE;
             this.hasSameNeighbour = true;
 
             let score = 50;
-            score += Tile.firePairReturnScore(this.top, "top", 0+this.radius);
-            score += Tile.firePairReturnScore(this.right, "right", 0+this.radius);
-            score += Tile.firePairReturnScore(this.bottom, "bottom", 0+this.radius);
-            score += Tile.firePairReturnScore(this.left, "left", 0+this.radius);
+            score += Tile.firePairReturnScore(this.top, "top", 0+this.radius, null, this.field, burnAnimationCallback);
+            score += Tile.firePairReturnScore(this.right, "right", 0+this.radius, null, this.field, burnAnimationCallback);
+            score += Tile.firePairReturnScore(this.bottom, "bottom", 0+this.radius, null, this.field, burnAnimationCallback);
+            score += Tile.firePairReturnScore(this.left, "left", 0+this.radius, null, this.field, burnAnimationCallback);
 
-            return score;
+            if(this.field != undefined){
+                let position = this.field.getPositionOfTile(this);
+                burnAnimationCallback(position.row, position.col);
+            }
+            return score * rate;
         }
         return 0;
     }
