@@ -33,34 +33,10 @@ window.onload = function() {
 
     // Появление нового Тайла и его анимация генерации\выпадения
     function generateAnimation(newTileType, row, positionsDifference){
-        
-        // сгенерировать уникальный ключ для новых тайлов 
-        // по ключу мы найдем тайл в canvas.getObjects() (библиотека Fabric)
-        let id = "id" + Math.random().toString(16).slice(2);
-        
+                
         if(newTileType == undefined) return;
-        createTile(0, row, offsetX, offsetY, canvas, field, newTileType, id);
-        
-       setTimeout(function(){
-            let tiles = canvas.getObjects();
-            for(let tile of tiles){
-                if(tile.uniqueId == id){
-                    const currentTop = tile.top;
-                    tile.set("opacity",0);
-                    const newTop = currentTop+50 * (positionsDifference-1);
-                    tile.animate('top', newTop, {
-                        onChange: canvas.renderAll.bind(canvas),
-                        duration: 100
-                    });
-                    tile.animate('opacity', 1, {
-                        onChange: canvas.renderAll.bind(canvas),
-                        duration: 200
-                    });
-                    tile.set("top",newTop);
-                    break;
-                }
-            }
-        },100);
+        // Создать новый тайл с параетрами "типа тайлов" и "разницы в Y позиции"
+        createTile(0, row, offsetX, offsetY, canvas, field, newTileType, positionsDifference);
     }
 
     // отправлять этот метод в колбек для выпадания после сгорания
@@ -103,8 +79,7 @@ window.onload = function() {
         };
     }
 
-    let createTile = function(i, j, offsetX, offsetY, canvas, field, tileType, id){
-        const uniqueId = id;
+    let createTile = function(i, j, offsetX, offsetY, canvas, field, tileType, positionsDifference){
         let myImg, imgSource;
 
         // Определиться с типом тайла для отображения
@@ -125,16 +100,30 @@ window.onload = function() {
                 top:  top,
                 width: 44,
                 height: 50,
-                opacity: 0.9
+                opacity: 1
             });
             myImg.empty = false;
             myImg.coordinateX = j;
             myImg.coordinateY = i;
-            //if(uniqueId != undefined) console.log("UNIQUE:"+uniqueId);
-            myImg.uniqueId = uniqueId;
             canvas.add(myImg); 
             myImg.set('selectable', false);
 
+            // true если создаваемый тайл вторичен и должен свалиться сверху
+            if(positionsDifference){
+                const currentTop = myImg.top;
+                console.log("pD::::::"+positionsDifference+"("+tileType+") "+currentTop);
+                myImg.set("opacity",0);
+                const newTop = currentTop+50 * (positionsDifference-1);
+                myImg.animate('top', newTop, {
+                    onChange: canvas.renderAll.bind(canvas),
+                    duration: 100
+                });
+                myImg.animate('opacity', 1, {
+                    onChange: canvas.renderAll.bind(canvas),
+                    duration: 200
+                });
+                myImg.set("top",newTop);
+            }
             myImg.on('mouseover', function(e){
                 if(!this.empty){
                     this.animate('scaleY', 0.9, {
@@ -147,17 +136,12 @@ window.onload = function() {
                         duration: 100,
                         easing: fabric.util.ease.easeOutBounce
                     });
-                    /*this.animate('top', top+2, {
-                        onChange: canvas.renderAll.bind(canvas),
-                        duration: 100,
-                        easing: fabric.util.ease.easeOutBounce
-                    });*/
                     this.animate('left', left+2, {
                         onChange: canvas.renderAll.bind(canvas),
                         duration: 100,
                         easing: fabric.util.ease.easeOutBounce
                     });
-                    this.animate('opacity', 1, {
+                    this.animate('opacity', 0.8, {
                         onChange: canvas.renderAll.bind(canvas),
                         duration: 100,
                         easing: fabric.util.ease.easeOutBounce
@@ -173,17 +157,12 @@ window.onload = function() {
                     this.animate('scaleX', 1, {
                         onChange: canvas.renderAll.bind(canvas)
                     });
-                   /* this.animate('top', top, {
-                        onChange: canvas.renderAll.bind(canvas),
-                        duration: 100,
-                        easing: fabric.util.ease.easeOutBounce
-                    });*/
                     this.animate('left', left, {
                         onChange: canvas.renderAll.bind(canvas),
                         duration: 100,
                         easing: fabric.util.ease.easeOutBounce
                     });
-                    this.animate('opacity', 0.9, {
+                    this.animate('opacity', 1, {
                         onChange: canvas.renderAll.bind(canvas),
                         duration: 100,
                         easing: fabric.util.ease.easeOutBounce
@@ -220,12 +199,16 @@ window.onload = function() {
 
     let drawField = function(canvas, field, offsetX=0, offsetY=2){
         
-        canvas.clear();
+        const oldCanvasField = canvas.getObjects();
         for(let i=0; i< field.length; i++){
             for(let j=0; j<field[i].length; j++){
                     createTile(i,j, offsetX, offsetY, canvas, field);
             }
         }
+        
+        setTimeout(()=>{
+            canvas.remove(...oldCanvasField);
+        },150);
     }
 
     const initGame = function(){

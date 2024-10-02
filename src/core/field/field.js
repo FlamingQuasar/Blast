@@ -211,7 +211,7 @@ export class Field{
         for(let burned of newTilesGenerationMask){
             sumBurnedTiles += burned;
         }
-        let counterOfGenerations = newTilesGenerationMask.map((element) => element);
+        let counterOfGenerations = newTilesGenerationMask.map(() => 1);
         for(let i = 0; i< maxBurnedTilesColumn; i++){
             for(let j=0; j<Field.settings.fieldWidth; j++){
                 // Если номер текущей строки меньше чем количество пустот в данном стобце
@@ -226,7 +226,7 @@ export class Field{
                                                                         teleportProbability:Field.settings.boosterProbability});
                         genCallback(this[i][j].tileType, j, counterOfGenerations[j]);
                     }
-                    counterOfGenerations[j]--;
+                    counterOfGenerations[j]++;
                 }
             }
         }
