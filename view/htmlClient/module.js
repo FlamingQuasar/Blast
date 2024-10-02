@@ -4,7 +4,7 @@ window.onload = function() {
     const COLORTILES=["blue","orange","green","grey","pink","red","white","yellow"];
     const canvas = new fabric.Canvas('canvas', {selection: false});
     const shakeButton = document.getElementsByClassName("control-shake")[0];
-    let tilesField = [];
+    //let tilesField = [];
     let field;
     let offsetX = 0;
     let offsetY = 0;
@@ -33,42 +33,41 @@ window.onload = function() {
 
     // Появление нового Тайла и его анимация генерации\выпадения
     function generateAnimation(newTileType, row, positionsDifference){
-        //console.log("GENERATE IN UI " + newTileType + "; diff "+positionsDifference)
+        
+        // сгенерировать уникальный ключ для новых тайлов 
+        // по ключу мы найдем тайл в canvas.getObjects() (библиотека Fabric)
         let id = "id" + Math.random().toString(16).slice(2);
+        
+        if(newTileType == undefined) return;
         createTile(0, row, offsetX, offsetY, canvas, field, newTileType, id);
-       // let processNewTile =
-        setTimeout(function(){
+        
+       setTimeout(function(){
             let tiles = canvas.getObjects();
-        //console.log("(1) TILE CREATED!");
-        for(let tile of tiles){
-            if(tile.uniqueId == id){
-                console.log("!!!!!!! TILE CREATED! - " + newTileType + "diff: "+positionsDifference);
-                const currentTop = tile.top;
-                tile.set("opacity",0);
-                const newTop = currentTop+50 * (positionsDifference-1);
-                tile.animate('top', newTop, {
-                    onChange: canvas.renderAll.bind(canvas),
-                    duration: 100
-                });
-                tile.animate('opacity', 1, {
-                    onChange: canvas.renderAll.bind(canvas),
-                    duration: 100
-                });
-                tile.set("top",newTop);
-                console.log("GENERATION ANIM");
-                break;
+            for(let tile of tiles){
+                if(tile.uniqueId == id){
+                    const currentTop = tile.top;
+                    tile.set("opacity",0);
+                    const newTop = currentTop+50 * (positionsDifference-1);
+                    tile.animate('top', newTop, {
+                        onChange: canvas.renderAll.bind(canvas),
+                        duration: 100
+                    });
+                    tile.animate('opacity', 1, {
+                        onChange: canvas.renderAll.bind(canvas),
+                        duration: 200
+                    });
+                    tile.set("top",newTop);
+                    break;
+                }
             }
-        }
-    },200);
+        },100);
     }
 
     // отправлять этот метод в колбек для выпадания после сгорания
     function fallDownTileAnimation(r, c, positionsDifference){
-        console.log("Fall down, row:"+r+"; col:"+c)
         let tiles = canvas.getObjects();
         for(let tile of tiles){
             if(tile.coordinateY == r && tile.coordinateX == c){
-                console.log(tile.top);
                 const currentTop = tile.top;
                 const newTop = currentTop+50*positionsDifference;
                 tile.animate('top', newTop, {
@@ -107,13 +106,17 @@ window.onload = function() {
     let createTile = function(i, j, offsetX, offsetY, canvas, field, tileType, id){
         const uniqueId = id;
         let myImg, imgSource;
-        let type = tileType==undefined? field[i][j].tileType : tileType;
 
+        // Определиться с типом тайла для отображения
+        let type = tileType==undefined ? field[i][j]?.tileType : tileType;
         if(type == "b"){  imgSource = `assets/tile_bomb.png`; }
         else if(type =="t"){ imgSource = `assets/tile_teleport.png`;}
         else if(type=="L"){ imgSource = `assets/tile_super.png`;}
-        else if(type=="_"){ imgSource = `assets/tile__.png`;}
-        else imgSource = `assets/tile_${COLORTILES[field[i][j].tileType]}.png`;
+        else if(type=="_" || type==undefined){ imgSource = `assets/tile__.png`;}
+        else imgSource = (tileType != undefined)? 
+            `assets/tile_${COLORTILES[tileType]}.png` :
+            `assets/tile_${COLORTILES[field[i][j].tileType]}.png`;
+
         return new fabric.Image.fromURL(imgSource, function(img){
             let top = offsetX+12+i*50;
             let left = offsetY+12+j*50;
@@ -127,7 +130,7 @@ window.onload = function() {
             myImg.empty = false;
             myImg.coordinateX = j;
             myImg.coordinateY = i;
-            if(uniqueId != undefined) console.log("UNIQUE:"+uniqueId);
+            //if(uniqueId != undefined) console.log("UNIQUE:"+uniqueId);
             myImg.uniqueId = uniqueId;
             canvas.add(myImg); 
             myImg.set('selectable', false);
@@ -196,32 +199,37 @@ window.onload = function() {
                         await window.tapTile(coordinateY,coordinateX,
                             burnTileFromGroupAnimation,
                             fallDownTileAnimation,
-                            generateAnimation);//.then(window.showField());
+                            generateAnimation,
+                            refreshAllField
+                        );//.then(window.showField());
                         //setTimeout(function(){initGame()},500);
                         //initGame();
                     }
                 }
             });
-        
-        
         });
+    //}
     }
+    
+    const refreshAllField = function(){
+
+        console.log("INIT AFTER STEP - 1")
+        initGame();
+    }
+    
 
     let drawField = function(canvas, field, offsetX=0, offsetY=2){
+        
         canvas.clear();
-        tilesField = [];
         for(let i=0; i< field.length; i++){
-            let row = [];
-            tilesField.push(row);
             for(let j=0; j<field[i].length; j++){
-                //console.log(img);
-                row.push(createTile(i,j, offsetX, offsetY, canvas, field));
+                    createTile(i,j, offsetX, offsetY, canvas, field);
             }
         }
     }
 
     const initGame = function(){
-        
+        console.log("INIT AFTER STEP - 2")
         const shakesCountField = document.getElementById("shake-counter");
         const scoreCountField = document.getElementById("blscorecounter");
         const stepsCountField = document.getElementById("blstepscounter");
@@ -229,16 +237,14 @@ window.onload = function() {
         shakesCountField.innerText = shakesCounter;
         scoreCountField.innerText = `${window.getScoreCount()}/${window.getMaxScore()}`;
         stepsCountField.innerText = window.getStepsCount();
-
-
-        /*if(shakesCounter==0){
+        if(shakesCounter==0){
             shakeButton.classList.add("end");
         }
         else {
             shakeButton.classList.remove("end");
-        }*/
+        }
         field = window.showField();
-        
+        console.log(field);
         offsetX = (FIELDSIZE-field.length*50)/2;
         offsetY = (FIELDSIZE-field[0].length*50)/2;
         
@@ -247,8 +253,6 @@ window.onload = function() {
 
     shakeButton.addEventListener("click", function(){
         if(window.shakeField()){
-            window.showField();
-            alert("shake");
             initGame();
         }
         else alert("Встряски закончились!");

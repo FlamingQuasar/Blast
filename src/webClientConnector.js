@@ -33,9 +33,14 @@ addEventListener("DOMContentLoaded",function(){
             return game.settings.maxScore;
         }
 
-        const gameTapTile = async function(row, column, 
-                burnAnimation=()=>{}, fallAnimation = ()=>{}, generateAnimation=()=>{}){
-            return await game.activateTile(row, column, ()=>{}, false, burnAnimation, fallAnimation, generateAnimation);
+        const gameTapTile = async function(
+                row, column, 
+                burnAnimation=()=>{}, 
+                fallAnimation = ()=>{}, 
+                generateAnimation=()=>{},
+                refreshAllField=()=>{}){
+            return await game.activateTile(row, column, ()=>{}, false, burnAnimation, 
+                fallAnimation, generateAnimation, refreshAllField);
         }
 
         window.showField = showField;

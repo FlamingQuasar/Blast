@@ -133,7 +133,8 @@ export class BlastGame{
         stepsCalcFreeze = false, 
         burnAnimationCallback = ()=>{}, 
         fallAnimationCallback = ()=>{},
-        genAnimationCallback = ()=>{}){
+        genAnimationCallback = ()=>{},
+        refreshAllField = ()=>{}){
             // если row и col undefined и stepsCounter не надо убавлять
         let clientResult = false; 
         if((undefined == (row && col)) ?? true){
@@ -155,6 +156,10 @@ export class BlastGame{
             if(!stepsCalcFreeze) this.settings.stepsCounter--;
             clientResult= true;
         }
+        setTimeout(()=>{
+            console.log("refresh AFTER STEP - 0")
+            //console.log("!!! refresh !!!");
+            refreshAllField()}, 1000);
         clientCallbackFunction(this);
         return clientResult;
     }
