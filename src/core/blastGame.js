@@ -23,9 +23,11 @@ export class BlastGame{
     constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10,
                  s=3, boosterProbability = 50, bombRadius=4,
                  largeGroupBonusRequirement=3, largeGroupBonusEffect=0, 
-                 tapTileHandler=()=>{}, isWebUI = false}){
+                 tapTileHandler=()=>{}, isWebUI = false, singleLevel=true}){
         this.tapTileHandler = tapTileHandler;
         this.settings = new Settings({
+            singleLevel: singleLevel,
+            currentLevel: 1,
             isWebUI: isWebUI,
             fieldHeight : n<2?2:n,
             fieldWidth : m<2?2:m,
@@ -45,7 +47,7 @@ export class BlastGame{
         this.currentScore = 0;
         this.scoreAchieved = false;
         this.hasPairs = false;
-        this.level = 1;
+        //this.level = 1;
         this.createField();
     }
     get stage(){

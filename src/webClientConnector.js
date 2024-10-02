@@ -10,7 +10,8 @@ addEventListener("DOMContentLoaded",function(){
                 boosterProbability: 100, bombRadius:3, largeGroupBonusRequirement:3,
                 largeGroupBonusEffect:0,
                 tapTileHandler: tapTileForTeleport,
-                isWebUI: true });
+                isWebUI: true,
+                singleLevel: false });
         }
 
         const showField = function(){            
