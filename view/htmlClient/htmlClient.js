@@ -30,6 +30,7 @@ window.onload = function() {
     const COLORTILES=["blue","orange","green","grey","pink","red","white","yellow"];
     const canvas = new fabric.Canvas('canvas', {selection: false});
     const shakeButton = document.getElementsByClassName("control-shake")[0];
+    const settingsButton = document.getElementsByClassName("control-settings")[0];
     //let tilesField = [];
     let field;
     let offsetX = 0;
@@ -268,6 +269,11 @@ window.onload = function() {
         
         drawField(canvas,field, offsetX, offsetY);
     }
+    
+    settingsButton.addEventListener("click", function(){
+        let box = document.getElementsByClassName("game-settingsbox")[0];
+        box.classList.add("active");
+    });
 
     shakeButton.addEventListener("click", function(){
         if(window.shakeField()){

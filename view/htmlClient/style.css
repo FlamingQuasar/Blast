@@ -114,7 +114,7 @@ body{
     padding: 4px 18px;
     width: auto;
 }
-.app .settings-button,
+.app .settings-button:hover,
 .app .game-resultbox .result-button:hover{
     background: linear-gradient(#f08dfb, #5e0a98);
     border-radius: 20px;
