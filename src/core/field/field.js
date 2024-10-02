@@ -45,7 +45,9 @@ export class Field{
     }
 
     static async tapTile(questionText){
+        console.log("tap from static async Field.tapTile")
         if(Field.tapTileHandler != undefined){
+            console.log("Field.tapTileHandler != undefined");
             return await Field.tapTileHandler(questionText);
         }
         return 0;
@@ -150,6 +152,7 @@ export class Field{
         let scoreToAdd = 0;
         // случай с тайлом-телепортом - метод требует ожидания второго тайла
         if(this[row][col].fireTileReturnScore.constructor.name == "AsyncFunction"){
+            console.log("call AsyncFunction to get score");
             scoreToAdd = await this[row][col].fireTileReturnScore(message);
         } else {
             scoreToAdd = this[row][col].fireTileReturnScore(1, burnAnimationCallback);
@@ -248,7 +251,7 @@ export class Field{
 
     // Запустить механизм выпадения новых фишек и перемещения
     replaceAfterBurn(showBurnedTiles = false, fallCallback=()=>{}, genCallback=()=>{}){
-        
+        console.log(fallCallback);
         // Подготовить массив счетчиков для генерации новых фишек
         let newTilesGenerationMask = [];
         for(let i=0; i<Field.settings.fieldWidth; i++)
@@ -270,7 +273,7 @@ export class Field{
                             this[i][j].hasSameNeighbour = false;
                             break;
                         }
-                    }                    
+                    }
                 }
             }
         }

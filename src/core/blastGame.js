@@ -18,13 +18,15 @@ export class BlastGame{
     * @param {number} largeGroupBonusRequirement=3 - Размер группы сжигаемой для выпадения супер-тайла
     * @param {number} largeGroupBonusEffect=1 - Тип эффекта активации супер-тайла
     * @param {function} tapTileHandler=()=>{} - Внешняя функция выбора позиции тайла на игровом поле
+    * @param {Boolean} isWebUI=false - флаг для подключения с веб-клиента
     */
     constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10,
                  s=3, boosterProbability = 50, bombRadius=4,
                  largeGroupBonusRequirement=3, largeGroupBonusEffect=0, 
-                 tapTileHandler=()=>{}} = {}){
+                 tapTileHandler=()=>{}, isWebUI = false}){
         this.tapTileHandler = tapTileHandler;
         this.settings = new Settings({
+            isWebUI: isWebUI,
             fieldHeight : n<2?2:n,
             fieldWidth : m<2?2:m,
             colorsCount : c>8?8:c,
@@ -135,6 +137,10 @@ export class BlastGame{
         fallAnimationCallback = ()=>{},
         genAnimationCallback = ()=>{},
         refreshAllField = ()=>{}){
+        
+        this.field.burnAnimationCallback = burnAnimationCallback;
+        this.field.fallAnimationCallback = fallAnimationCallback;
+        this.field.genAnimationCallback = genAnimationCallback;
             // если row и col undefined и stepsCounter не надо убавлять
         let clientResult = false; 
         if((undefined == (row && col)) ?? true){

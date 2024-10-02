@@ -1,5 +1,12 @@
 
 window.onload = function() {
+    async function tapTileForTeleport(){
+        console.log("TAP TILE");
+        return [0,0];
+    }
+
+    window.createNewGame(tapTileForTeleport);
+
     const FIELDSIZE = 550;
     const COLORTILES=["blue","orange","green","grey","pink","red","white","yellow"];
     const canvas = new fabric.Canvas('canvas', {selection: false});
@@ -190,8 +197,6 @@ window.onload = function() {
     }
     
     const refreshAllField = function(){
-
-        console.log("INIT AFTER STEP - 1")
         initGame();
     }
     
@@ -211,7 +216,6 @@ window.onload = function() {
     }
 
     const initGame = function(){
-        console.log("INIT AFTER STEP - 2")
         const shakesCountField = document.getElementById("shake-counter");
         const scoreCountField = document.getElementById("blscorecounter");
         const stepsCountField = document.getElementById("blstepscounter");
@@ -226,7 +230,6 @@ window.onload = function() {
             shakeButton.classList.remove("end");
         }
         field = window.showField();
-        console.log(field);
         offsetX = (FIELDSIZE-field.length*50)/2;
         offsetY = (FIELDSIZE-field[0].length*50)/2;
         

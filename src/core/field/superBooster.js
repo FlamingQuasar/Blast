@@ -13,38 +13,46 @@ export class SuperBooster extends Tile{
         //this._fireTileReturnScore = this._fireTileReturnScore.bind(this);
     }
 
-    _fireTileReturnScore(){        
+    _fireTileReturnScore(rate=1, burnAnimationCallback=()=>{}){        
         if(this.tileType != Tile.EMPTYTILE){
             let score = 50;
             this.tileType = Tile.EMPTYTILE;
-            this.hasSameNeighbour = true;
+            this.hasSameNeighbour = true;            
+                
+            // Вызвать колбек на анимацию взрыва самого супер-тайла
+            if(this.field != undefined){
+                let position = this.field.getPositionOfTile(this);
+                burnAnimationCallback(position.row, position.col);
+            }
+
             switch(this.effect){
                 // Взорвать радиус бомбы радиуса R
                 case SuperBooster.EFFECTS[0]:{
-                    score += Tile.firePairReturnScore(this.top, "top", 0+this.radius);
-                    score += Tile.firePairReturnScore(this.right, "right", 0+this.radius);
-                    score += Tile.firePairReturnScore(this.bottom, "bottom", 0+this.radius);
-                    score += Tile.firePairReturnScore(this.left, "left", 0+this.radius);
+                    // Параметры: tile, direction, radius, crossType=null, field=null, burnAnimationCallback
+                    score += Tile.firePairReturnScore(this.top, "top", 0+this.radius, null, this.field, burnAnimationCallback);
+                    score += Tile.firePairReturnScore(this.right, "right", 0+this.radius, null, this.field, burnAnimationCallback);
+                    score += Tile.firePairReturnScore(this.bottom, "bottom", 0+this.radius, null, this.field, burnAnimationCallback);
+                    score += Tile.firePairReturnScore(this.left, "left", 0+this.radius, null, this.field, burnAnimationCallback);
                     return score;
                 } 
                 // Взорвать всю строку
                 case SuperBooster.EFFECTS[1]:{
-                    score += Tile.firePairReturnScore(this.right, "right", Infinity);
-                    score += Tile.firePairReturnScore(this.left, "left", Infinity);
+                    score += Tile.firePairReturnScore(this.right, "right", Infinity, null, this.field, burnAnimationCallback);
+                    score += Tile.firePairReturnScore(this.left, "left", Infinity, null, this.field, burnAnimationCallback);
                     return score;
                 } 
                 // Взорвать весь столбец
                 case SuperBooster.EFFECTS[2]:{
-                    score += Tile.firePairReturnScore(this.top, "top", Infinity);
-                    score += Tile.firePairReturnScore(this.bottom, "bottom", Infinity);
+                    score += Tile.firePairReturnScore(this.top, "top", Infinity, null, this.field, burnAnimationCallback);
+                    score += Tile.firePairReturnScore(this.bottom, "bottom", Infinity, null, this.field, burnAnimationCallback);
                     return score;
                 }
                 // Взорвать крест радиуса R
                 case SuperBooster.EFFECTS[3]:{
-                    score += Tile.firePairReturnScore(this.top, "top", 0+this.radius, "cross");
-                    score += Tile.firePairReturnScore(this.right, "right", 0+this.radius, "cross");
-                    score += Tile.firePairReturnScore(this.bottom, "bottom", 0+this.radius, "cross");
-                    score += Tile.firePairReturnScore(this.left, "left", 0+this.radius, "cross");
+                    score += Tile.firePairReturnScore(this.top, "top", 0+this.radius, "cross", this.field, burnAnimationCallback);
+                    score += Tile.firePairReturnScore(this.right, "right", 0+this.radius, "cross", this.field, burnAnimationCallback);
+                    score += Tile.firePairReturnScore(this.bottom, "bottom", 0+this.radius, "cross", this.field, burnAnimationCallback);
+                    score += Tile.firePairReturnScore(this.left, "left", 0+this.radius, "cross", this.field, burnAnimationCallback);
                     return score;
                 }
                 // Взорвать всё игровое поле
