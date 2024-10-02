@@ -2,15 +2,14 @@
 <html lang="en" dir="ltr">
   <head>
     	<meta charset="utf-8">
-    	<title>Game From Scratch</title>
+    	<title>Blast Game</title>
 		<link rel="stylesheet" href="style.css">
-		<script src="module.js"></script>
+		<script src="libs/fabric.js/3.0.0/fabric.min.js"></script>
+		<script src="htmlCLient.js"></script>
 	</head>
 	<body>
 		<div class="app">
-			<!-- <canvas id="images_demo" width="570" height="570" class="game-field"></canvas> -->
 			<canvas id="canvas" width="570" height="570" class="game-field"></canvas>
-			
 			<div class="game-lvlnscore">
 				<div class="game-lvlcircle">
 					<p id="bllvlcounter">1</p>
@@ -20,18 +19,49 @@
 					<p id="blscorecounter">10000</p>
 				</div>
 				<div class="game-steps">
-					<p>ШАГИ</p>
+					<p>ОСТАЛОСЬ ШАГОВ</p>
 					<p id="blstepscounter">10/10</p>
 				</div>
 			</div>
 			<div class="game-controls">
 				<div class="control-shake">
 					<img src="assets/shake.png">
-					<div id="shake-counter" class="shake-counter">3</div>
+					<div id="shake-counter" class="shake-counter"></div>
 				</div>
 				<div class="control-settings">
 					<img src="assets/settings.png">
 				</div>
+			</div>
+			<div class="game-resultbox">
+				<h3 class="result-title"></h3>
+				<div class="result-text">
+					<p class="result-info"></p>
+					<p class="result-score"></p></div>
+				<div class="result-button"></div>
+			</div>
+			<div class="game-settingsbox">
+				<h3 class="settings-title">НАСТРОЙКИ</h3>
+				<div class="result-text">
+					<div class="flex">
+						<div>
+							<p class="settings-info">fieldHeight <input type="number" id="fieldheight" min="2" max="11"> </p>
+							<p class="settings-info">fieldWidth <input type="number" id="fieldwidth" min="2" max="11"> </p>
+							<p class="settings-info">colorsCount <input type="number" id="colorscount" min="0" max="8"> </p>
+							<p class="settings-info">maxScore <input type="number" id="maxscore" min="1" max="999"> </p>
+							<p class="settings-info">stepsCounter <input type="number" id="stepscounter" min="1" max="999"> </p>
+						</div>
+						<div>
+							<p class="settings-info">shakesCount <input type="number" id="shakescount"  min="0" max="999"> </p>
+							<p class="settings-info">boosterProbability <input type="number" id="boosterprobability" min="1" max="100"> </p>
+							<p class="settings-info">bombRadius <input type="number" id="bombradius" min="1" max="11"> </p>
+							<p class="settings-info">largeGroupBonusRequirement <input type="number" id="largegroupbonusrequirement" min="3"> </p>
+							<p class="settings-info">largeGroupBonusEffect <input type="number" id="largegroupbonuseffect" min="0" max="4"> </p>
+						</div>
+					</div>
+					(largeGroupBonusEffect: 0 - Взорвать радиус, 1 - Взорвать всю строку, 2- Взорвать весь столбец, 3 - Взорвать крест, 4 - Взорвать все поле)
+				</div>
+				<div class="settings-button sb-ok">Ок</div>
+				<div class="settings-button sb-cancel">Отмена</div>
 			</div>
 		</div>
 	</body>

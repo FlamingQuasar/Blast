@@ -1,12 +1,15 @@
 export class Settings{
     /* Класс настроек реализован как синглтон */
     constructor({
+        singleLevel,
+        isWebUI,
         fieldHeight,
         fieldWidth,
         colorsCount,
         minimalGroup,
         maxScore,
         stepsCounter,
+        maxStepsCount,
         shakesCount,
         boosterProbability,
         bombRadius,
