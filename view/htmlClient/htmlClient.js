@@ -22,7 +22,9 @@ window.onload = function() {
         return tileToTeleportCoordinates;
     }
 
-    window.createNewGame(tapTileForTeleport);
+    window.createNewGame(
+        6, 6, 9, 250, 5, 5, 30, 2, 7,0,
+        tapTileForTeleport);
 
     const FIELDSIZE = 550;
     const COLORTILES=["blue","orange","green","grey","pink","red","white","yellow"];

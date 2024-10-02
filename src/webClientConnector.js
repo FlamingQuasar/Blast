@@ -5,10 +5,15 @@ addEventListener("DOMContentLoaded",function(){
     if(window != undefined){
         let game = null;
         
-        const createNewGame = function(tapTileForTeleport=()=>{}){
-            game = new BlastGame({n:6, m:6, c:9, k:2, maxScore:250, stepsCounter:5, s:5,
-                boosterProbability: 100, bombRadius:3, largeGroupBonusRequirement:3,
-                largeGroupBonusEffect:0,
+        const createNewGame = function(
+            n, m, c, maxScore, stepsCounter, s,
+            boosterProbability, bombRadius, largeGroupBonusRequirement,
+            largeGroupBonusEffect,
+            tapTileForTeleport=()=>{}
+        ){
+            game = new BlastGame({n:n, m:m, c:c, k:2, maxScore:maxScore, stepsCounter:stepsCounter, s:s,
+                boosterProbability: boosterProbability, bombRadius:bombRadius, 
+                largeGroupBonusRequirement:largeGroupBonusRequirement, largeGroupBonusEffect:largeGroupBonusEffect,
                 tapTileHandler: tapTileForTeleport,
                 isWebUI: true,
                 singleLevel: false });
