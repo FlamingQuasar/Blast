@@ -33,31 +33,9 @@ window.onload = function() {
     let offsetX = 0;
     let offsetY = 0;
 
-    // анимашка для телепортации в отличие от сгорания уменьшает тайлы и потом увеличивает, либо анимируем смену x,y
-    let teleportAnimation = function(firstTile, secondTile){
-
-    }   
-
-    // отправлять этот метод или расширенную версию принимающую только x,y матрицы в колбек для действий
-    let boomBurnAnimation = function(tileImage, canvas, fabric){
-        tileImage.animate('scaleY', 10, {
-            onChange: canvas.renderAll.bind(canvas),
-            duration: 100,
-        });
-        tileImage.animate('scaleX', 10, {
-            onChange: canvas.renderAll.bind(canvas),
-            duration: 100,
-        });
-        tileImage.animate('opacity', 0, {
-            onChange: canvas.renderAll.bind(canvas),
-            duration: 100,
-            easing: fabric.util.ease.easeOutBounce
-        });
-    }
-
+    
     // Появление нового Тайла и его анимация генерации\выпадения
     function generateAnimation(newTileType, row, positionsDifference){
-
         if(newTileType == undefined) return;
         // Создать новый тайл с параетрами "типа тайлов" и "разницы в Y позиции"
         createTile(0, row, offsetX, offsetY, canvas, field, newTileType, positionsDifference);
@@ -210,14 +188,11 @@ window.onload = function() {
                         else{
                             tileForTeleportSelected = [coordinateY,coordinateX];
                             awaitUserForTeleportTileClick = false;
-                        }//.then(window.showField());
-                        //setTimeout(function(){initGame()},500);
-                        //initGame();
+                        }
                     }
                 }
             });
         });
-    //}
     }
     
     const refreshAllField = function(){
@@ -237,6 +212,10 @@ window.onload = function() {
         setTimeout(()=>{
             canvas.remove(...oldCanvasField);
         },150);
+    }
+
+    const ShowResultPopup = function(){
+
     }
 
     const initGame = function(){
@@ -268,7 +247,4 @@ window.onload = function() {
     });
     initGame();
 
-                
-                
-                
 }
