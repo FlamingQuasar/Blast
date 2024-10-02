@@ -5,12 +5,9 @@ window.onload = function() {
     let tileForTeleportSelected = null; // this is to be changed on user input
     
     async function waitUserInput() {
-        console.log("waitUserInput start")
         while (tileForTeleportSelected == null){
             await timeout(100); // остановить скрипт
-            console.log("wait");
         }
-        console.log("waitUserInput END")
         return tileForTeleportSelected;
     }
 
@@ -33,8 +30,6 @@ window.onload = function() {
     const settingsButton = document.getElementsByClassName("control-settings")[0];
     const settingsButtonCancel = document.getElementsByClassName("sb-cancel")[0];
     const settingsButtonOk = document.getElementsByClassName("sb-ok")[0];
-
-    //let tilesField = [];
     let field;
     let offsetX = 0;
     let offsetY = 0;
