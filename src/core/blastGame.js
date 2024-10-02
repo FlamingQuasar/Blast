@@ -19,6 +19,7 @@ export class BlastGame{
     * @param {number} largeGroupBonusEffect=1 - Тип эффекта активации супер-тайла
     * @param {function} tapTileHandler=()=>{} - Внешняя функция выбора позиции тайла на игровом поле
     * @param {Boolean} isWebUI=false - флаг для подключения с веб-клиента
+    * @param {Boolean} singleLevel=true - флаг для игрой в единственный уровень
     */
     constructor({n, m, c, k = 2, maxScore = 1000, stepsCounter = 10,
                  s=3, boosterProbability = 50, bombRadius=4,

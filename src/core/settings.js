@@ -1,6 +1,8 @@
 export class Settings{
     /* Класс настроек реализован как синглтон */
     constructor({
+        singleLevel,
+        currentLevel,
         isWebUI,
         fieldHeight,
         fieldWidth,
