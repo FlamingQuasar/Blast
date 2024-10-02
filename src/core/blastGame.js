@@ -36,6 +36,7 @@ export class BlastGame{
             minimalGroup : k<2?2:k,
             maxScore : maxScore>1?maxScore:1,
             stepsCounter : stepsCounter>1? stepsCounter : 1,
+            maxStepsCount: stepsCounter>1? stepsCounter : 1,
             shakesCount : s,
             boosterProbability :boosterProbability,
             bombRadius : bombRadius,
@@ -117,15 +118,14 @@ export class BlastGame{
     showFieldAndState(prefixText = ""){
         console.log(prefixText);
         BlastGame.showField(this.field, this.settings);
+        console.log("this.currentScore "+this.currentScore);
         if(this.currentScore >= this.settings.maxScore){
             this.stage = GameState.WIN;
-            console.log("Победа!");
             this.scoreAchieved = true;
             return this.stage;
         }
         else if(this.settings.stepsCounter == 0){
             this.stage = GameState.LOSE;
-            console.log("Поражение!");
             return this.stage;
         }
         return 0;
@@ -144,8 +144,9 @@ export class BlastGame{
         this.field.burnAnimationCallback = burnAnimationCallback;
         this.field.fallAnimationCallback = fallAnimationCallback;
         this.field.genAnimationCallback = genAnimationCallback;
-            // если row и col undefined и stepsCounter не надо убавлять
+
         let clientResult = false; 
+        // если row и col undefined и stepsCounter не надо убавлять
         if((undefined == (row && col)) ?? true){
             clientResult= true;
         }
@@ -173,6 +174,22 @@ export class BlastGame{
 
         // Вызов колбека при работе с Консолью
         clientCallbackFunction(this);
+        console.log("this.currentScore: "+this.currentScore);
+        console.log("this.stepsCount: "+this.settings.stepsCounter);
+        if(this.currentScore >= this.settings.maxScore){
+            console.log("Победа!");
+            console.log("Вывести итоговую табличку по уровню и написать в ней счет");
+            console.log("Кнопка Далее!");
+        }
+        else if(this.settings.stepsCounter == 0){
+            console.log("Поражение :(");
+            console.log("Вывести итоговую табличку по уровню и написать в ней счет");
+            console.log("Кнопка Переиграть!");
+        }
         return clientResult;
+    }
+
+    startAnotherLevel(){
+
     }
 }

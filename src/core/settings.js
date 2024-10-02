@@ -10,6 +10,7 @@ export class Settings{
         minimalGroup,
         maxScore,
         stepsCounter,
+        maxStepsCount,
         shakesCount,
         boosterProbability,
         bombRadius,

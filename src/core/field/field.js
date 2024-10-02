@@ -251,7 +251,6 @@ export class Field{
 
     // Запустить механизм выпадения новых фишек и перемещения
     replaceAfterBurn(showBurnedTiles = false, fallCallback=()=>{}, genCallback=()=>{}){
-        console.log(fallCallback);
         // Подготовить массив счетчиков для генерации новых фишек
         let newTilesGenerationMask = [];
         for(let i=0; i<Field.settings.fieldWidth; i++)

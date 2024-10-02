@@ -50,10 +50,57 @@ body{
     border: 1px solid black;
     border-radius: 15px;
     box-shadow: 0px 0px 7px 1px #00c7ffa3;
-    height: 95px;
+    height: 90px;
     margin-left: 40px;
     margin-top: 17px;
     width: 246px;
+}
+.app .game-resultbox{
+    background-color: #20549a;
+    border: 4px solid #6be7fa;
+    border-radius: 31px;
+    box-shadow: 0px 0px 7px 8px #00c7ffa3 inset;
+    color: white;
+    display: none;
+    font-family: fantasy;
+    height: 230px;
+    left: 300px;
+    position: absolute;
+    text-align: center;
+    top: 150px;
+    width: 250px;
+}
+.app .game-resultbox>.result-title{
+    color: white;
+    font-family: fantasy;
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    text-align: center;
+}
+.app .game-resultbox .result-text{
+    background: linear-gradient(#081e3c, #0f376f 66.71%);
+    border: 1px solid black;
+    border-radius: 15px;
+    box-shadow: 0px 0px 7px 1px #00c7ffa3;
+    margin: 12px;    
+    margin-top: 20px;
+}
+.app .game-resultbox .result-button{
+    background: #340150;
+    border: 2px solid #a22ccf;
+    border-radius: 16px;
+    display: inline-flex;
+    padding: 4px 18px;
+    width: auto;
+}
+.app .game-resultbox .result-button:hover{
+    background: linear-gradient(#f08dfb, #5e0a98);
+    border-radius: 20px;
+    border: 2px solid pink;
+}
+.app .game-resultbox.active{
+    display: block;
 }
 .app .game-scoreblock>img{
     margin-left: 81px;
