@@ -39,6 +39,30 @@
 					<p class="result-score"></p></div>
 				<div class="result-button"></div>
 			</div>
+			<div class="game-settingsbox">
+				<h3 class="settings-title">НАСТРОЙКИ</h3>
+				<div class="result-text">
+					<div class="flex">
+						<div>
+							<p class="settings-info">fieldHeight <input type="number" id="fieldheight" min="2" max="11"> </p>
+							<p class="settings-info">fieldWidth <input type="number" id="fieldwidth" min="2" max="11"> </p>
+							<p class="settings-info">colorsCount <input type="number" id="colorscount" min="1" max="8"> </p>
+							<p class="settings-info">maxScore <input type="number" id="maxscore" min="1" max="10000"> </p>
+							<p class="settings-info">stepsCounter <input type="number" id="stepscounter" min="1" max="10000"> </p>
+						</div>
+						<div>
+							<p class="settings-info">shakesCount <input type="number" id="shakescount"  min="0" max="10000"> </p>
+							<p class="settings-info">boosterProbability <input type="number" id="boosterprobability" min="1" max="100"> </p>
+							<p class="settings-info">bombRadius <input type="number" id="bombradius" min="1" max="11"> </p>
+							<p class="settings-info">largeGroupBonusRequirement <input type="number" id="largegroupbonusrequirement" min="3"> </p>
+							<p class="settings-info">largeGroupBonusEffect <input type="number" id="largeGroupBonusEffect" min="0" max="4"> </p>
+						</div>
+					</div>
+					(largeGroupBonusEffect: 0 - Взорвать радиус, 1 - Взорвать всю строку, 2- Взорвать весь столбец, 3 - Взорвать крест, 4 - Взорвать все поле)
+				</div>
+				<div class="settings-button">Ок</div>
+				<div class="settings-button">Отмена</div>
+			</div>
 		</div>
 	</body>
 	<script type="text/javascript" src="view/htmlClient/compiled/MAIN.js"></script>

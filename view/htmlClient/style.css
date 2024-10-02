@@ -55,6 +55,7 @@ body{
     margin-top: 17px;
     width: 246px;
 }
+.app .game-settingsbox,
 .app .game-resultbox{
     background-color: #20549a;
     border: 4px solid #6be7fa;
@@ -70,6 +71,23 @@ body{
     top: 150px;
     width: 250px;
 }
+.app .game-settingsbox{
+    height: 410px;
+    left: 200px;
+    top: 70px;
+    width: 450px;
+}
+.app .game-settingsbox .flex{
+    display: flex;
+}
+.app .game-settingsbox .flex>div{
+    padding-left: 10px;
+    text-align: right;
+}
+.app .game-settingsbox input{
+    width: 38px;
+}
+.app .game-settingsbox>.settings-title,
 .app .game-resultbox>.result-title{
     color: white;
     font-family: fantasy;
@@ -78,6 +96,7 @@ body{
     margin-bottom: 6px;
     text-align: center;
 }
+.app .game-settingsbox .result-text,
 .app .game-resultbox .result-text{
     background: linear-gradient(#081e3c, #0f376f 66.71%);
     border: 1px solid black;
@@ -86,6 +105,7 @@ body{
     margin: 12px;    
     margin-top: 20px;
 }
+.app .settings-button,
 .app .game-resultbox .result-button{
     background: #340150;
     border: 2px solid #a22ccf;
@@ -94,11 +114,13 @@ body{
     padding: 4px 18px;
     width: auto;
 }
+.app .settings-button,
 .app .game-resultbox .result-button:hover{
     background: linear-gradient(#f08dfb, #5e0a98);
     border-radius: 20px;
     border: 2px solid pink;
 }
+.app .game-settingsbox.active,
 .app .game-resultbox.active{
     display: block;
 }
