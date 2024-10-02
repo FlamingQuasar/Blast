@@ -1,8 +1,25 @@
 
 window.onload = function() {
+    let awaitUserForTeleportTileClick = false;
+    const timeout = async ms => new Promise(res => setTimeout(res, ms));
+    let tileForTeleportSelected = null; // this is to be changed on user input
+    
+    async function waitUserInput() {
+        console.log("waitUserInput start")
+        while (tileForTeleportSelected == null){
+            await timeout(100); // остановить скрипт
+            console.log("wait");
+        }
+        console.log("waitUserInput END")
+        return tileForTeleportSelected;
+    }
+
     async function tapTileForTeleport(){
+        awaitUserForTeleportTileClick = true;
         console.log("TAP TILE");
-        return [0,0];
+        let tileToTeleportCoordinates = await waitUserInput();
+        tileForTeleportSelected = null; // отключить переменную
+        return tileToTeleportCoordinates;
     }
 
     window.createNewGame(tapTileForTeleport);
@@ -180,13 +197,20 @@ window.onload = function() {
                 if(!this.empty){
                     let coordinateY = e?.target?.coordinateY;
                     let coordinateX = e?.target?.coordinateX;
+                    //clickTile(coordinateY, coordinateX);
                     if(coordinateX!= undefined && coordinateY!=undefined){
-                        await window.tapTile(coordinateY,coordinateX,
-                            burnTileFromGroupAnimation,
-                            fallDownTileAnimation,
-                            generateAnimation,
-                            refreshAllField
-                        );//.then(window.showField());
+                        if(!awaitUserForTeleportTileClick){
+                            await window.tapTile(coordinateY,coordinateX,
+                                burnTileFromGroupAnimation,
+                                fallDownTileAnimation,
+                                generateAnimation,
+                                refreshAllField
+                            );
+                        }
+                        else{
+                            tileForTeleportSelected = [coordinateY,coordinateX];
+                            awaitUserForTeleportTileClick = false;
+                        }//.then(window.showField());
                         //setTimeout(function(){initGame()},500);
                         //initGame();
                     }

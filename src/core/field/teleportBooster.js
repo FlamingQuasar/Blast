@@ -17,17 +17,24 @@ export class TeleportBooster extends Tile{
     async fireTileReturnScore(){
         // Вывести из строя текущий тайл телепорта
         this.tileType = Tile.EMPTYTILE;
-        console.log("Field.settings.isWebUI"+Field.settings.isWebUI);
         if(Field.settings.isWebUI){
-            console.log("Privet from WebUI Teleport");
-            console.log(this.field.fallCallback);
-            console.log(this.field.genCallback);
            // if(this.field != undefined){
                 let position = this.field.getPositionOfTile(this);
                 this.field.burnAnimationCallback(position.row, position.col);
             //}
             this.field.replaceAfterBurn(false, this.field.fallCallback, this.field.genCallback);
+            let pos1 = await Field.tapTile("Test first");
+            console.log(pos1);
+            let pos2 = await Field.tapTile("Test second");
+            console.log(pos2);
 
+            //сделать свап двух тайлов
+            [this.field[+pos1[0]][+pos1[1]], this.field[+pos2[0]][+pos2[1]]] 
+                = Field.swap(this.field[+pos1[0]][+pos1[1]], this.field[+pos2[0]][+pos2[1]]);
+            // Обновить соседские отношения тайлов-пар для новой обстановке на игровом поле
+            this.field.updateNeighbourRelations();
+            // Данный тайл телепорта отмечен как пустой ("_") и должен сгореть
+            //this.field.replaceAfterBurn(false, this.field.fallCallback, this.field.genCallback);
         }
         else{
             console.log("Для консольного клиента")
