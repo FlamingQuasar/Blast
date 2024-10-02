@@ -22,7 +22,7 @@ addEventListener("DOMContentLoaded",function(){
         }
 
         const getStepsCount = function(){
-            return game.settings.stepsCounter+1;
+            return game.settings.stepsCounter;
         }
 
         const getScoreCount = function(){
