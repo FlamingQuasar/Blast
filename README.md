@@ -11,7 +11,8 @@ blast videogame example
 1. **npm install --save-dev babel-loader css-loader webpack webpack-cli style-loader webpack-dev-server**
 2. **npm run dev**
 3. запустить в браузере **http://192.168.0.11:8080**
-4. либо поиграть на сайте разработчика
+4. либо играть на сайте разработчика Online WebClient: https://bakoomwak.ru/projects/blast/b/view/htmlClient/
+
 
 ## Автотесты
 1. Для установки автотестов нужно: **npm install**
