@@ -188,13 +188,14 @@ body{
     margin-left: 24px;
     margin-top: 24px;
 }
-@media (max-width: 600px) and (orientation: portrait){
+@media screen and (min-width: 300px) and (max-width: 1081px) {
+
         .canvas-container{
             height: 570px;
-            left: 201px;
+            left: 194px!important;
             position: relative;
             scale: 1.65;
-            top: 324px;
+            top: 324px!important;
             user-select: none;
             width: 570px;
         }
@@ -226,5 +227,15 @@ body{
             margin-left: 20px;
             margin-top: 19px;
             width: 246px;
+        }
+        .app .game-controls{
+            left: 14px;
+        }
+        .app .game-settingsbox{
+            scale: 1.6;
+            top: 139px;
+        }
+        .game-resultbox{
+            scale: 1.6;
         }
     }
