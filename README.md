@@ -13,6 +13,7 @@ blast videogame example
 3. запустить в браузере **http://192.168.0.11:8080**
 4. либо играть на сайте разработчика Online WebClient: https://bakoomwak.ru/projects/blast/b/view/htmlClient/
 
+
 ## Автотесты
 1. Для установки автотестов нужно: **npm install**
 2. Для запуска автотестов нужно: **npm test**
